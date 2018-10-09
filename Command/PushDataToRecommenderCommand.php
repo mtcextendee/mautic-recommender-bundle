@@ -11,8 +11,6 @@ use Mautic\PluginBundle\Model\IntegrationEntityModel;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiUserItemsInteractions;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
-use Recommender\RecommApi\Requests as Reqs;
-use Recommender\RecommApi\Exceptions as Ex;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -179,13 +177,13 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         $criteria['integrationEntity'] = 'users';
         $criteria['internalEntity']    = 'contacts';
         //$integrationEntity = $em->getRepository(IntegrationEntity::class)->findOneBy($criteria);
-        /** @var ApiCommands $serviceApiCommands */
-        $serviceApiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
+        /** @var ApiCommands $apiCommands */
+        $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
         /** @var IntegrationEntityModel $integrationEntityModel */
         $integrationEntityModel = $this->getContainer()->get('mautic.plugin.model.integration_entity');
         switch ($type) {
             case "items":
-                $serviceApiCommands->ImportItems($items);
+                $apiCommands->ImportItems($items);
                 break;
             case "contacts":
 
@@ -236,7 +234,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                             foreach ($leads as $lead) {
                                 $items[$lead->getId()] = $lead->getProfileFields();
                             }
-                            $serviceApiCommands->ImportUser($items);
+                            $apiCommands->ImportUser($items);
                             /*if ($serviceApiCommands->hasCommandOutput()) {
                                 $this->displayCmdTextFromResult(
                                     $serviceApiCommands->getCommandOutput(),
@@ -251,6 +249,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                     $start += count($items);
                 }
                 $output->write($translator->trans('mautic.plugin.recommender.integration.total.processed').': '.$start);
+
                 return;
                 break;
         }
@@ -258,38 +257,34 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         $requestsPropertyValues = [];
         switch ($type) {
             case "views":
-                $serviceApiCommands->callCommand('AddDetailView', $items);
+                $apiCommands->callCommand('AddDetailView', $items);
                 break;
 
             case "purchases":
-                $serviceApiCommands->callCommand('AddPurchase', $items);
+                $apiCommands->callCommand('AddPurchase', $items);
                 break;
 
             case "carts":
-                $serviceApiCommands->callCommand('AddCartAddition', $items);
+                $apiCommands->callCommand('AddCartAddition', $items);
                 break;
 
             case "bookmarks":
-                $serviceApiCommands->callCommand('AddBookmark', $items);
+                $apiCommands->callCommand('AddBookmark', $items);
                 break;
             case "ratings":
-                $serviceApiCommands->callCommand('AddRating', $items);
+                $apiCommands->callCommand('AddRating', $items);
                 break;
             case "portions":
-                $serviceApiCommands->callCommłand('SetViewPortion', $items);
+                $apiCommands->callCommłand('SetViewPortion', $items);
                 break;
         }
 
-        try {
-            if ($serviceApiCommands->hasCommandOutput()) {
-                $this->displayCmdTextFromResult(
-                    $serviceApiCommands->getCommandOutput(),
-                    'user property values',
-                    $output
-                );
-            }
-        } catch
-        (Ex\ResponseException $e) {
+        if ($apiCommands->hasCommandOutput()) {
+            $this->displayCmdTextFromResult(
+                $apiCommands->getCommandOutput(),
+                'user property values',
+                $output
+            );
         }
     }
 
