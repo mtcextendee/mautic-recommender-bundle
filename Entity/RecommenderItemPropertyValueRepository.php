@@ -20,5 +20,12 @@ use Mautic\CoreBundle\Entity\CommonRepository;
  */
 class RecommenderItemPropertyValueRepository extends CommonRepository
 {
+    /**
+     * @return string
+     */
+    public function getTableAlias()
+    {
+        return 'ripv';
+    }
 
 }

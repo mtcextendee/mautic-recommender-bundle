@@ -20,5 +20,11 @@ use Mautic\CoreBundle\Entity\CommonRepository;
  */
 class RecommenderItemRepository extends CommonRepository
 {
-
+    /**
+     * @return string
+     */
+    public function getTableAlias()
+    {
+        return 'ri';
+    }
 }
