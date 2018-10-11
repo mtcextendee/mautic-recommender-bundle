@@ -18,10 +18,10 @@ use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\LeadBundle\Entity\Lead;
 
 /**
- * Class RecommenderEventsLog
+ * Class RecommenderEventLog
  * @package MauticPlugin\MauticRecommenderBundle\Entity
  */
-class RecommenderEventsLog
+class RecommenderEventLog
 {
     /**
      * @var int

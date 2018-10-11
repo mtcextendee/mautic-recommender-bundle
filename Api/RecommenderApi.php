@@ -16,10 +16,9 @@ use Mautic\CoreBundle\Templating\Helper\VersionHelper;
 use Mautic\PageBundle\Model\TrackableModel;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Monolog\Logger;
-use Recommender\RecommApi\Client;
 
 
-class RecommenderApi extends AbstractRecommenderApi
+class RecommenderApi
 {
     /**
      * @var Client
@@ -64,6 +63,7 @@ class RecommenderApi extends AbstractRecommenderApi
         VersionHelper $versionHelper
     ) {
         $this->logger = $logger;
+        return;
 
         $integration = $integrationHelper->getIntegrationObject('Recommender');
         if (($integration && $integration->getIntegrationSettings()->getIsPublished()) || isset($_POST['integration_details'])) {

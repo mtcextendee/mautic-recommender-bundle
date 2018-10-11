@@ -15,10 +15,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 
 /**
- * Class RecommenderEventsLogRepository
+ * Class RecommenderEventLogRepository
  * @package MauticPlugin\MauticRecommenderBundle\Entity
  */
-class RecommenderEventsLogRepository extends CommonRepository
+class RecommenderEventLogRepository extends CommonRepository
 {
 
 }
