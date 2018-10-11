@@ -15,13 +15,8 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
-use Mautic\LeadBundle\Entity\Lead;
 
-/**
- * Class RecommenderItem
- * @package MauticPlugin\MauticRecommenderBundle\Entity
- */
-class RecommenderItem
+class ItemProperty
 {
     /**
      * @var int
@@ -31,9 +26,19 @@ class RecommenderItem
     /**
      * @var string
      */
-    protected $itemId;
+    protected $name;
 
-    /*
+    /**
+     * @var string
+     */
+    protected $type;
+
+    /**
+     * @var string
+     */
+    protected $value;
+
+    /**
      * @var \DateTime
      */
     protected $dateAdded;
@@ -44,18 +49,22 @@ class RecommenderItem
         $this->setDateAdded(new \DateTime());
     }
 
+
+
     /**
      * @param ORM\ClassMetadata $metadata
      */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->setTable('recommender_item')
-            ->setCustomRepositoryClass(RecommenderItemRepository::class)
-            ->addIndex(['item_id'], 'item_id_index')
+        $builder->setTable('recommender_item_property')
+            ->setCustomRepositoryClass(ItemPropertyRepository::class)
+            ->addIndex(['name'], 'name_index')
             ->addId()
-            ->addNamedField('itemId', 'string', 'item_id', true)
-            ->addNamedField('dateAdded', 'datetime', 'date_added');
+            ->addNamedField('name', 'string', 'name')
+            ->addNamedField('type', 'string', 'type')
+            ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
+
     }
 
     /**
@@ -69,7 +78,8 @@ class RecommenderItem
             ->addListProperties(
                 [
                     'id',
-                    'itemId',
+                    'name',
+                    'type',
                     'dateAdded',
                 ]
             )
@@ -87,13 +97,59 @@ class RecommenderItem
     }
 
     /**
-     * @param string $itemId
+     * Set name.
      *
-     * @return RecommenderItem
+     * @param string $name
+     *
+     * @return LeadEventLog
      */
-    public function setItemId(string $itemId)
+    public function setName($name)
     {
-        $this->itemId = $itemId;
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return ItemProperty
+     */
+    public function setValue(string $value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value.
+     *
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Item
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }
@@ -101,28 +157,8 @@ class RecommenderItem
     /**
      * @return string
      */
-    public function getItemId()
+    public function getType()
     {
-        return $this->itemId;
-    }
-
-    /**
-     * @param \DateTime $dateAdded
-     *
-     * @return RecommenderItem
-     */
-    public function setDateAdded(\DateTime $dateAdded)
-    {
-        $this->dateAdded = $dateAdded;
-
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateAdded()
-    {
-        return $this->dateAdded;
+        return $this->type;
     }
 }

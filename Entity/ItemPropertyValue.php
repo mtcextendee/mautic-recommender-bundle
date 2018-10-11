@@ -16,11 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 
-/**
- * Class RecommenderItemProperty
- * @package MauticPlugin\MauticRecommenderBundle\Entity
- */
-class RecommenderItemProperty
+class ItemPropertyValue
 {
     /**
      * @var int
@@ -28,31 +24,19 @@ class RecommenderItemProperty
     protected $id;
 
     /**
-     * @var string
+     * @var ItemProperty
      */
-    protected $name;
+    protected $property;
 
     /**
-     * @var string
+     * @var Item
      */
-    protected $type;
+    protected $item;
 
     /**
      * @var string
      */
     protected $value;
-
-    /**
-     * @var \DateTime
-     */
-    protected $dateAdded;
-
-
-    public function __construct()
-    {
-        $this->setDateAdded(new \DateTime());
-    }
-
 
 
     /**
@@ -61,13 +45,21 @@ class RecommenderItemProperty
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->setTable('recommender_item_property')
-            ->setCustomRepositoryClass(RecommenderItemPropertyRepository::class)
-            ->addIndex(['name'], 'name_index')
-            ->addId()
-            ->addNamedField('name', 'string', 'name')
-            ->addNamedField('type', 'string', 'type')
-            ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
+        $builder->setTable('recommender_item_property_value')
+            ->setCustomRepositoryClass(ItemPropertyValueRepository::class)
+            ->addNamedField('value', Type::TEXT, 'value', false)
+            ->addId();
+
+        $builder->createManyToOne(
+            'item',
+            'MauticPlugin\MauticRecommenderBundle\Entity\Item'
+        )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
+
+
+        $builder->createManyToOne(
+            'property',
+            'MauticPlugin\MauticRecommenderBundle\Entity\ItemProperty'
+        )->addJoinColumn('property_id', 'id', true, false, 'CASCADE')->build();
 
     }
 
@@ -84,7 +76,7 @@ class RecommenderItemProperty
                     'id',
                     'name',
                     'type',
-                    'dateAdded',
+                    'value',
                 ]
             )
             ->build();
@@ -101,33 +93,45 @@ class RecommenderItemProperty
     }
 
     /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return LeadEventLog
+     * @return ItemProperty
      */
-    public function setName($name)
+    public function getProperty()
     {
-        $this->name = $name;
+        return $this->property;
+    }
+
+    /**
+     * @param ItemProperty $property
+     */
+    public function setProperty(ItemProperty $property)
+    {
+        $this->property = $property;
+    }
+
+    /**
+     * @param Item $item
+     *
+     * @return ItemPropertyValue
+     */
+    public function setItem(Item $item)
+    {
+        $this->item = $item;
 
         return $this;
     }
 
     /**
-     * Get name.
-     *
-     * @return string
+     * @return Item
      */
-    public function getName()
+    public function getItem()
     {
-        return $this->name;
+        return $this->item;
     }
 
     /**
      * @param string $value
      *
-     * @return RecommenderItemProperty
+     * @return ItemPropertyValue
      */
     public function setValue(string $value)
     {
@@ -137,32 +141,10 @@ class RecommenderItemProperty
     }
 
     /**
-     * Get value.
-     *
      * @return string
      */
     public function getValue()
     {
         return $this->value;
-    }
-
-    /**
-     * @param string $type
-     *
-     * @return RecommenderItem
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

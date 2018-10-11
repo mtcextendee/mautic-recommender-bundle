@@ -14,18 +14,14 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 
-/**
- * Class RecommenderItemPropertyValueRepository
- * @package MauticPlugin\MauticRecommenderBundle\Entity
- */
-class RecommenderItemPropertyValueRepository extends CommonRepository
+
+class ItemPropertyRepository extends CommonRepository
 {
     /**
      * @return string
      */
     public function getTableAlias()
     {
-        return 'ripv';
+        return 'rip';
     }
-
 }

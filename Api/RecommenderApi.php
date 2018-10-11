@@ -15,6 +15,7 @@ use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\CoreBundle\Templating\Helper\VersionHelper;
 use Mautic\PageBundle\Model\TrackableModel;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
+use MauticPlugin\MauticRecommenderBundle\Client\Client;
 use Monolog\Logger;
 
 
@@ -90,12 +91,14 @@ class RecommenderApi
             $secretKey = $keys['secret_key'];
         }
 
-        $this->client = new Client(
+      /*  $this->client = new Client(
             $database,
             $secretKey,
             'https',
             ['serviceName' => 'Mautic '.$versionHelper->getVersion()]
-        );
+        );*/
+
+      $this->client = new Client();
         parent::__construct($pageTrackableModel);
         $this->integrationHelper = $integrationHelper;
         $this->versionHelper = $versionHelper;

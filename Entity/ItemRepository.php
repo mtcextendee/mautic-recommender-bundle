@@ -14,11 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 
-/**
- * Class RecommenderItemRepository
- * @package MauticPlugin\MauticRecommenderBundle\Entity
- */
-class RecommenderItemRepository extends CommonRepository
+class ItemRepository extends CommonRepository
 {
     /**
      * @return string
