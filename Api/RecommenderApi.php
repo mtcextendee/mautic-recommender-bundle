@@ -15,7 +15,7 @@ use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\CoreBundle\Templating\Helper\VersionHelper;
 use Mautic\PageBundle\Model\TrackableModel;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\MauticRecommenderBundle\Client\Client;
+use MauticPlugin\MauticRecommenderBundle\Api\Client\Client;
 use Monolog\Logger;
 
 
@@ -55,15 +55,21 @@ class RecommenderApi
      * @param Logger            $logger
      * @param VersionHelper     $versionHelper
      *
+     * @param Client            $client
+     *
      * @internal param CoreParametersHelper $coreParametersHelper
      */
     public function __construct(
         TrackableModel $pageTrackableModel,
         IntegrationHelper $integrationHelper,
         Logger $logger,
-        VersionHelper $versionHelper
+        VersionHelper $versionHelper,
+        Client $client
     ) {
+
         $this->logger = $logger;
+        $this->client = $client;
+
         return;
 
         $integration = $integrationHelper->getIntegrationObject('Recommender');
@@ -98,10 +104,10 @@ class RecommenderApi
             ['serviceName' => 'Mautic '.$versionHelper->getVersion()]
         );*/
 
-      $this->client = new Client();
         parent::__construct($pageTrackableModel);
         $this->integrationHelper = $integrationHelper;
         $this->versionHelper = $versionHelper;
+        $this->client = $client;
     }
 
     /**

@@ -56,19 +56,10 @@ class ProcessData
             }
         }
 
-        $funcProperty = 'Recommender\RecommApi\Requests\\'.$funcProperty;
-        $funcValue    = 'Recommender\RecommApi\Requests\\'.$funcValue;
         $items        = $this->itemsToMultiArray($items);
         $uniqueParams = [];
 
         foreach ($items as $item) {
-            /** @todo  check */
-            if (!isset($item['id'])) {
-                throw new \Exception('ID  missing: '.print_r($item, true));
-            }
-            $itemId =  $item['id'];
-            $item['item-id'] = $itemId;
-            unset($item['id']);
             foreach ($item as $key => $value) {
                 if (is_array($value)) {
                     if (count($value) == count($value, COUNT_RECURSIVE)) {
@@ -94,7 +85,7 @@ class ProcessData
                     $item[$key] = strtotime($value);
                 }
             }
-            $this->requestsPropertyValues[] = new $funcValue($itemId, $item, ['cascadeCreate' => true]);
+            $this->requestsPropertyValues[] = $item;
         }
 
         $allowedImagesFileTypes = ['gif', 'png', 'jpg'];

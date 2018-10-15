@@ -171,7 +171,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             }
         }
 
-
         // import Leads
         $criteria['integration']       = 'Recommender';
         $criteria['integrationEntity'] = 'users';

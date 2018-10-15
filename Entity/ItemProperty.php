@@ -161,4 +161,25 @@ class ItemProperty
     {
         return $this->type;
     }
+
+
+    /**
+     * @param \DateTime $dateAdded
+     *
+     * @return Item
+     */
+    public function setDateAdded(\DateTime $dateAdded)
+    {
+        $this->dateAdded = $dateAdded;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateAdded()
+    {
+        return $this->dateAdded;
+    }
 }

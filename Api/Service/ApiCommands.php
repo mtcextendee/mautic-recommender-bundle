@@ -15,8 +15,6 @@ use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
 use Psr\Log\LoggerInterface;
-use Recommender\RecommApi\Requests as Reqs;
-use Recommender\RecommApi\Exceptions as Ex;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ApiCommands
@@ -89,155 +87,20 @@ class ApiCommands
         $this->recommenderTokenFinder = $recommenderTokenFinder;
     }
 
-    private function optionsChecker($apiRequest, $options)
-    {
-        $options                   = array_keys($options);
-        $interactionRequiredParams = $this->getInteractionRequiredParam($apiRequest);
-        if (!isset($interactionRequiredParams['userId'])) {
-            $interactionRequiredParams = array_merge(['userId'], $interactionRequiredParams);
-        }
-        //required params no contains from input
-        if (count(array_intersect($options, $interactionRequiredParams)) != count($interactionRequiredParams)) {
-            $this->logger->error(
-                $this->translator->trans(
-                    'mautic.plugin.recommender.api.wrong.params',
-                    ['%params' => implode(', ', $options), '%options' => implode(',', $interactionRequiredParams)]
-                )
-            );
-
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * @param       $apiRequest
      * @param array $batchOptions
      */
     public function callCommand($apiRequest, array $batchOptions = [])
     {
-        // not batch
-        if (!isset($batchOptions[0])) {
-            $batchOptions = [$batchOptions];
-        }
-        $command  = 'Recommender\RecommApi\Requests\\'.$apiRequest;
-        $requests = [];
-        foreach ($batchOptions as $options) {
-            $userId = null;
-            if (isset($options['userId'])) {
-                $userId = $options['userId'];
-                unset($options['userId']);
-            }
-            $itemId = null;
-            if (isset($options['itemId'])) {
-                $itemId = $options['itemId'];
-                unset($options['itemId']);
-            }
-            $options['cascadeCreate'] = true;
-            $req = '';
-            switch ($apiRequest) {
-                case "ListItemProperties":
-                case "ListUserProperties":
-                    $req = new $command();
-                    break;
-                case "AddDetailView":
-                case "DeleteCartAddition":
-                case "AddBookmark":
-                    $req = new $command(
-                        $userId,
-                        $itemId
-                    );
-                    break;
-                case "AddCartAddition":
-                case "AddPurchase":
-                $req = new $command(
-                    $userId,
-                    $itemId,
-                    $options
-                );
-                break;
-                case "AddRating":
-                    $rating = $options['rating'];
-                    unset($options['rating']);
-                    $req = new $command(
-                        $userId,
-                        $itemId,
-                        $rating,
-                        $options
-                    );
-                    break;
-                case "SetViewPortion":
-                    $portion = $options['portion'];
-                    unset($options['portion']);
-                    $req = new $command(
-                        $userId,
-                        $itemId,
-                        $portion,
-                        $options
-                    );
-
-                    break;
-                case "RecommendItemsToUser":
-                    $limit = $options['limit'];
-                    unset($options['limit']);
-                    $req = new $command(
-                        $userId,
-                        $limit,
-                        $options
-                    );
-                    break;
-            }
-            if ($req) {
-                $req->setTimeout(5000);
-                $requests[] = $req;
-            }
-
-            $this->segmentMapping->map($apiRequest, $userId);
-        }
-        //$this->logger->debug('Recommender requests:'.var_dump($batchOptions));
-        $this->setCacheId($requests);
-        try {
-            //batch processing
-            if (count($requests) > 1) {
-                $this->setCommandOutput($this->recommenderApi->getClient()->send(new Reqs\Batch($requests)));
-            } elseif (count($requests) == 1) {
-                $this->setCommandOutput($this->recommenderApi->getClient()->send(end($requests)));
-            }
-            if ($this->hasCommandOutput()) {
-                return $this->getCommandOutput();
-            }
-        } catch (Ex\ResponseException $e) {
-            die($e->getMessage());
-            $this->logger->error(
-                $this->translator->trans(
-                    'mautic.plugin.recommender.api.error',
-                    ['%error' => $e->getMessage()]
-                )
-            );
-        }
-    }
-
-    public function ImportUser($items)
-    {
-        $processedData = new ProcessData($items, 'AddUserProperty', 'SetUserValues');
-        try {
-            $this->callApi($processedData->getRequestsPropertyName());
-            $this->callApi($processedData->getRequestsPropertyValues());
-        } catch (\Exception $exception) {
-
-        }
+        $this->recommenderApi->getClient()->send($apiRequest, $batchOptions);
     }
 
     public function ImportItems($items)
     {
-        $processedData = new ProcessData($items, 'AddItemProperty', 'SetItemValues');
-        try {
-            $this->callApi($processedData->getRequestsPropertyName());
-            $this->callApi($processedData->getRequestsPropertyValues());
-        } catch (\Exception $exception) {
-
-        }
+        $this->recommenderApi->getClient()->send('AddItem', $items);
+        $this->recommenderApi->getClient()->send('AddItemProperty', $items);
+        $this->recommenderApi->getClient()->send('AddItemPropertyValue', $items);
     }
 
     /**
@@ -300,34 +163,12 @@ class ApiCommands
 
     public function callApi($requests)
     {
-        if (empty($requests)) {
-            return;
-        }
-
-        if (!isset($requests[0])) {
-            $requests = [$requests];
-        }
         $this->setCacheId($requests);
 
-        if ($this->hasCommandOutput()) {
-            return $this->getCommandOutput();
+        if (!$this->hasCommandOutput()) {
+            $this->setCommandOutput($this->recommenderApi->getClient()->send($requests));
         }
-        try {
-            //batch processing
-            if (count($requests) > 1) {
-                $this->setCommandOutput($this->recommenderApi->getClient()->send(new Reqs\Batch($requests)));
-            } elseif (count($requests) == 1) {
-                $this->setCommandOutput($this->recommenderApi->getClient()->send(end($requests)));
-            }
-        } catch (Ex\ResponseException $e) {
-            throw new \Exception($e->getMessage());
-            /* $this->logger->error(
-                 $this->translator->trans(
-                     'mautic.plugin.recommender.api.error',
-                     ['%error' => $e->getMessage()]
-                 )
-             );*/
-        }
+        return $this->getCommandOutput();
     }
 
     /**

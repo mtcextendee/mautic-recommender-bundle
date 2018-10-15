@@ -7,6 +7,7 @@ use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\CoreBundle\Templating\Helper\AnalyticsHelper;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticExtendeeAnalyticsBundle\Integration\EAnalyticsIntegration;
+use MauticPlugin\MauticRecommenderBundle\Api\Client\Request\Item;
 use MauticPlugin\MauticRecommenderBundle\Helper\GoogleAnalyticsHelper;
 use Recommender\RecommApi\Requests as Reqs;
 use Recommender\RecommApi\Exceptions as Ex;
@@ -17,6 +18,14 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RecommenderIntegration extends AbstractIntegration
 {
+
+    /**
+     * RecommenderIntegration constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}

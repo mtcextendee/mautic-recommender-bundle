@@ -76,6 +76,15 @@ return [
             'mautic.recommender.model.recommender' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel::class,
             ],
+            'mautic.recommender.model.item' => [
+                'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemModel::class,
+            ],
+            'mautic.recommender.model.item.property' => [
+                'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel::class,
+            ],
+            'mautic.recommender.model.item.property.value' => [
+                'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyValueModel::class,
+            ],
         ],
         'forms'        => [
             'mautic.form.type.recommender'         => [
@@ -137,6 +146,15 @@ return [
             ],
         ],
         'other'        => [
+
+            'mautic.recommender.client'=> [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Api\Client\Client::class,
+                'arguments' => [
+                    'mautic.recommender.model.item',
+                    'mautic.recommender.model.item.property',
+                    'mautic.recommender.model.item.property.value',
+                ],
+            ],
             'mautic.recommender.helper'                      => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper::class,
                 'arguments' => [
@@ -154,6 +172,7 @@ return [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                     'mautic.helper.template.version',
+                    'mautic.recommender.client'
                 ],
             ],
             'mautic.recommender.service.api.commands'        => [
@@ -225,7 +244,6 @@ return [
             'mautic.integration.recommender' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration::class,
                 'arguments' => [
-
                 ],
             ],
         ],

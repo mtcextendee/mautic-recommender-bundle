@@ -9,9 +9,11 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\MauticMessageBirdBundle\Exception;
+namespace MauticPlugin\MauticRecommender\Exception;
 
-class InvalidApiKeyException extends MessageBirdException
+use MauticPlugin\MauticRecommenderBundle\Exception\RecomenderException;
+
+class ItemIdNotFoundException extends RecomenderException
 {
-    protected $message = 'mautic.plugin.messagebird.missing_api_key';
+
 }
