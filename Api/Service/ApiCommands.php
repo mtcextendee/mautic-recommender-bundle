@@ -96,6 +96,9 @@ class ApiCommands
         $this->recommenderApi->getClient()->send($apiRequest, $batchOptions);
     }
 
+    public function ImportUser($lead)
+    {
+    }
     public function ImportItems($items)
     {
         $this->recommenderApi->getClient()->send('AddItem', $items);
