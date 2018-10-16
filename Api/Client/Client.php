@@ -59,8 +59,9 @@ class Client
      */
     public function send($endpoint, array $options)
     {
-        if (!isset($options[0])) {
-            $options = [$options];
+        $this->optionCleanUp($options);
+        if (empty($options)) {
+            die('options empty');
         }
         $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$endpoint;
         if (!class_exists($class)) {
@@ -79,6 +80,30 @@ class Client
         }
 
         $loader->execute();
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return array
+     */
+    private function optionCleanUp(array &$options)
+    {
+        $resetOptions = reset($options);
+        if (is_array($resetOptions)) {
+            $options = array_values($options);
+        }else{
+            $options = [$options];
+        }
+        foreach ($options as $key => &$option) {
+            if (isset($option['id'])) {
+                $option['itemId'] = $option['id'];
+                unset($option['id']);
+            }
+            if (!isset($option['itemId'])) {
+                unset($options[$key]);
+            }
+        }
     }
 }
 

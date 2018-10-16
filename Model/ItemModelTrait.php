@@ -34,6 +34,7 @@ trait ItemModelTrait
         foreach ($options as $key=>$value){
             try {
                 $accessor->setValue($entity, $key, $value);
+                echo $key;
             } catch (\Exception $exception) {
 
             }

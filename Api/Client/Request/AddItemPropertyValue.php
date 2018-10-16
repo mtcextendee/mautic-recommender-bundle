@@ -17,60 +17,44 @@ use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyValueModel;
 
-class AddItemPropertyValue
+class AddItemPropertyValue extends PropertyValue
 {
-    use AddTrait;
-
-    /** @var \MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyRepository */
-    protected $repo;
-
-    /**
-     * @var ItemPropertyModel
-     */
-    protected $model;
-
-    /** @var  array */
-    protected $options;
-
-
-    /**
-     * Property constructor.
-     *
-     * @param array             $options
-     * @param ItemPropertyModel $itemPropertyValueModel
-     */
-    public function __construct(array $options, ItemPropertyValueModel $itemPropertyValueModel)
-    {
-        $this->model   = $itemPropertyValueModel;
-        $this->repo    = $itemPropertyValueModel->getRepository();
-        $this->options = $options;
-    }
 
     protected function add($option)
     {
         // not update If already exist
-        $property = $this->repo->findOneBy(['name' => $option['name']]);
-        if ($property) {
-            return false;
-        }
-
         return $this->model->setValues(null, $option);
+    }
+
+    public function get($option)
+    {
+        $items =  $this->repo->getEntities(
+            [
+                'filter'         => [
+                    'force' => [
+                        [
+                            'column' => 'item_id',
+                            'expr'   => 'eq',
+                            'value'  => $option['itemId'],
+                        ],
+                    ],
+                ],
+                'hydration_mode' => 'HYDRATE_ARRAY',
+            ]
+        );
     }
 
     public function execute()
     {
-        $properties = $this->model->getItemPropertyRepository()->getEntities(['hydration_mode' => 'HYDRATE_ARRAY']);              $columns = $this->model->getItemRepository()->findOneBy(['item_id'=> 1]);
-
-        $items   = [];
-        foreach ($options as $option) {
-            $add = $this->add($option);
-            if ($add) {
-                $items[] = $add;
+        foreach ($this->options as $option) {
+            $items = $this->get($option);
+            $entities = [];
+            foreach ($option as $opt) {
+                $entities[] = $this->add($option);
             }
+            $this->repo->saveEntities($entities);
         }
-        if (!empty($items)) {
-            $this->repo->saveEntities($items);
-        }
+
     }
 }
 

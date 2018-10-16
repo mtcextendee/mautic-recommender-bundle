@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Model;
 use Mautic\CoreBundle\Model\AbstractCommonModel;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 use MauticPlugin\MauticRecommenderBundle\Entity\ItemProperty;
+use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
 
 class ItemPropertyValueModel extends AbstractCommonModel
 {
@@ -52,7 +53,7 @@ class ItemPropertyValueModel extends AbstractCommonModel
      */
     public function newEntity()
     {
-        return new ItemProperty();
+        return new ItemPropertyValue();
     }
 
 }

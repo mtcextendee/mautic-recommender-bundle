@@ -17,15 +17,6 @@ class AddItem extends Item
 {
     protected function add($option)
     {
-        if (isset($option['id'])) {
-            $option['itemId'] = $option['id'];
-            unset($option['id']);
-        }
-        if (!isset($option['itemId'])) {
-            //throw new ItemIdNotFoundException('Item ID not found');
-        }
-
-        // not update If already exist
         $item = $this->repo->findOneBy(['itemId' => $option['itemId']]);
         if ($item) {
             return false;

@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 trait AddTrait
 {
+
     public function execute()
     {
         $items = [];
