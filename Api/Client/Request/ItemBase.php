@@ -14,18 +14,27 @@ namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
-use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel;
 
-class AddItemProperty extends Property
+abstract class ItemBase
 {
-    protected function add($option)
+  protected $options = [];
+
+
+    /**
+     *
+     */
+    public function execute()
     {
-        // not update If already exist
-        $property = $this->repo->findOneBy(['name' => $option['name']]);
-        if ($property) {
-            return false;
+        $items = [];
+        foreach ($this->getOptions() as $option) {
+            $add = $this->add($option);
+            if ($add) {
+                $items[] = $add;
+            }
         }
-        return $this->model->setValues(null, $option);
+        if (!empty($items)) {
+            $this->repo->saveEntities($items);
+        }
     }
 
     /**
@@ -33,8 +42,15 @@ class AddItemProperty extends Property
      */
     public function getOptions()
     {
-        return $this->processPropertyFromItems($this->options);
+        return $this->options;
     }
 
+    /**
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+    }
 }
 

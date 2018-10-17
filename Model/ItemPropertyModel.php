@@ -35,7 +35,7 @@ class ItemPropertyModel extends AbstractCommonModel
      */
     public function newEntity()
     {
-        return new ItemPropertyValue();
+        return new ItemProperty();
     }
 
 }

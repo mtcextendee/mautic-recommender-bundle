@@ -17,10 +17,8 @@ use MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel;
 
-class Property
+class Property extends ItemBase
 {
-    use AddTrait;
-
     /** @var \MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyRepository */
     protected $repo;
 
@@ -28,10 +26,6 @@ class Property
      * @var ItemPropertyModel
      */
     protected $model;
-
-    /** @var  array */
-    protected $options;
-
 
     /**
      * Property constructor.

@@ -15,10 +15,8 @@ use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
 
-class Item
+class Item extends ItemBase
 {
-    use AddTrait;
-
     /**
      * @var ItemModel
      */

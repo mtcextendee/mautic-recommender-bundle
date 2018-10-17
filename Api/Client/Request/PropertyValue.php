@@ -18,10 +18,8 @@ use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyValueModel;
 
-class PropertyValue
+class PropertyValue extends ItemBase
 {
-    use AddTrait;
-
     /** @var \MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValueRepository */
     protected $repo;
 
