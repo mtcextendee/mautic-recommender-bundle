@@ -49,7 +49,7 @@ class Event
     {
         $builder = new ClassMetadataBuilder($metadata);
         $builder->setTable('recommender_event')
-            ->setCustomRepositoryClass(RecommenderEventRepository::class)
+            ->setCustomRepositoryClass(EventRepository::class)
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');

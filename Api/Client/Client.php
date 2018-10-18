@@ -40,10 +40,10 @@ class Client
      * Client constructor.
      *
      * @param ItemModel                    $itemModel
-     * @param EventLogModelc|EventLogModel $eventLogModel
+     * @param EventLogModel $eventLogModel
      * @param LeadModel                    $leadModel
      */
-    public function __construct(ItemModel $itemModel, EventLogModelc $eventLogModel, LeadModel $leadModel)
+    public function __construct(ItemModel $itemModel, EventLogModel $eventLogModel, LeadModel $leadModel)
     {
         $this->propertyAccessor = new PropertyAccessor();
         $this->itemModel        = $itemModel;
@@ -104,8 +104,15 @@ class Client
                 continue;
             }
 
-            if (!isset($option['userId'])) {
-               // $option['userId'] = $this->leadModel->getCurrentLead();
+            if (isset($option['userId'])) {
+                $option['lead'] = $this->leadModel->getEntity($option['userId']);
+                unset($option['userId']);
+            }
+
+
+            if (!isset($option['itemId'])) {
+                $option['item'] = $this->itemModel->getRepository()->findBy(['item_id' => $option['itemId']]);
+                unset($option['itemId']);
             }
         }
     }

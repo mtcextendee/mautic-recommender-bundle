@@ -145,7 +145,7 @@ class ItemProperty
     /**
      * @param string $type
      *
-     * @return EventLog
+     * @return Item
      */
     public function setType($type)
     {
@@ -166,7 +166,7 @@ class ItemProperty
     /**
      * @param \DateTime $dateAdded
      *
-     * @return EventLog
+     * @return Item
      */
     public function setDateAdded(\DateTime $dateAdded)
     {

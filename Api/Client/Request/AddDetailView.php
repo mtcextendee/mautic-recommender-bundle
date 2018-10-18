@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
+use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 
 class AddDetailView extends AbstractRequest
 {
@@ -24,24 +25,24 @@ class AddDetailView extends AbstractRequest
      * @return null|object
      */
     public function findExist()
-   {
-       $event = $this->getModel()->getEventRepository()->findBy(['name' => __CLASS__ ]);
-       // If event name already not exist
-       if (!$event) {
-           $event = new Event();
-           $event->setName(__CLASS__);
-           $this->getModel()->getEventRepository()->saveEntity($event);
-       }
+    {
+        $event = $this->getModel()->getEventRepository()->findBy(['name' => __CLASS__]);
+        // If event name already not exist
+        if (!$event) {
+            $event = new Event();
+            $event->setName(__CLASS__);
+            $this->getModel()->getEventRepository()->saveEntity($event);
+        }
 
-       $this->addOption('event', $event);
+        $this->addOption('event', $event);
 
-       return false;
-   }
+        return false;
+    }
 
     /**
      * Just return new entity
      *
-     * @return EventLog
+     * @return Item
      */
     public function newEntity()
    {

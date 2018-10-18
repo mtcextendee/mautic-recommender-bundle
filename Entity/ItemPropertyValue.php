@@ -29,7 +29,7 @@ class ItemPropertyValue
     protected $property;
 
     /**
-     * @var EventLog
+     * @var Item
      */
     protected $item;
 
@@ -70,11 +70,12 @@ class ItemPropertyValue
      */
     public static function loadApiMetadata(ApiMetadataDriver $metadata)
     {
-        $metadata->setGroupPrefix('item')
+        $metadata->setGroupPrefix('value')
             ->addListProperties(
                 [
                     'id',
                     'name',
+                    'item',
                     'type',
                     'value',
                 ]
@@ -109,11 +110,11 @@ class ItemPropertyValue
     }
 
     /**
-     * @param EventLog $item
+     * @param Item $item
      *
      * @return ItemPropertyValue
      */
-    public function setItem(EventLog $item)
+    public function setItem(Item $item)
     {
         $this->item = $item;
 
@@ -121,7 +122,7 @@ class ItemPropertyValue
     }
 
     /**
-     * @return EventLog
+     * @return Item
      */
     public function getItem()
     {
@@ -149,11 +150,11 @@ class ItemPropertyValue
     }
 
     /**
-     * @param EventLog     $item
+     * @param Item         $item
      * @param ItemProperty $property
      * @param string       $value
      */
-    public function setValues(EventLog $item, ItemProperty $property, $value)
+    public function setValues(Item $item, ItemProperty $property, $value)
     {
         $this->item     = $item;
         $this->property = $property;

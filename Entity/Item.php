@@ -17,7 +17,7 @@ use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\LeadBundle\Entity\Lead;
 
-class EventLog
+class Item
 {
     /**
      * @var int
@@ -25,19 +25,9 @@ class EventLog
     protected $id;
 
     /**
-     * @var string
+     * @var
      */
-    protected $item;
-
-    /**
-     * @var Event
-     */
-    protected $event;
-
-    /**
-     * @var Lead
-     */
-    protected $lead;
+    protected $itemId;
 
     /*
      * @var \DateTime
@@ -56,28 +46,14 @@ class EventLog
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->setTable('recommender_event_log')
+        $builder->setTable('recommender_item')
             ->setCustomRepositoryClass(ItemRepository::class)
             ->addIndex(['item_id'], 'item_id_index')
-            ->addIndex(['event_id'], 'event_id_index')
             ->addId()
+            ->addNamedField('itemId', 'text', 'item_id')
             ->addNamedField('dateAdded', 'datetime', 'date_added');
 
 
-        $builder->createManyToOne(
-            'event',
-            'MauticPlugin\MauticRecommenderBundle\Entity\Event'
-        )->addJoinColumn('event_id', 'id', true, false, 'CASCADE')->build();
-
-        $builder->createManyToOne(
-            'item',
-            'MauticPlugin\MauticRecommenderBundle\Entity\Item'
-        )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
-
-        $builder->createManyToOne(
-            'lead',
-            'Mautic\LeadBundle\Entity\Lead'
-        )->addJoinColumn('lead_id', 'id', true, false, 'CASCADE')->build();
     }
 
     /**
@@ -87,13 +63,11 @@ class EventLog
      */
     public static function loadApiMetadata(ApiMetadataDriver $metadata)
     {
-        $metadata->setGroupPrefix('event_log')
+        $metadata->setGroupPrefix('item')
             ->addListProperties(
                 [
                     'id',
                     'item_id',
-                    'event_id',
-                    'lead_id',
                     'dateAdded',
                 ]
             )
@@ -111,13 +85,13 @@ class EventLog
     }
 
     /**
-     * @param string $item
+     * @param string $itemId
      *
-     * @return EventLog
+     * @return Item
      */
-    public function setItem(string $item)
+    public function setItemId(string $itemId)
     {
-        $this->item = $item;
+        $this->itemId = $itemId;
 
         return $this;
     }
@@ -125,15 +99,15 @@ class EventLog
     /**
      * @return string
      */
-    public function getItem()
+    public function getItemId()
     {
-        return $this->item;
+        return $this->itemId;
     }
 
     /**
      * @param \DateTime $dateAdded
      *
-     * @return EventLog
+     * @return Item
      */
     public function setDateAdded(\DateTime $dateAdded)
     {
@@ -148,45 +122,5 @@ class EventLog
     public function getDateAdded()
     {
         return $this->dateAdded;
-    }
-
-    /**
-     * @param Event $event
-     *
-     * @return EventLog
-     */
-    public function setEvent(Event $event)
-    {
-        $this->event = $event;
-
-        return $this;
-    }
-
-    /**
-     * @return Event
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * @param Lead $lead
-     *
-     * @return EventLog
-     */
-    public function setLead(Lead $lead)
-    {
-        $this->lead = $lead;
-
-        return $this;
-    }
-
-    /**
-     * @return Lead
-     */
-    public function getLead()
-    {
-        return $this->lead;
     }
 }

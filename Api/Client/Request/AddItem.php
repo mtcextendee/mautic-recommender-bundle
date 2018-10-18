@@ -12,7 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
-use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
+use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 
 class AddItem extends AbstractRequest
 {
@@ -30,11 +30,11 @@ class AddItem extends AbstractRequest
     /**
      * Just return new entity
      *
-     * @return EventLog
+     * @return Item
      */
     public function newEntity()
    {
-       return new EventLog();
+       return new Item();
    }
 
     /**
