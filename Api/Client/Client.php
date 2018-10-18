@@ -77,6 +77,9 @@ class Client
             case "AddItemPropertyValue":
                 $loader = new $class($options, $this->itemPropertyValueModel);
                 break;
+            case "AddDetailView":
+                $loader = new $class($options, $this->itemPropertyValueModel);
+                break;
         }
 
         $loader->execute();

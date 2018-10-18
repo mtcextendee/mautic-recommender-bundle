@@ -164,16 +164,6 @@ class ApiCommands
         return [];
     }
 
-    public function callApi($requests)
-    {
-        $this->setCacheId($requests);
-
-        if (!$this->hasCommandOutput()) {
-            $this->setCommandOutput($this->recommenderApi->getClient()->send($requests));
-        }
-        return $this->getCommandOutput();
-    }
-
     /**
      * @return mixed
      */
@@ -201,15 +191,6 @@ class ApiCommands
         $commandOutput
     ) {
         $this->commandOutput[$this->getCacheId()] = $commandOutput;
-    }
-
-    /**
-     * @return array
-     */
-    public function getInteractionRequiredParam(
-        $key
-    ) {
-        return $this->interactionRequiredParams[$key];
     }
 
     public function getCommandResult()
