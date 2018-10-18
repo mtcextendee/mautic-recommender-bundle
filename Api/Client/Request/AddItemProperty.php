@@ -40,8 +40,9 @@ class AddItemProperty extends AbstractRequest
      */
     public function getRepo()
     {
-        return $this->getItemModel()->getItemPropertyRepository();
+        return $this->getModel()->getItemPropertyRepository();
     }
+
     /**
      * @return array
      */

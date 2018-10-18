@@ -18,26 +18,15 @@ use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\LeadBundle\Entity\Lead;
 
 /**
- * Class RecommenderEventLog
+ * Class Event
  * @package MauticPlugin\MauticRecommenderBundle\Entity
  */
-class RecommenderEventLog
+class Event
 {
     /**
      * @var int
      */
     protected $id;
-
-    /**
-     * @var Lead
-     */
-    protected $lead;
-
-    /**
-     * @var Item
-     */
-    // protected $item_id;
-
     /**
      * @var string
      */
@@ -47,11 +36,6 @@ class RecommenderEventLog
      * @var \DateTime
      */
     protected $dateAdded;
-
-    /**
-     * @var array
-     */
-    private $properties = [];
 
     public function __construct()
     {
@@ -64,19 +48,11 @@ class RecommenderEventLog
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->setTable('recommender_event_log')
-            ->setCustomRepositoryClass(RecommenderEventsLogRepository::class)
-            ->addIndex(['lead_id'], 'lead_id_index')
-          //  ->addIndex(['item_id'], 'item_id_index')
+        $builder->setTable('recommender_event')
+            ->setCustomRepositoryClass(RecommenderEventRepository::class)
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
-            ->addNamedField('dateAdded', Type::DATETIME, 'date_added')
-            ->addNullableField('properties', Type::JSON_ARRAY);
-
-        $builder->createManyToOne('lead', Lead::class)
-            ->addJoinColumn('lead_id', 'id', true, false, 'CASCADE')
-            ->inversedBy('eventLog')
-            ->build();
+            ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
     }
 
     /**
@@ -90,10 +66,8 @@ class RecommenderEventLog
             ->addListProperties(
                 [
                     'id',
-                    'leadId',
                     'name',
                     'dateAdded',
-                    'properties',
                 ]
             )
             ->build();
@@ -107,30 +81,6 @@ class RecommenderEventLog
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set lead.
-     *
-     * @param Lead $lead
-     *
-     * @return LeadEventLog
-     */
-    public function setLead(Lead $lead)
-    {
-        $this->lead = $lead;
-
-        return $this;
-    }
-
-    /**
-     * Get lead.
-     *
-     * @return Lead
-     */
-    public function getLead()
-    {
-        return $this->lead;
     }
 
     /**
@@ -155,45 +105,6 @@ class RecommenderEventLog
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set properties.
-     *
-     * @param array $properties
-     *
-     * @return LeadEventLog
-     */
-    public function setProperties(array $properties)
-    {
-        $this->properties = $properties;
-
-        return $this;
-    }
-
-    /**
-     * Set one property into the properties array.
-     *
-     * @param string $key
-     * @param string $value
-     *
-     * @return LeadEventLog
-     */
-    public function addProperty($key, $value)
-    {
-        $this->properties[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get properties.
-     *
-     * @return array
-     */
-    public function getProperties()
-    {
-        return $this->properties;
     }
 
     /**

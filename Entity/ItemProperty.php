@@ -125,7 +125,7 @@ class ItemProperty
      *
      * @return ItemProperty
      */
-    public function setValue(string $value)
+    public function setValue($value)
     {
         $this->value = $value;
 
@@ -145,7 +145,7 @@ class ItemProperty
     /**
      * @param string $type
      *
-     * @return Item
+     * @return EventLog
      */
     public function setType($type)
     {
@@ -166,7 +166,7 @@ class ItemProperty
     /**
      * @param \DateTime $dateAdded
      *
-     * @return Item
+     * @return EventLog
      */
     public function setDateAdded(\DateTime $dateAdded)
     {

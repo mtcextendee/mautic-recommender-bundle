@@ -17,7 +17,7 @@ use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\LeadBundle\Entity\Lead;
 
-class Item
+class EventLog
 {
     /**
      * @var int
@@ -85,7 +85,7 @@ class Item
     /**
      * @param string $itemId
      *
-     * @return Item
+     * @return EventLog
      */
     public function setItemId(string $itemId)
     {
@@ -105,7 +105,7 @@ class Item
     /**
      * @param \DateTime $dateAdded
      *
-     * @return Item
+     * @return EventLog
      */
     public function setDateAdded(\DateTime $dateAdded)
     {

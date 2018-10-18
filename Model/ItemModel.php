@@ -25,7 +25,7 @@ use MauticPlugin\MauticMTCPilotBundle\Entity\MTCPilotRepository;
 use MauticPlugin\MauticMTCPilotBundle\Entity\Stat;
 use MauticPlugin\MauticMTCPilotBundle\Event\MTCPilotEvent;
 use Mautic\LeadBundle\Entity\Lead;
-use MauticPlugin\MauticRecommenderBundle\Entity\Item;
+use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderRepository;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderEvent;
@@ -36,8 +36,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ItemModel extends AbstractCommonModel
 {
-    use ItemModelTrait;
-
     /**
      * Get this model's repository.
      *
@@ -64,11 +62,11 @@ class ItemModel extends AbstractCommonModel
         return $this->em->getRepository('MauticRecommenderBundle:ItemPropertyValue');
     }
     /**
-     * @return Item
+     * @return EventLog
      */
     public function newEntity()
     {
-        return new Item();
+        return new EventLog();
     }
 
 }

@@ -12,9 +12,10 @@
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
+use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
 
-class AddItem extends AbstractRequest
+class AddDetailView extends AbstractRequest
 {
 
     /**
@@ -24,7 +25,17 @@ class AddItem extends AbstractRequest
      */
     public function findExist()
    {
-       return $this->getRepo()->findOneBy(['itemId' => $this->getOption()['itemId']]);
+       $event = $this->getModel()->getEventRepository()->findBy(['name' => __CLASS__ ]);
+       // If event name already not exist
+       if (!$event) {
+           $event = new Event();
+           $event->setName(__CLASS__);
+           $this->getModel()->getEventRepository()->saveEntity($event);
+       }
+
+       $this->addOption('event', $event);
+
+       return false;
    }
 
     /**

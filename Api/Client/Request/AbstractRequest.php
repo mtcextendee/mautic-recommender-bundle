@@ -11,8 +11,8 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
-use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
-use MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository;
+use Mautic\CampaignBundle\Model\EventModel;
+use MauticPlugin\MauticRecommenderBundle\Model\EventLogModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -23,41 +23,69 @@ abstract class AbstractRequest
     protected $repo;
 
     /**
-     * @var ItemModel
+     * @var
      */
-    private $itemModel;
+    private $model;
 
 
     /**
      * ItemRequest constructor.
      *
-     * @param array     $options
-     * @param ItemModel $itemModel
+     * @param array $options
+     * @param $model
      */
-    public function __construct(array $options, ItemModel $itemModel)
+    public function __construct(array $options, $model)
     {
         $this->options = $options;
-        $this->itemModel = $itemModel;
+        $this->model   = $model;
     }
 
 
-    abstract protected function findExist();
-    abstract protected function newEntity();
-
-
     /**
-     * @param       $option
-     *
      * @return bool
      */
-    protected function add($option)
+    protected function findExist(){
+        return false;
+    }
+
+    protected function newEntity(){ }
+
+    /**
+     * @param bool $save
+     *
+     * @return array
+     */
+    public function execute($save = true)
+    {
+        $items = [];
+        foreach ($this->getOptions() as $option) {
+            $this->setOption($option);
+            $add = $this->add();
+            if (is_array($add)) {
+                $items = array_merge($items, $add);
+            }else{
+                $items[] = $add;
+            }
+        }
+        if (!empty($items)) {
+            if ($save) {
+                $this->getRepo()->saveEntities(array_filter($items));
+            }else{
+                return array_filter($items);
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function add()
     {
         $item = $this->findExist();
         if ($item) {
             return false;
         }
-
-        return $this->setValues($this->newEntity(), $option);
+        return $this->setValues($this->newEntity(), $this->getOption());
     }
 
 
@@ -86,29 +114,20 @@ abstract class AbstractRequest
     }
 
     /**
-     *
-     */
-    public function execute()
-    {
-        $items = [];
-        foreach ($this->getOptions() as $option) {
-            $this->setOption($option);
-            $add = $this->add($option);
-            if ($add) {
-                $items[] = $add;
-            }
-        }
-        if (!empty($items)) {
-            $this->getRepo()->saveEntities($items);
-        }
-    }
-
-    /**
      * @return array
      */
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function addOption($key, $value)
+    {
+        $this->options[$key] = $value;
     }
 
     /**
@@ -120,11 +139,11 @@ abstract class AbstractRequest
     }
 
     /**
-     * @return ItemModel
+     * @return ItemModel|EventLogModel
      */
-    public function getItemModel()
+    public function getModel()
     {
-        return $this->itemModel;
+        return $this->model;
     }
 
     /**

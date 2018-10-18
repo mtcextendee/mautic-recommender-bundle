@@ -29,7 +29,7 @@ class ItemPropertyValue
     protected $property;
 
     /**
-     * @var Item
+     * @var EventLog
      */
     protected $item;
 
@@ -109,11 +109,11 @@ class ItemPropertyValue
     }
 
     /**
-     * @param Item $item
+     * @param EventLog $item
      *
      * @return ItemPropertyValue
      */
-    public function setItem(Item $item)
+    public function setItem(EventLog $item)
     {
         $this->item = $item;
 
@@ -121,7 +121,7 @@ class ItemPropertyValue
     }
 
     /**
-     * @return Item
+     * @return EventLog
      */
     public function getItem()
     {
@@ -146,5 +146,17 @@ class ItemPropertyValue
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param EventLog     $item
+     * @param ItemProperty $property
+     * @param string       $value
+     */
+    public function setValues(EventLog $item, ItemProperty $property, $value)
+    {
+        $this->item     = $item;
+        $this->property = $property;
+        $this->value    = $value;
     }
 }

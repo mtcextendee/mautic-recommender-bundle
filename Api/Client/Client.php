@@ -11,10 +11,10 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client;
 
+use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommender\Exception\ApiEndpointNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
-use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel;
-use MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyValueModel;
+use MauticPlugin\MauticRecommenderBundle\Model\EventLogModel;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class Client
@@ -27,28 +27,28 @@ class Client
     private $itemModel;
 
     /**
-     * @var ItemPropertyModel
+     * @var EventLogModel
      */
-    private $itemPropertyModel;
+    private $eventLogModel;
 
     /**
-     * @var ItemPropertyValueModel
+     * @var LeadModel
      */
-    private $itemPropertyValueModel;
+    private $leadModel;
 
     /**
      * Client constructor.
      *
-     * @param ItemModel              $itemModel
-     * @param ItemPropertyModel      $itemPropertyModel
-     * @param ItemPropertyValueModel $itemPropertyValueModel
+     * @param ItemModel                    $itemModel
+     * @param EventLogModelc|EventLogModel $eventLogModel
+     * @param LeadModel                    $leadModel
      */
-    public function __construct(ItemModel $itemModel, ItemPropertyModel $itemPropertyModel, ItemPropertyValueModel $itemPropertyValueModel)
+    public function __construct(ItemModel $itemModel, EventLogModelc $eventLogModel, LeadModel $leadModel)
     {
         $this->propertyAccessor = new PropertyAccessor();
-        $this->itemModel = $itemModel;
-        $this->itemPropertyModel = $itemPropertyModel;
-        $this->itemPropertyValueModel = $itemPropertyValueModel;
+        $this->itemModel        = $itemModel;
+        $this->eventLogModel    = $eventLogModel;
+        $this->leadModel = $leadModel;
     }
 
     /**
@@ -69,16 +69,12 @@ class Client
         }
         switch ($endpoint) {
             case "AddItem":
-                $loader = new $class($options, $this->itemModel);
-                break;
             case "AddItemProperty":
-                $loader = new $class($options, $this->itemModel);
-                break;
             case "AddItemPropertyValue":
                 $loader = new $class($options, $this->itemModel);
                 break;
             case "AddDetailView":
-                $loader = new $class($options, $this->itemModel);
+                $loader = new $class($options, $this->eventLogModel);
                 break;
         }
 
@@ -105,6 +101,11 @@ class Client
             }
             if (!isset($option['itemId'])) {
                 unset($options[$key]);
+                continue;
+            }
+
+            if (!isset($option['userId'])) {
+               // $option['userId'] = $this->leadModel->getCurrentLead();
             }
         }
     }

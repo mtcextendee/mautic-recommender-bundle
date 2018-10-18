@@ -79,11 +79,8 @@ return [
             'mautic.recommender.model.item' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemModel::class,
             ],
-            'mautic.recommender.model.item.property' => [
-                'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyModel::class,
-            ],
-            'mautic.recommender.model.item.property.value' => [
-                'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemPropertyValueModel::class,
+            'mautic.recommender.model.event.log' => [
+                'class' => \MauticPlugin\MauticRecommenderBundle\Model\EventLogModel::class,
             ],
         ],
         'forms'        => [
@@ -146,13 +143,12 @@ return [
             ],
         ],
         'other'        => [
-
             'mautic.recommender.client'=> [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Api\Client\Client::class,
                 'arguments' => [
                     'mautic.recommender.model.item',
-                    'mautic.recommender.model.item.property',
-                    'mautic.recommender.model.item.property.value',
+                    'mautic.recommender.model.event.log',
+                    'mautic.lead.model.lead'
                 ],
             ],
             'mautic.recommender.helper'                      => [

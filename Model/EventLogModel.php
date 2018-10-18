@@ -32,7 +32,22 @@ use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
-class RecommenderEventLogModel extends AbstractCommonModel
+class EventLogModel extends AbstractCommonModel
 {
+    /**
+     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\EventLogRepository
+     */
+    public function getRepository()
+    {
+        return $this->em->getRepository('MauticRecommenderBundle:EventLog');
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\EventRepository
+     */
+    public function getEventRepository()
+    {
+        return $this->em->getRepository('MauticRecommenderBundle:Event');
+    }
 
 }
