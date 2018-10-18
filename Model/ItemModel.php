@@ -49,6 +49,21 @@ class ItemModel extends AbstractCommonModel
     }
 
     /**
+     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyRepository
+     */
+    public function getItemPropertyRepository()
+    {
+        return $this->em->getRepository('MauticRecommenderBundle:ItemProperty');
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValueRepository
+     */
+    public function getItemPropertyValueRepository()
+    {
+        return $this->em->getRepository('MauticRecommenderBundle:ItemPropertyValue');
+    }
+    /**
      * @return Item
      */
     public function newEntity()

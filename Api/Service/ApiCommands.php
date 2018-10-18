@@ -103,7 +103,7 @@ class ApiCommands
     {
         $this->recommenderApi->getClient()->send('AddItem', $items);
         $this->recommenderApi->getClient()->send('AddItemProperty', $items);
-        $this->recommenderApi->getClient()->send('AddItemPropertyValue', $items);
+        //$this->recommenderApi->getClient()->send('AddItemPropertyValue', $items);
     }
 
     /**

@@ -12,18 +12,37 @@
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
+use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 
-class AddItem extends Item
+class AddItem extends AbstractRequest
 {
-    protected function add($option)
-    {
-        $item = $this->repo->findOneBy(['itemId' => $option['itemId']]);
-        if ($item) {
-            return false;
-        }
 
-        return $this->model->setValues(null, $option);
-    }
+    /**
+     * Find exist entity
+     *
+     * @return null|object
+     */
+    public function findExist()
+   {
+       return $this->getRepo()->findOneBy(['itemId' => $this->getOption()['itemId']]);
+   }
 
+    /**
+     * Just return new entity
+     *
+     * @return Item
+     */
+    public function newEntity()
+   {
+       return new Item();
+   }
+
+    /**
+     * @return \MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository
+     */
+    public function getRepo()
+   {
+       return $this->getItemModel()->getRepository();
+   }
 }
 

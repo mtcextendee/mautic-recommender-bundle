@@ -72,13 +72,13 @@ class Client
                 $loader = new $class($options, $this->itemModel);
                 break;
             case "AddItemProperty":
-                $loader = new $class($options, $this->itemPropertyModel);
+                $loader = new $class($options, $this->itemModel);
                 break;
             case "AddItemPropertyValue":
-                $loader = new $class($options, $this->itemPropertyValueModel);
+                $loader = new $class($options, $this->itemModel);
                 break;
             case "AddDetailView":
-                $loader = new $class($options, $this->itemPropertyValueModel);
+                $loader = new $class($options, $this->itemModel);
                 break;
         }
 

@@ -30,21 +30,7 @@ class ItemPropertyValueModel extends AbstractCommonModel
         return $this->em->getRepository('MauticRecommenderBundle:ItemPropertyValue');
     }
 
-    /**
-     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyRepository
-     */
-    public function getItemPropertyRepository()
-    {
-        return $this->em->getRepository('MauticRecommenderBundle:ItemProperty');
-    }
 
-    /**
-     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository
-     */
-    public function getItemRepository()
-    {
-        return $this->em->getRepository('MauticRecommenderBundle:Item');
-    }
 
 
 

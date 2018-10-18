@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ItemRepository extends CommonRepository
 {
@@ -23,4 +24,5 @@ class ItemRepository extends CommonRepository
     {
         return 'ri';
     }
+
 }

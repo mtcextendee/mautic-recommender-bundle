@@ -36,19 +36,19 @@ class AddItemPropertyValue extends PropertyValue
             }
             /** @var ItemPropertyValue $itemPropertyValue */
             $itemPropertyValue = $this->repo->findOneBy(['item' => $item, 'property' => $property]);
-            if (!$itemPropertyValue) {
-                $data             = [];
-                $data['item']     = $item;
-                $data['property'] = $property;
-                $data['value']    = $value;
-                $entitiesToSave[] = $this->model->setValues(null, $data);
-            } elseif ($value != $itemPropertyValue->getValue()) {
-                $itemPropertyValue->setValue($value);
-                $entitiesToSave[] = $itemPropertyValue;
-            }
+        if (!$itemPropertyValue) {
+            $data             = [];
+            $data['item']     = $item;
+            $data['property'] = $property;
+            $data['value']    = $value;
+            $entitiesToSave[] = $this->model->setValues(null, $data);
+        } elseif ($value != $itemPropertyValue->getValue()) {
+            $itemPropertyValue->setValue($value);
+            $entitiesToSave[] = $itemPropertyValue;
         }
+    }
 
-        return $entitiesToSave;
+return $entitiesToSave;
     }
 
 
