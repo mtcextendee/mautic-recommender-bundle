@@ -109,9 +109,8 @@ class Client
                 unset($option['userId']);
             }
 
-
-            if (!isset($option['itemId'])) {
-                $option['item'] = $this->itemModel->getRepository()->findBy(['item_id' => $option['itemId']]);
+            if (isset($option['itemId'])) {
+                $option['item'] = $this->itemModel->getRepository()->findBy(['itemId' => $option['itemId']]);
                 unset($option['itemId']);
             }
         }

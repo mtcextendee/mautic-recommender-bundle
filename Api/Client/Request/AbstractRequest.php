@@ -127,7 +127,7 @@ abstract class AbstractRequest
      */
     public function addOption($key, $value)
     {
-        $this->options[$key] = $value;
+        $this->option[$key] = $value;
     }
 
     /**
