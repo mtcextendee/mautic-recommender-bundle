@@ -13,8 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Api\Client;
 
 use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommender\Exception\ApiEndpointNotFoundException;
-use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
-use MauticPlugin\MauticRecommenderBundle\Model\EventLogModel;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class Client
@@ -22,33 +21,27 @@ class Client
     private $propertyAccessor;
 
     /**
-     * @var ItemModel
-     */
-    private $itemModel;
-
-    /**
-     * @var EventLogModel
-     */
-    private $eventLogModel;
-
-    /**
      * @var LeadModel
      */
     private $leadModel;
 
     /**
+     * @var RecommenderClientModel
+     */
+    private $clientModel;
+
+    /**
      * Client constructor.
      *
-     * @param ItemModel                    $itemModel
-     * @param EventLogModel $eventLogModel
-     * @param LeadModel                    $leadModel
+     * @param RecommenderClientModel $clientModel
+     * @param LeadModel   $leadModel
+     *
      */
-    public function __construct(ItemModel $itemModel, EventLogModel $eventLogModel, LeadModel $leadModel)
+    public function __construct(RecommenderClientModel $clientModel, LeadModel $leadModel)
     {
         $this->propertyAccessor = new PropertyAccessor();
-        $this->itemModel        = $itemModel;
-        $this->eventLogModel    = $eventLogModel;
         $this->leadModel = $leadModel;
+        $this->clientModel = $clientModel;
     }
 
     /**
@@ -69,16 +62,21 @@ class Client
         }
         switch ($endpoint) {
             case "AddItem":
-            case "AddItemProperty":
+            case "AddProperty":
             case "AddItemPropertyValue":
-                $loader = new $class($options, $this->itemModel);
+            case "AddEvent":
+            case "AddEventLog":
+            case "AddEventLogPropertyValue":
+                $loader = new $class($options, $this->clientModel, $this);
                 break;
             case "AddDetailView":
-                $loader = new $class($options, $this->eventLogModel);
+                $this->mapOptionsToEntity($options, ['contact', 'item', 'name'], $endpoint);
+                $loader = new $class($options, $this->clientModel, $this);
                 break;
         }
 
         $loader->execute();
+        return $loader;
     }
 
     /**
@@ -103,13 +101,29 @@ class Client
                 unset($options[$key]);
                 continue;
             }
+        }
+    }
 
-            if (isset($option['userId'])) {
+    /**
+     * @param array  $options
+     * @param array  $entities
+     * @param string $endpoint
+     *
+     * @return array
+     */
+    private function mapOptionsToEntity(array &$options, $entities = [], $endpoint = '')
+    {
+        foreach ($options as $key => &$option) {
+
+            if (!isset($option['name']) && in_array('name', $entities)) {
+                $option['name'] = $endpoint;
+            }
+            if (isset($option['userId']) && in_array('contact', $entities)) {
                 $option['lead'] = $this->leadModel->getEntity($option['userId']);
             }
 
-            if (isset($option['itemId'])) {
-                $option['item'] = $this->itemModel->getRepository()->findOneBy(['itemId' => $option['itemId']]);
+            if (isset($option['itemId']) && in_array('item', $entities)) {
+                $option['item'] = $this->clientModel->getRepository()->findOneBy(['itemId' => $option['itemId']]);
             }
         }
     }

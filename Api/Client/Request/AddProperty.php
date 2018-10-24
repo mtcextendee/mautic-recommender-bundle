@@ -11,14 +11,14 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
-use MauticPlugin\MauticRecommenderBundle\Entity\ItemProperty;
+use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 
-class AddItemProperty extends AbstractRequest
+class AddProperty extends AbstractRequest
 {
     /**
      * Find exist entity
      *
-     * @return null|object
+     * @return bool|object
      */
     public function findExist()
     {
@@ -28,19 +28,19 @@ class AddItemProperty extends AbstractRequest
     /**
      * Just return new entity
      *
-     * @return Item
+     * @return Property
      */
     public function newEntity()
     {
-        return new ItemProperty();
+        return new Property();
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyRepository
+     * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\PropertyRepository
      */
     public function getRepo()
     {
-        return $this->getModel()->getItemPropertyRepository();
+        return $this->getModel()->getPropertyRepository();
     }
 
     /**
@@ -48,6 +48,30 @@ class AddItemProperty extends AbstractRequest
      */
     public function getOptions(){
         return $this->parseProperties($this->options);
+    }
+
+    /**
+     * Find ItemProperty entity by name
+     *
+     * @param $name
+     *
+     * @return null
+     */
+    public function findPropertyByName($name)
+    {
+        static $properties;
+
+        if (!isset($properties)) {
+            $properties = $this->getModel()->getPropertyRepository()->findAll();
+        }
+        /** @var Property $propertyEntity */
+        foreach ($properties as $propertyEntity) {
+            if ($propertyEntity->getName() === $name) {
+                return $propertyEntity;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -64,7 +88,9 @@ class AddItemProperty extends AbstractRequest
 
         foreach ($items as $item) {
             foreach ($item as $key => $value) {
-                if (is_array($value)) {
+                if (is_object($value)) {
+                    continue;
+                }else if (is_array($value)) {
                     if (count($value) == count($value, COUNT_RECURSIVE)) {
                         $item[$key] = json_encode(array_values($value));
                         unset($item[$key]);

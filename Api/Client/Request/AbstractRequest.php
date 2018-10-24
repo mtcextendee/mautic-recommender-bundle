@@ -12,8 +12,10 @@
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 use Mautic\CampaignBundle\Model\EventModel;
+use MauticPlugin\MauticRecommenderBundle\Api\Client\Client;
 use MauticPlugin\MauticRecommenderBundle\Model\EventLogModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 abstract class AbstractRequest
@@ -27,17 +29,29 @@ abstract class AbstractRequest
      */
     private $model;
 
+    /**
+     * @var Client
+     */
+    private $client;
+
 
     /**
      * ItemRequest constructor.
      *
-     * @param array $options
-     * @param $model
+     * @param array  $options
+     * @param        $model
+     * @param Client $client
      */
-    public function __construct(array $options, $model)
+    public function __construct(array $options, $model, Client $client)
     {
         $this->options = $options;
         $this->model   = $model;
+        $this->client = $client;
+    }
+
+    protected function getContext()
+    {
+        return $this;
     }
 
 
@@ -71,11 +85,14 @@ abstract class AbstractRequest
         if (!empty($items)) {
             if ($save) {
                 $this->getRepo()->saveEntities($items);
+
             }else{
                 return array_filter($items);
             }
         }
     }
+
+
 
     /**
      * @return bool
@@ -140,7 +157,7 @@ abstract class AbstractRequest
     }
 
     /**
-     * @return ItemModel|EventLogModel
+     * @return RecommenderClientModel
      */
     public function getModel()
     {
@@ -161,6 +178,14 @@ abstract class AbstractRequest
     public function setOption(array $option)
     {
         $this->option = $option;
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient(): Client
+    {
+        return $this->client;
     }
 
 }

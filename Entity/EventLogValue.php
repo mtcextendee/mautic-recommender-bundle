@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 
-class ItemPropertyValue
+class EventLogValue
 {
     /**
      * @var int
@@ -29,9 +29,9 @@ class ItemPropertyValue
     protected $property;
 
     /**
-     * @var Item
+     * @var EventLog
      */
-    protected $item;
+    protected $eventLog;
 
     /**
      * @var string
@@ -45,15 +45,15 @@ class ItemPropertyValue
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->setTable('recommender_item_property_value')
-            ->setCustomRepositoryClass(ItemPropertyValueRepository::class)
+        $builder->setTable('recommender_event_log_property_value')
+            ->setCustomRepositoryClass(EventLogValueRepository::class)
             ->addNamedField('value', Type::TEXT, 'value', false)
             ->addId();
 
         $builder->createManyToOne(
-            'item',
-            'MauticPlugin\MauticRecommenderBundle\Entity\Item'
-        )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
+            'eventLog',
+            'MauticPlugin\MauticRecommenderBundle\Entity\EventLog'
+        )->addJoinColumn('event_log_id', 'id', true, false, 'CASCADE')->build();
 
 
         $builder->createManyToOne(
@@ -75,7 +75,7 @@ class ItemPropertyValue
                 [
                     'id',
                     'name',
-                    'item',
+                    'eventLog',
                     'type',
                     'value',
                 ]
@@ -110,26 +110,6 @@ class ItemPropertyValue
     }
 
     /**
-     * @param Item $item
-     *
-     * @return ItemPropertyValue
-     */
-    public function setItem(Item $item)
-    {
-        $this->item = $item;
-
-        return $this;
-    }
-
-    /**
-     * @return Item
-     */
-    public function getItem()
-    {
-        return $this->item;
-    }
-
-    /**
      * @param string $value
      *
      * @return ItemPropertyValue
@@ -150,14 +130,34 @@ class ItemPropertyValue
     }
 
     /**
-     * @param Item     $item
+     * @param EventLog     $eventLog
      * @param Property $property
      * @param string   $value
      */
-    public function setValues(Item $item, Property $property, $value)
+    public function setValues(EventLog $eventLog, Property $property, $value)
     {
-        $this->item     = $item;
+        $this->eventLog     = $eventLog;
         $this->property = $property;
         $this->value    = $value;
+    }
+
+    /**
+     * @param EventLog $eventLog
+     *
+     * @return EventLogValue
+     */
+    public function setEventLog(EventLog $eventLog): EventLogValue
+    {
+        $this->eventLog = $eventLog;
+
+        return $this;
+    }
+
+    /**
+     * @return EventLog
+     */
+    public function getEventLog(): EventLog
+    {
+        return $this->eventLog;
     }
 }

@@ -33,7 +33,7 @@ class Event
     protected $name;
 
     /** @var  int */
-    protected $weight;
+    protected $weight = 0;
 
     /**
      * @var \DateTime

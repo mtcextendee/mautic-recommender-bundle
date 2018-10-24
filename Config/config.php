@@ -76,6 +76,9 @@ return [
             'mautic.recommender.model.recommender' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel::class,
             ],
+            'mautic.recommender.model.client' => [
+                'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel::class,
+            ],
             'mautic.recommender.model.item' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemModel::class,
             ],
@@ -146,8 +149,7 @@ return [
             'mautic.recommender.client'=> [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Api\Client\Client::class,
                 'arguments' => [
-                    'mautic.recommender.model.item',
-                    'mautic.recommender.model.event.log',
+                    'mautic.recommender.model.client',
                     'mautic.lead.model.lead'
                 ],
             ],

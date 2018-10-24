@@ -15,7 +15,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 
 
-class ItemPropertyRepository extends CommonRepository
+class PropertyRepository extends CommonRepository
 {
     /**
      * @return string

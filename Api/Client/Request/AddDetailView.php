@@ -26,16 +26,9 @@ class AddDetailView extends AbstractRequest
      */
     public function findExist()
     {
-        $event = $this->getModel()->getEventRepository()->findOneBy(['name' => __CLASS__]);
-        // If event name already not exist
-        if (!$event) {
-            $event = new Event();
-            $event->setName(__CLASS__);
-            $this->getModel()->getEventRepository()->saveEntity($event);
-        }
-
-        $this->addOption('event', $event);
-
+        $addEvent = $this->getClient()->send('AddEvent', $this->getOptions());
+        /** @var AddEventLog $addEventLog */
+        $addEventLog = $this->getClient()->send('AddEventLog', $this->getOptions());
         return false;
     }
 
@@ -49,12 +42,9 @@ class AddDetailView extends AbstractRequest
        return new EventLog();
    }
 
-    /**
-     * @return \MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository
-     */
     public function getRepo()
    {
-       return $this->getModel()->getRepository();
+       return $this->getModel()->getEventLogRepository();
    }
 }
 

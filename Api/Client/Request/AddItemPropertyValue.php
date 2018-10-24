@@ -11,7 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
-use MauticPlugin\MauticRecommenderBundle\Entity\ItemProperty;
+use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
 
 class AddItemPropertyValue extends AbstractRequest
@@ -48,13 +48,18 @@ class AddItemPropertyValue extends AbstractRequest
         $currentEntities = $this->getRepo()->findBy(['item' => $item]);
         $items           = [];
         $deleteItems     = [];
+
+        // All properties check
+        /** @var AddProperty $addProperty */
+        $addProperty = $this->getClient()->send('AddProperty', $options);
         foreach ($options as $propertyName => $value) {
-            if(is_array($value))
+            if(is_array($value) || is_object($value))
             {
                 continue;
             }
-            $property = $this->findPropertyByName($propertyName);
-            if ($property === null) {
+
+            $property = $addProperty->findPropertyByName($propertyName);
+            if (!$property) {
                 continue;
             }
             /** @var ItemPropertyValue $itemPropertyValue */
@@ -79,30 +84,6 @@ class AddItemPropertyValue extends AbstractRequest
         $this->getRepo()->deleteEntities($deleteItems);
 
         return $items;
-    }
-
-    /**
-     * Find ItemProperty entity by name
-     *
-     * @param $name
-     *
-     * @return null
-     */
-    private function findPropertyByName($name)
-    {
-        static $properties;
-
-        if (!isset($properties)) {
-            $properties = $this->getModel()->getItemPropertyRepository()->findAll();
-        }
-        /** @var ItemProperty $propertyEntity */
-        foreach ($properties as $propertyEntity) {
-            if ($propertyEntity->getName() === $name) {
-                return $propertyEntity;
-            }
-        }
-
-        return null;
     }
 }
 

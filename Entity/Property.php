@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 
-class ItemProperty
+class Property
 {
     /**
      * @var int
@@ -57,8 +57,8 @@ class ItemProperty
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->setTable('recommender_item_property')
-            ->setCustomRepositoryClass(ItemPropertyRepository::class)
+        $builder->setTable('recommender_property')
+            ->setCustomRepositoryClass(PropertyRepository::class)
             ->addIndex(['name'], 'name_index')
             ->addId()
             ->addNamedField('name', 'string', 'name')
@@ -123,7 +123,7 @@ class ItemProperty
     /**
      * @param string $value
      *
-     * @return ItemProperty
+     * @return Property
      */
     public function setValue($value)
     {
