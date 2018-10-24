@@ -67,9 +67,10 @@ abstract class AbstractRequest
                 $items[] = $add;
             }
         }
+        $items = array_filter($items);
         if (!empty($items)) {
             if ($save) {
-                $this->getRepo()->saveEntities(array_filter($items));
+                $this->getRepo()->saveEntities($items);
             }else{
                 return array_filter($items);
             }

@@ -32,6 +32,9 @@ class Event
      */
     protected $name;
 
+    /** @var  int */
+    protected $weight;
+
     /**
      * @var \DateTime
      */
@@ -52,6 +55,7 @@ class Event
             ->setCustomRepositoryClass(EventRepository::class)
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
+            ->addNamedField('weight', Type::INTEGER, 'weight')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
     }
 
@@ -67,6 +71,7 @@ class Event
                 [
                     'id',
                     'name',
+                    'weight',
                     'dateAdded',
                 ]
             )
@@ -129,5 +134,25 @@ class Event
     public function getDateAdded()
     {
         return $this->dateAdded;
+    }
+
+    /**
+     * @param int $weight
+     *
+     * @return Event
+     */
+    public function setWeight(int $weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
     }
 }

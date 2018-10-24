@@ -26,7 +26,7 @@ class AddDetailView extends AbstractRequest
      */
     public function findExist()
     {
-        $event = $this->getModel()->getEventRepository()->findBy(['name' => __CLASS__]);
+        $event = $this->getModel()->getEventRepository()->findOneBy(['name' => __CLASS__]);
         // If event name already not exist
         if (!$event) {
             $event = new Event();

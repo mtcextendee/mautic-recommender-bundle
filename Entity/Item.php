@@ -50,7 +50,7 @@ class Item
             ->setCustomRepositoryClass(ItemRepository::class)
             ->addIndex(['item_id'], 'item_id_index')
             ->addId()
-            ->addNamedField('itemId', 'text', 'item_id')
+            ->addNamedField('itemId', 'string', 'item_id')
             ->addNamedField('dateAdded', 'datetime', 'date_added');
 
 

@@ -25,7 +25,7 @@ class EventLog
     protected $id;
 
     /**
-     * @var string
+     * @var Item
      */
     protected $item;
 
@@ -72,7 +72,7 @@ class EventLog
         $builder->createManyToOne(
             'item',
             'MauticPlugin\MauticRecommenderBundle\Entity\Item'
-        )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
+            )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
 
         $builder->createManyToOne(
             'lead',
@@ -111,11 +111,11 @@ class EventLog
     }
 
     /**
-     * @param string $item
+     * @param Item $item
      *
      * @return EventLog
      */
-    public function setItem(string $item)
+    public function setItem(Item $item)
     {
         $this->item = $item;
 

@@ -106,12 +106,10 @@ class Client
 
             if (isset($option['userId'])) {
                 $option['lead'] = $this->leadModel->getEntity($option['userId']);
-                unset($option['userId']);
             }
 
             if (isset($option['itemId'])) {
-                $option['item'] = $this->itemModel->getRepository()->findBy(['itemId' => $option['itemId']]);
-                unset($option['itemId']);
+                $option['item'] = $this->itemModel->getRepository()->findOneBy(['itemId' => $option['itemId']]);
             }
         }
     }

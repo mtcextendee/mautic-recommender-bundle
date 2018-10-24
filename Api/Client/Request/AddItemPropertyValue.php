@@ -46,9 +46,13 @@ class AddItemPropertyValue extends AbstractRequest
             return;
         }
         $currentEntities = $this->getRepo()->findBy(['item' => $item]);
-        $items = [];
-        $deleteItems = [];
+        $items           = [];
+        $deleteItems     = [];
         foreach ($options as $propertyName => $value) {
+            if(is_array($value))
+            {
+                continue;
+            }
             $property = $this->findPropertyByName($propertyName);
             if ($property === null) {
                 continue;
@@ -64,13 +68,16 @@ class AddItemPropertyValue extends AbstractRequest
                 $items[] = $itemPropertyValue;
             }
             /** @var ItemPropertyValue $currentEntity */
-            foreach ($currentEntities as $currentEntity) {
-                if (!isset($options[$currentEntity->getProperty()->getName()])) {
-                    $deleteItems[] = $currentEntity;
+            if ($currentEntities) {
+                foreach ($currentEntities as $currentEntity) {
+                    if (!isset($options[$currentEntity->getProperty()->getName()])) {
+                        $deleteItems[] = $currentEntity;
+                    }
                 }
             }
         }
         $this->getRepo()->deleteEntities($deleteItems);
+
         return $items;
     }
 
