@@ -11,31 +11,29 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Model;
 
-use Doctrine\DBAL\Query\QueryBuilder;
-use Mautic\CoreBundle\Helper\Chart\ChartQuery;
-use Mautic\CoreBundle\Helper\Chart\LineChart;
 use Mautic\CoreBundle\Model\AbstractCommonModel;
-use Mautic\CoreBundle\Model\AjaxLookupModelInterface;
-use Mautic\CoreBundle\Model\FormModel;
-use Mautic\CoreBundle\Model\TranslationModelTrait;
-use Mautic\CoreBundle\Model\VariantModelTrait;
-use MauticPlugin\MauticMTCPilotBundle\MTCPilotEvents;
-use MauticPlugin\MauticMTCPilotBundle\Entity\MTCPilot;
-use MauticPlugin\MauticMTCPilotBundle\Entity\MTCPilotRepository;
-use MauticPlugin\MauticMTCPilotBundle\Entity\Stat;
-use MauticPlugin\MauticMTCPilotBundle\Event\MTCPilotEvent;
+use Mautic\LeadBundle\Tracker\ContactTracker;
 use Mautic\LeadBundle\Entity\Lead;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
-use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderRepository;
-use MauticPlugin\MauticRecommenderBundle\Event\RecommenderEvent;
-use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class RecommenderClientModel extends AbstractCommonModel
 {
+
+    /**
+     * @var ContactTracker
+     */
+    private $contactTracker;
+
+    /**
+     * RecommenderClientModel constructor.
+     *
+     * @param ContactTracker $contactTracker
+     */
+    public function __construct(ContactTracker $contactTracker)
+    {
+        $this->contactTracker = $contactTracker;
+    }
+
     /**
      * Get this model's repository.
      *
@@ -89,9 +87,17 @@ class RecommenderClientModel extends AbstractCommonModel
     /**
      * @return \Doctrine\ORM\EntityRepository|\Mautic\LeadBundle\Entity\LeadRepository
      */
-    public function getContactModel()
+    public function getContactRepository()
     {
-        return $this->em->getRepository('MauticLeadBundle:Lead');
+        return $this->em->get('MauticLeadBundle:Lead');
+    }
+
+    /**
+     * @return Lead|null
+     */
+    public function getCurrentContact()
+    {
+        return $this->contactTracker->getContact();
     }
 
 }

@@ -78,6 +78,7 @@ return [
             ],
             'mautic.recommender.model.client' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel::class,
+                'arguments' => ['mautic.tracker.contact']
             ],
             'mautic.recommender.model.item' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemModel::class,

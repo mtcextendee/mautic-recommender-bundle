@@ -55,6 +55,13 @@ class Options
     {
         $options = $this->options;
         foreach ($entities as $entity) {
+
+            switch ($entity) {
+                case 'contactId':
+                    $addOptions['lead'] = $this->clientModel->getCurrentContact();
+                    continue;
+            }
+
             // don't convert not exist params
             if (!isset($options[$entity])) {
                 continue;
@@ -65,7 +72,7 @@ class Options
                     unset($options['itemId']);
                     break;
                 case 'userId':
-                    $addOptions['lead'] = $this->clientModel->getContactModel()->getEntity($options[$entity]);
+                    $addOptions['lead'] = $this->clientModel->getContactRepository()->getEntity($options[$entity]);
                     unset($options['userId']);
                     break;
 

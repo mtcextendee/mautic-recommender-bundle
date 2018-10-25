@@ -89,11 +89,11 @@ class ApiCommands
 
     /**
      * @param       $apiRequest
-     * @param array $batchOptions
+     * @param array $options
      */
-    public function callCommand($apiRequest, array $batchOptions = [])
+    public function callCommand($apiRequest, array $options = [])
     {
-        $this->recommenderApi->getClient()->send($apiRequest, $batchOptions);
+        $this->recommenderApi->getClient()->send($apiRequest, $options);
     }
 
     public function ImportUser($lead)
@@ -109,7 +109,7 @@ class ApiCommands
         }
       //  $this->recommenderApi->getClient()->send('AddItem', $items);
     //    $this->recommenderApi->getClient()->send('AddItemPropertyValue', $items);
-     /*   $this->recommenderApi->getClient()->send(
+       /* $this->recommenderApi->getClient()->send(
             'AddDetailView',
             ['itemId' => '9-191', 'userId' => 234, 'Profit' => '10']
         );*/

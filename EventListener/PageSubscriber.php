@@ -125,10 +125,6 @@ class PageSubscriber extends CommonSubscriber
         if (!empty($request->get('Recommender'))) {
             $commands = \GuzzleHttp\json_decode($request->get('Recommender'), true);
             foreach ($commands as $apiRequest => $options) {
-                // try get userId If not set directly from tracking code
-                if (!isset($options['userId'])) {
-                    $options['userId'] = $event->getLead()->getId();
-                }
                 $this->apiCommands->callCommand($apiRequest, $options);
             }
         }

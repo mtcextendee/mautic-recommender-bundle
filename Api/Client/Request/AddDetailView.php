@@ -25,7 +25,7 @@ class AddDetailView extends AbstractRequest
         $event = $addEvent->addIfNotExist();
         $addEvent->save();
 
-        $addEventLog = $this->getClient()->send('AddEventLog', $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'userId'], ['event'=> $event]));
+        $addEventLog = $this->getClient()->send('AddEventLog', $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'contactId'], ['event'=> $event]));
         $eventLog = $addEventLog->add();
         $addEventLog->save();
 

@@ -29,7 +29,6 @@ class ImportItems extends AbstractRequest
         $addEventLogPropertyValues->save();
         $addEventLogPropertyValues->delete();
 
-        return false;
     }
 
 }
