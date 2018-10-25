@@ -11,19 +11,17 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
+use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLogValue;
 
-class AddEventLogPropertyValue extends AbstractRequest
+class AddEvents extends AbstractRequest
 {
 
-    /**
-     * Just return new entity
-     *
-     * @return EventLogValue
-     */
-    public function newEntity()
+    public function add()
     {
-        return new EventLogValue();
+        foreach ($this->getOptionsResolver()->getOptions() as $option) {
+
+        }
     }
 
     /**
@@ -31,7 +29,7 @@ class AddEventLogPropertyValue extends AbstractRequest
      */
     public function getRepo()
     {
-        return $this->getModel()->getEventLogValueRepository();
+        return $this->getModel()->getEventRepository();
     }
 
 }

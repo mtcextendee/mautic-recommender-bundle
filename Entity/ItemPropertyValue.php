@@ -38,6 +38,8 @@ class ItemPropertyValue
      */
     protected $value;
 
+    private $changes = [];
+
 
     /**
      * @param ORM\ClassMetadata $metadata
@@ -136,6 +138,9 @@ class ItemPropertyValue
      */
     public function setValue(string $value)
     {
+        if($this->value != $value) {
+            $this->changes['value'] = isset($this->value) ? $this->value : '';
+        }
         $this->value = $value;
 
         return $this;
@@ -159,5 +164,16 @@ class ItemPropertyValue
         $this->item     = $item;
         $this->property = $property;
         $this->value    = $value;
+    }
+
+    public function isChanged($key)
+    {
+        if (isset($this->changes[$key])) {
+            if (empty($this->changes[$key])) {
+                return true;
+            }
+            return $this->changes[$key];
+        }
+        return false;
     }
 }

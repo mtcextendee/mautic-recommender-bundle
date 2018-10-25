@@ -18,7 +18,6 @@ use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
 
 class AddEventLog extends AbstractRequest
 {
-
     /**
      * Just return new entity
      *
@@ -36,28 +35,5 @@ class AddEventLog extends AbstractRequest
     {
         return $this->getModel()->getEventLogRepository();
     }
-
-
-    /**
-     * @param bool $save
-     *
-     * @return array
-     */
-    public function execute($save = true)
-    {
-        $items = [];
-        foreach ($this->getOptions() as $option) {
-            $this->setOption($option);
-            $eventLog = $this->add();
-            $this->getModel()->getEventLogRepository()->saveEntity($eventLog);
-            /** @var AddEventLogPropertyValue $addEventLogPropertyValue */
-            $option['eventLog'] = $eventLog;
-            $addEventLogPropertyValue = $this->getClient()->send('AddEventLogPropertyValue', $option);
-            $addEventLogPropertyValue->addOption('eventLog', $eventLog);
-            $addEventLogPropertyValue->execute();
-
-        }
-    }
-
 }
 

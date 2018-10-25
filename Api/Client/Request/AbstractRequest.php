@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 use Mautic\CampaignBundle\Model\EventModel;
 use MauticPlugin\MauticRecommenderBundle\Api\Client\Client;
+use MauticPlugin\MauticRecommenderBundle\Api\Client\Options;
 use MauticPlugin\MauticRecommenderBundle\Model\EventLogModel;
 use MauticPlugin\MauticRecommenderBundle\Model\ItemModel;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
@@ -20,7 +21,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 abstract class AbstractRequest
 {
-    protected $options = [];
+
+    /** @var   */
+    protected $options;
+    protected $optionsResolver;
     protected $option = [];
     protected $repo;
 
@@ -34,35 +38,110 @@ abstract class AbstractRequest
      */
     private $client;
 
+    /** @var array  */
+    private $entities = [];
+
+
+    /** @var array  */
+    private $deleteEntities = [];
+
 
     /**
      * ItemRequest constructor.
      *
-     * @param array  $options
-     * @param        $model
-     * @param Client $client
+     * @param Client  $client
      */
-    public function __construct(array $options, $model, Client $client)
+    public function __construct(Client $client)
     {
-        $this->options = $options;
-        $this->model   = $model;
         $this->client = $client;
+        $this->options = $this->client->getOptions();
+        $this->optionsResolver =  $this->client->getOptionsResolver();
+        $this->model   = $this->client->getClientModel();
+
     }
 
-    protected function getContext()
+    protected function newEntity(){}
+
+
+    protected function getAll()
     {
-        return $this;
+        return $this->getRepo()->findAll();
     }
 
-
-    /**
-     * @return bool
-     */
-    protected function findExist(){
+    protected function find()
+    {
         return false;
     }
 
-    protected function newEntity(){ }
+    public function run()
+    {
+
+    }
+
+    public function add()
+    {
+        $newEntity = $this->newEntity();
+        $this->addEntity($this->setValues($newEntity));
+
+        return $newEntity;
+
+    }
+
+    public function addIfNotExist()
+    {
+        if ($entity = $this->find()) {
+            return $entity;
+        }
+
+        $newEntity  =  $this->newEntity();
+        $this->addEntity($this->setValues($newEntity));
+
+        return $newEntity;
+    }
+
+    public function addOrEditIfExist()
+    {
+        if ($entity = $this->find()) {
+            return $this->edit();
+        }
+
+        $newEntity  =  $this->newEntity();
+        $this->addEntity($this->setValues($newEntity));
+
+        return $newEntity;
+    }
+
+    public function edit()
+    {
+        $entity = $this->find();
+        $this->addEntity($this->setValues($entity));
+        return $entity;
+    }
+
+
+    public function getEntity()
+    {
+         return $this->getEntities()[0];
+    }
+
+    public function save()
+    {
+        if (count($this->getEntities()) == 1) {
+            return $this->getRepo()->saveEntity($this->getEntities()[0]);
+        }elseif(count($this->getEntities()) > 1){
+            return $this->getRepo()->saveEntities($this->getEntities());
+        }
+    }
+
+
+    public function delete()
+    {
+        if (count($this->getDeleteEntities()) == 1) {
+            return $this->getRepo()->deleteEntity($this->getDeleteEntities()[0]);
+        }elseif(count($this->getDeleteEntities()) > 1){
+            return $this->getRepo()->deleteEntities($this->getDeleteEntities());
+        }
+    }
 
     /**
      * @param bool $save
@@ -72,16 +151,6 @@ abstract class AbstractRequest
     public function execute($save = true)
     {
         $items = [];
-        foreach ($this->getOptions() as $option) {
-            $this->setOption($option);
-            $add = $this->add();
-            if (is_array($add)) {
-                $items = array_merge($items, $add);
-            }else{
-                $items[] = $add;
-            }
-        }
-        $items = array_filter($items);
         if (!empty($items)) {
             if ($save) {
                 $this->getRepo()->saveEntities($items);
@@ -93,49 +162,30 @@ abstract class AbstractRequest
     }
 
 
-
     /**
-     * @return bool
-     */
-    protected function add()
-    {
-        $item = $this->findExist();
-        if ($item) {
-            return false;
-        }
-        return $this->setValues($this->newEntity(), $this->getOption());
-    }
-
-
-    /**
-     * @param null $entity
-     * @param array     $options
+     * @param object $entity
      *
-     * @return Item
+     * @return object
      */
-    public function setValues($entity = null, array $options)
+    public function setValues($entity)
     {
-        if ($entity === null) {
-            return;
-        }
-
         $accessor = new PropertyAccessor();
-        foreach ($options as $key=>$value){
+        foreach ($this->getOptions() as $key=>$value){
             try {
                 $accessor->setValue($entity, $key, $value);
             } catch (\Exception $exception) {
 
             }
         }
-
         return $entity;
     }
 
     /**
-     * @return array
+     * @return Options
      */
     public function getOptions()
     {
+
         return $this->options;
     }
 
@@ -146,6 +196,16 @@ abstract class AbstractRequest
     public function addOption($key, $value)
     {
         $this->option[$key] = $value;
+    }
+
+    /**
+     * @param $key
+     */
+    public function removeOption($key)
+    {
+        if (isset($this->option[$key])) {
+            unset($this->option[$key]);
+        }
     }
 
     /**
@@ -173,14 +233,6 @@ abstract class AbstractRequest
     }
 
     /**
-     * @param array $option
-     */
-    public function setOption(array $option)
-    {
-        $this->option = $option;
-    }
-
-    /**
      * @return Client
      */
     public function getClient(): Client
@@ -188,5 +240,105 @@ abstract class AbstractRequest
         return $this->client;
     }
 
+    /**
+     * @return array
+     */
+    public function getEntities(): array
+    {
+        return $this->entities;
+    }
+
+    /**
+     * @param object $entity
+     */
+    public function addEntity($entity)
+    {
+        $this->entities[] = $entity;
+    }
+
+    /**
+     * @param array $entities
+     */
+    public function setEntities(array $entities)
+    {
+        $this->entities = $entities;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDeleteEntities(): array
+    {
+        return $this->deleteEntities;
+    }
+
+
+    /**
+     * @param object $entity
+     */
+    public function addDeleteEntity($entity)
+    {
+        $this->deleteEntities[] = $entity;
+    }
+
+    /**
+     * @param array $deleteEntities
+     */
+    public function setDeleteEntities(array $deleteEntities)
+    {
+        $this->deleteEntities = $deleteEntities;
+    }
+
+    /**
+     * @return Options
+     */
+    public function getOptionsResolver(): Options
+    {
+        return $this->optionsResolver;
+    }
+
+    /**
+     * Return property type
+     *
+     * @param $property
+     *
+     * @return string
+     */
+    protected function getPropertyType($property)
+    {
+        if (is_array($property)) {
+            return 'set';
+        } elseif (is_int($property)) {
+            return 'int';
+        } elseif (is_double($property)) {
+            return 'float';
+        } elseif (is_bool($property)) {
+            return 'boolean';
+        } elseif ($this->isDateTime($property)) {
+            return'datetime';
+        } else {
+            return 'string';
+        }
+    }
+
+    /**
+     * @param $date
+     *
+     * @return bool
+     */
+    private function isDateTime($date)
+    {
+        $d = \DateTime::createFromFormat('Y-m-d g:i:s', $date);
+        $d2 = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+
+        if(($d && $d->format('Y-m-d g:i:s') == $date) || ($d2 && $d2->format('Y-m-d H:i:s') == $date))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 

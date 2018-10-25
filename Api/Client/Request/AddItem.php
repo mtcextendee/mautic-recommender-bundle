@@ -17,15 +17,10 @@ use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 class AddItem extends AbstractRequest
 {
 
-    /**
-     * Find exist entity
-     *
-     * @return null|object
-     */
-    public function findExist()
-   {
-       return $this->getRepo()->findOneBy(['itemId' => $this->getOption()['itemId']]);
-   }
+    public function find()
+    {
+        return $this->getRepo()->findOneBy(['itemId' => $this->getOptions()['item_id']]);
+    }
 
     /**
      * Just return new entity

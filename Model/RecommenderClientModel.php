@@ -84,7 +84,14 @@ class RecommenderClientModel extends AbstractCommonModel
     public function getEventLogValueRepository()
     {
         return $this->em->getRepository('MauticRecommenderBundle:EventLogValue');
+    }
 
+    /**
+     * @return \Doctrine\ORM\EntityRepository|\Mautic\LeadBundle\Entity\LeadRepository
+     */
+    public function getContactModel()
+    {
+        return $this->em->getRepository('MauticLeadBundle:Lead');
     }
 
 }

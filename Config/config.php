@@ -150,7 +150,6 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Api\Client\Client::class,
                 'arguments' => [
                     'mautic.recommender.model.client',
-                    'mautic.lead.model.lead'
                 ],
             ],
             'mautic.recommender.helper'                      => [

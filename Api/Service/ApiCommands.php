@@ -101,12 +101,18 @@ class ApiCommands
     }
     public function ImportItems($items)
     {
+        foreach ($items as $item) {
+            $this->recommenderApi->getClient()->send(
+                'ImportItems',
+                $item
+            );
+        }
       //  $this->recommenderApi->getClient()->send('AddItem', $items);
     //    $this->recommenderApi->getClient()->send('AddItemPropertyValue', $items);
-        $this->recommenderApi->getClient()->send(
+     /*   $this->recommenderApi->getClient()->send(
             'AddDetailView',
             ['itemId' => '9-191', 'userId' => 234, 'Profit' => '10']
-        );
+        );*/
 
     }
 

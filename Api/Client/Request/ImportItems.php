@@ -16,22 +16,18 @@ use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 
-class AddDetailView extends AbstractRequest
+class ImportItems extends AbstractRequest
 {
     public function run()
     {
+        $addItem = $this->getClient()->send('AddItem', ['item_id'=> $this->getOptions()['itemId']]);
+        $item = $addItem->addIfNotExist();
+        $addItem->save();
 
-        $addEvent = $this->getClient()->send('AddEvent', ['name'=> $this->getClient()->getEndpoint()]);
-        $event = $addEvent->addIfNotExist();
-        $addEvent->save();
-
-        $addEventLog = $this->getClient()->send('AddEventLog', $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'userId'], ['event'=> $event]));
-        $eventLog = $addEventLog->add();
-        $addEventLog->save();
-
-        $addEventLogPropertyValues = $this->getClient()->send('AddEventLogPropertyValues', $this->getOptionsResolver()->getOptionsWithEntities([], ['eventLog'=> $eventLog]));
+        $addEventLogPropertyValues = $this->getClient()->send('AddItemValues', $this->getOptionsResolver()->getOptionsWithEntities([], ['item'=> $item]));
         $addEventLogPropertyValues->add();
         $addEventLogPropertyValues->save();
+        $addEventLogPropertyValues->delete();
 
         return false;
     }
