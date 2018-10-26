@@ -7,11 +7,11 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
-            /*'mautic.recommender.js.subscriber'  => [
+            'mautic.recommender.js.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
                 'arguments' => [
                 ],
-            ],*/
+            ],
             'mautic.recommender.pagebundle.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\PageSubscriber::class,
                 'arguments' => [

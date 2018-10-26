@@ -15,15 +15,8 @@ use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
 use Mautic\LeadBundle\Model\LeadModel;
 use Mautic\LeadBundle\Tracker\ContactTracker;
-use Mautic\PageBundle\Event\PageDisplayEvent;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
-use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
-use Recommender\RecommApi\Requests as Reqs;
-use Recommender\RecommApi\Exceptions as Ex;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class RecommenderController extends AbstractStandardFormController
 {
@@ -187,17 +180,13 @@ class RecommenderController extends AbstractStandardFormController
                 ]
             );
         }
+
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->get('mautic.recommender.service.api.commands');
-        /** @var LeadModel $leadModel */
-        $leadModel = $this->get('mautic.lead.model.lead');
-        $lead      = $leadModel->getCurrentLead();
-
 
         /** @var ContactTracker $contactTracker */
-        //$contactTracker = $this->get('mautic.tracker.contact');
         $options           = $this->request->request->all();
-
+        die(print_r($options));
         $recommender = $this->request->get('recommender');
         $requests = json_decode(base64_decode($recommender), true);
         $response = [];

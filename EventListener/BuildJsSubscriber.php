@@ -44,59 +44,45 @@ class BuildJsSubscriber extends CommonSubscriber
         //basic js
         $js = <<<JS
         
-        MauticJS.createRecommenderRequestFromNode = function(onLoadPixel) {
-         var actions = [];
-        // Add a custom data attribute to all videos
-        MauticJS.iterateCollection(onLoadPixel)(function(node, i) {
-            var options = [];
-            console.log(node.dataset.component);
-            if(node.dataset.component && node.dataset.itemId){
-                 var a = {}; 
-                 Object.keys(node.dataset).map(function(key){ a[key] = node.dataset[key];});
-                 actions.push(JSON.stringify(a));
-            }else{
-                MauticJS.log('data-recombe-action or data-recombe-item-id missing');
-            }
-        });
-        var data = [];
-        data['recommender'] = btoa(JSON.stringify(actions));
-          MauticJS.makeCORSRequest('GET', '{$url}', data, function(response, xhr) {
-                 console.log(response);
-            });
-        }
+       MauticJS.recommenderEvent = function (params) {
+        params = params || {};
+        var eventParams = {};
         
-        var onLoadPixel = document.getElementsByClassName('recommender-pixel');
-        if(onLoadPixel.length){
-            MauticJS.createRecommenderRequestFromNode(onLoadPixel);
-        }
-        
-        [].forEach.call( document.querySelectorAll( '.recommender-pixel' ), function ( node ) {
-            var elementsToProcess = [];
-            if(node.dataset.event){
-                var event = node.dataset.event;
-                //remove from element
-                delete node.dataset.event;
-                if( event == 'load')
-                    {
-                        elementsToProcess.push(node);
-                    }else if(event == 'click'){
-                              node.addEventListener( 'click', function (e) {
-               e.preventDefault();
-               console.log(node.dataset.component);
-               console.log((e.target).dataset.component);
-           //MauticJS.createRecommenderRequestFromNode(node);
-        }, false );
-        });                 
-                    }else if(event == 'submit'){
-                        
-                    }
-                
+          if (typeof MauticJS.getInput === 'function') {
+                queue = MauticJS.getInput('send', 'recommender');
+            } else {
+                return false;
             }
             
-           
+            if (queue) {
+                for (var i=0; i<queue.length; i++) {
+                    var event = queue[i];
+                    // Merge user defined tracking pixel parameters.
+                    if (typeof event[2] === 'object') {
+                        for (var attr in event[2]) {
+                            eventParams[attr] = event[2][attr];
+                        }
+                    }
+                    var paramsToUrl = {};
+                    paramsToUrl['hit'] = eventParams;
+                    MauticJS.makeCORSRequest('POST', '{$url}', paramsToUrl, 
+        function(response) {
+        },
+        function() {
+        });
         
+       }
+                  }
+            }
+            
+              // Process pageviews after new are added
+    document.addEventListener('eventAddedToMauticQueue', function(e) {
+      if(e.detail[0] == 'send' && e.detail[1] == 'recommender'){
+         MauticJS.recommenderEvent();
+      }
+    });
        
-
+       MauticJS.onFirstEventDelivery(MauticJS.recommenderEvent);
 JS;
         $event->appendJs($js, 'Recommender');
     }

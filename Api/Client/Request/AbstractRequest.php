@@ -60,19 +60,19 @@ abstract class AbstractRequest
 
     }
 
+    /**
+     * New entity
+     */
     protected function newEntity(){}
-
-
-    protected function getAll()
-    {
-        return $this->getRepo()->findAll();
-    }
 
     protected function find()
     {
         return false;
     }
 
+    /**
+     *  Run script
+     */
     public function run()
     {
 
@@ -118,12 +118,6 @@ abstract class AbstractRequest
         return $entity;
     }
 
-
-    public function getEntity()
-    {
-         return $this->getEntities()[0];
-    }
-
     public function save()
     {
         if (count($this->getEntities()) == 1) {
@@ -144,25 +138,6 @@ abstract class AbstractRequest
     }
 
     /**
-     * @param bool $save
-     *
-     * @return array
-     */
-    public function execute($save = true)
-    {
-        $items = [];
-        if (!empty($items)) {
-            if ($save) {
-                $this->getRepo()->saveEntities($items);
-
-            }else{
-                return array_filter($items);
-            }
-        }
-    }
-
-
-    /**
      * @param object $entity
      *
      * @return object
@@ -180,35 +155,7 @@ abstract class AbstractRequest
         return $entity;
     }
 
-    /**
-     * @return Options
-     */
-    public function getOptions()
-    {
-
-        return $this->options;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function addOption($key, $value)
-    {
-        $this->option[$key] = $value;
-    }
-
-    /**
-     * @param $key
-     */
-    public function removeOption($key)
-    {
-        if (isset($this->option[$key])) {
-            unset($this->option[$key]);
-        }
-    }
-
-    /**
+       /**
      * @return mixed
      */
     public function getRepo()
@@ -222,14 +169,6 @@ abstract class AbstractRequest
     public function getModel()
     {
         return $this->model;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOption()
-    {
-        return $this->option;
     }
 
     /**
@@ -257,14 +196,6 @@ abstract class AbstractRequest
     }
 
     /**
-     * @param array $entities
-     */
-    public function setEntities(array $entities)
-    {
-        $this->entities = $entities;
-    }
-
-    /**
      * @return array
      */
     public function getDeleteEntities(): array
@@ -282,11 +213,12 @@ abstract class AbstractRequest
     }
 
     /**
-     * @param array $deleteEntities
+     * @return Options
      */
-    public function setDeleteEntities(array $deleteEntities)
+    public function getOptions()
     {
-        $this->deleteEntities = $deleteEntities;
+
+        return $this->options;
     }
 
     /**
