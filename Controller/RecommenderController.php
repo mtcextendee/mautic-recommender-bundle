@@ -193,16 +193,16 @@ class RecommenderController extends AbstractStandardFormController
         if (!isset($eventDetail['eventName'])) {
             $error = $this->get('translator')->trans('mautic.plugin.recommender.eventName.not_found', [], 'validators');
         } else {
-            if (!empty($integrationSettings['allowedEvents']['list']) && !in_array(
+            if (!empty($integrationSettings['allowedEvents']) && !in_array(
                     $eventDetail['eventName'],
-                    $integrationSettings['allowedEvents']['list']
+                    array_keys($integrationSettings['allowedEvents'])
                 )
             ) {
                 $error = $this->get('translator')->trans(
                     'mautic.plugin.recommender.eventName.not_allowed',
                     [
                         '%eventName%' => $eventDetail['eventName'],
-                        '%events%'    => implode(', ', $integrationSettings['allowedEvents']['list']),
+                        '%events%'    => implode(', ', array_keys($integrationSettings['allowedEvents'])),
                     ],
                     'validators'
                 );

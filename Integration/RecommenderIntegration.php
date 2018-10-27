@@ -117,8 +117,9 @@ class RecommenderIntegration extends AbstractIntegration
                         'tooltip' => 'mautic.plugin.recommender.events.tooltip'
                     ],
                     'option_required' => false,
-                    'with_labels'     => false,
+                    'with_labels'     => true,
                     'required'        => false,
+                    'key_value_pairs' => true,
                 ]
             );
 
