@@ -23,7 +23,7 @@ class Options
      */
     private $options;
 
-    private $protectedKeys = ['itemId', 'userId', 'endpoint'];
+    private $protectedKeys = ['itemId', 'userId', 'eventName', 'endpoint'];
 
     /**
      * @var Client

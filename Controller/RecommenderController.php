@@ -183,27 +183,42 @@ class RecommenderController extends AbstractStandardFormController
 
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->get('mautic.recommender.service.api.commands');
-
-        /** @var ContactTracker $contactTracker */
+        $eventLabel = $this->get('mautic.helper.core_parameters')->getParameter ('eventLabel');
+        $integrationSettings = $this->get('mautic.helper.integration')->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
         $options           = $this->request->request->all();
-        die(print_r($options));
-        $recommender = $this->request->get('recommender');
-        $requests = json_decode(base64_decode($recommender), true);
-        $response = [];
-        foreach ($requests as $request) {
-            $request = json_decode($request, true);
-            if (!is_array($request) || !isset($request['component'])) {
-                continue;
+        $recommender = $this->request->get('eventDetail');
+        $eventDetail = json_decode(base64_decode($recommender), true);
+        $error = false;
+
+        if (!isset($eventDetail['eventName'])) {
+            $error = $this->get('translator')->trans('mautic.plugin.recommender.eventName.not_found', [], 'validators');
+        } else {
+            if (!empty($integrationSettings['allowedEvents']['list']) && !in_array(
+                    $eventDetail['eventName'],
+                    $integrationSettings['allowedEvents']['list']
+                )
+            ) {
+                $error = $this->get('translator')->trans(
+                    'mautic.plugin.recommender.eventName.not_allowed',
+                    [
+                        '%eventName%' => $eventDetail['eventName'],
+                        '%events%'    => implode(', ', $integrationSettings['allowedEvents']['list']),
+                    ],
+                    'validators'
+                );
             }
-            $component = $request['component'];
-            $request['userId'] = $lead->getId();
-            unset($request['component']);
-            $apiCommands->callCommand($component, $request);
-            $response[] = $apiCommands->getCommandOutput();
         }
+
+        $response = ['success' => ! (bool) $error,];
+        if (!$error) {
+            $apiCommands->callCommand($eventLabel, $eventDetail);
+        }else{
+            $response['message'] = $error;
+        }
+
         return new JsonResponse(
             [
-                'response' => $response,
+                $response
             ]
         );
     }

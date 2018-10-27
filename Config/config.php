@@ -10,6 +10,7 @@ return [
             'mautic.recommender.js.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
                 'arguments' => [
+                    'mautic.helper.core_parameters'
                 ],
             ],
             'mautic.recommender.pagebundle.subscriber'  => [
@@ -294,5 +295,7 @@ return [
             ],
         ],
     ],
-    'parameters'  => [],
+    'parameters'  => [
+        'eventLabel'=> 'RecommenderEvent'
+    ],
 ];

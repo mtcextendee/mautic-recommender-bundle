@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 use Mautic\CoreBundle\CoreEvents;
 use Mautic\CoreBundle\Event\BuildJsEvent;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
+use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -21,6 +22,22 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class BuildJsSubscriber extends CommonSubscriber
 {
+
+    /**
+     * @var CoreParametersHelper
+     */
+    private $coreParametersHelper;
+
+    /**
+     * BuildJsSubscriber constructor.
+     *
+     * @param CoreParametersHelper $coreParametersHelper
+     */
+    public function __construct(CoreParametersHelper $coreParametersHelper)
+    {
+
+        $this->coreParametersHelper = $coreParametersHelper;
+    }
 
     /**
      * @return array
@@ -40,20 +57,19 @@ class BuildJsSubscriber extends CommonSubscriber
     public function onBuildJsTop(BuildJsEvent $event)
     {
         $url = $this->router->generate('mautic_recommender_process_action', [], UrlGeneratorInterface::ABSOLUTE_URL);
-
+        $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
         //basic js
         $js = <<<JS
         
        MauticJS.recommenderEvent = function (params) {
-        params = params || {};
+        parms = {};
         var eventParams = {};
         
           if (typeof MauticJS.getInput === 'function') {
-                queue = MauticJS.getInput('send', 'recommender');
+                queue = MauticJS.getInput('send', '{$eventLabel}');
             } else {
                 return false;
             }
-            
             if (queue) {
                 for (var i=0; i<queue.length; i++) {
                     var event = queue[i];
@@ -62,14 +78,14 @@ class BuildJsSubscriber extends CommonSubscriber
                         for (var attr in event[2]) {
                             eventParams[attr] = event[2][attr];
                         }
+                        parms['eventDetail'] = btoa(JSON.stringify(eventParams));
                     }
-                    var paramsToUrl = {};
-                    paramsToUrl['hit'] = eventParams;
-                    MauticJS.makeCORSRequest('POST', '{$url}', paramsToUrl, 
-        function(response) {
-        },
-        function() {
-        });
+                    MauticJS.makeCORSRequest('POST', '{$url}', parms, 
+                        function(response) {
+                        },
+                        function() {
+                            
+                    });
         
        }
                   }
@@ -77,7 +93,7 @@ class BuildJsSubscriber extends CommonSubscriber
             
               // Process pageviews after new are added
     document.addEventListener('eventAddedToMauticQueue', function(e) {
-      if(e.detail[0] == 'send' && e.detail[1] == 'recommender'){
+      if(e.detail[0] == 'send' && e.detail[1] == '{$eventLabel}'){
          MauticJS.recommenderEvent();
       }
     });

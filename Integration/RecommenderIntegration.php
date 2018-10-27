@@ -107,6 +107,23 @@ class RecommenderIntegration extends AbstractIntegration
                 ]
             );
 
+
+            $builder->add(
+                'allowedEvents',
+                SortableListType::class,
+                [
+                    'label' => 'mautic.plugin.recommender.events',
+                    'attr' => [
+                        'tooltip' => 'mautic.plugin.recommender.events.tooltip'
+                    ],
+                    'option_required' => false,
+                    'with_labels'     => false,
+                    'required'        => false,
+                ]
+            );
+
+
+
             $builder->add(
                 'abandoned_cart',
                 YesNoButtonGroupType::class,
@@ -141,21 +158,6 @@ class RecommenderIntegration extends AbstractIntegration
                     'attr'       => [
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.recommender.segment.abandoned.cart.order.tooltip',
-                        'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
-                    ],
-                    'multiple'   => false,
-                    'expanded'   => false,
-                ]
-            );
-
-            $builder->add(
-                'abandoned_cart_order_segment_remove',
-                'leadlist_choices',
-                [
-                    'label'      => 'mautic.recommender.segment.abandoned.cart.order.cart',
-                    'label_attr' => ['class' => 'control-label'],
-                    'attr'       => [
-                        'class'        => 'form-control',
                         'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
                     ],
                     'multiple'   => false,
