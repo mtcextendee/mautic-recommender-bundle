@@ -280,9 +280,9 @@ return [
                 'path'       => '/recommender/template/{id}',
                 'controller' => 'MauticRecommenderBundle:RecommenderTemplate:template',
             ],
-            'mautic_recommender_process_action' => [
-                'path'       => '/recommender/send/event',
-                'controller' => 'MauticRecommenderBundle:RecommenderTemplate:process',
+            'mautic_recommender_send_event' => [
+                'path'       => '/recommender/event/send',
+                'controller' => 'MauticRecommenderBundle:Recommender:send',
             ],
         ],
         'api'    => [

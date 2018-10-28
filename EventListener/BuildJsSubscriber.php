@@ -56,7 +56,7 @@ class BuildJsSubscriber extends CommonSubscriber
      */
     public function onBuildJsTop(BuildJsEvent $event)
     {
-        $url = $this->router->generate('mautic_recommender_process_action', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->router->generate('mautic_recommender_send_event', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
         //basic js
         $js = <<<JS

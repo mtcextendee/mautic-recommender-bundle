@@ -21,10 +21,8 @@ class RecommenderEvent extends AbstractRequest
     public function run()
     {
 
-        $addEvent = $this->getClient()->send('AddEvent', ['name'=> $this->getOptions()['eventName']]);
-        $event = $addEvent->addIfNotExist();
-        $addEvent->save();
 
+        $event = $this->getModel()->getEventRepository()->findOneBy(['name' => $this->getOptions()['eventName']]);
         $addEventLog = $this->getClient()->send('AddEventLog', $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'contactId'], ['event'=> $event]));
         $eventLog = $addEventLog->add();
         $addEventLog->save();

@@ -10,9 +10,8 @@
  */
 $view->extend('MauticCoreBundle:Default:content.html.php');
 
-$view['slots']->set('mauticContent', 'recommender');
-$view['slots']->set('headerTitle', $view['translator']->trans('mautic.plugin.recommender.templates'));
-
+$view['slots']->set('mauticContent', 'recommenderEvent');
+$view['slots']->set('headerTitle', $view['translator']->trans('mautic.plugin.recommender.event'));
 $view['slots']->set(
     'actions',
     $view->render(
@@ -21,7 +20,7 @@ $view['slots']->set(
             'templateButtons' => [
                 'new' => $permissions['recommender:recommender:create'],
             ],
-            'routeBase' => 'recommender_template',
+            'routeBase' => 'recommender_event',
         ]
     )
 );
