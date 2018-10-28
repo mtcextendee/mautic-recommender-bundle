@@ -21,10 +21,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
-/**
- * Class RecommenderType.
- */
-class RecommenderType extends AbstractType
+class RecommenderTemplatesType extends AbstractType
 {
     /**
      * @var \Mautic\CoreBundle\Security\Permissions\CorePermissions
@@ -98,24 +95,7 @@ class RecommenderType extends AbstractType
             ]
         );
 
-        $builder->add(
-            'templateType',
-            'button_group',
-            [
-                'label'      => 'mautic.plugin.recommender.form.template_type',
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'class'    => 'form-control',
-                    'tooltip'  => 'mautic.plugin.recommender.form.template_type.tooltip',
-                ],
-                'choices' => [
-                    'mautic.plugin.recommender.form.web'  => 'page',
-                    'mautic.plugin.recommender.form.email'   => 'email',
-                ],
-                'choices_as_values' => true,
-                'data'=> $options['data']->getTemplateType() ?:'web'
-            ]
-        );
+
 
         $builder->add(
             'templateMode',
@@ -185,6 +165,6 @@ class RecommenderType extends AbstractType
      */
     public function getName()
     {
-        return 'recommender';
+        return 'recommender_templates';
     }
 }

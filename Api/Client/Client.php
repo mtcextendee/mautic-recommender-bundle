@@ -60,8 +60,7 @@ class Client
             throw new ApiEndpointNotFoundException('Class '.$class.' doesn\'t exist.');
         }
         $loader = new $class($this);
-        $loader->run();
-        return $loader;
+        return $loader->run();
     }
 
     /**

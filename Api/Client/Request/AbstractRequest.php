@@ -75,7 +75,7 @@ abstract class AbstractRequest
      */
     public function run()
     {
-
+        return $this;
     }
 
     public function add()

@@ -13,8 +13,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Service;
 
 use Mautic\CampaignBundle\Model\CampaignModel;
 use Mautic\LeadBundle\Model\LeadModel;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
+use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 
 class RecommenderToken
 {
@@ -33,11 +33,11 @@ class RecommenderToken
 
     private $limit;
 
-    /** @var  Recommender $entity */
+    /** @var  RecommenderTemplate $entity */
     private $entity;
 
     /**
-     * @var RecommenderModel
+     * @var TemplateModel
      */
     private $recommenderModel;
 
@@ -75,11 +75,11 @@ class RecommenderToken
     /**
      * RecommenderToken constructor.
      *
-     * @param RecommenderModel $recommenderModel
+     * @param TemplateModel $recommenderModel
      * @param LeadModel     $leadModel
      * @param CampaignModel $campaignModel
      */
-    public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel, CampaignModel $campaignModel)
+    public function __construct(TemplateModel $recommenderModel, LeadModel $leadModel, CampaignModel $campaignModel)
     {
         $this->recommenderModel  = $recommenderModel;
         $this->campaignModel = $campaignModel;
@@ -198,7 +198,7 @@ class RecommenderToken
     {
         if ($this->id != $id) {
             $entity = $this->recommenderModel->getEntity($id);
-            if ($entity instanceof Recommender && $entity->getId()) {
+            if ($entity instanceof RecommenderTemplate && $entity->getId()) {
                 $this->setEntity($entity);
             }
         }

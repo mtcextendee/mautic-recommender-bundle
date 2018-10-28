@@ -21,7 +21,7 @@ $view['slots']->set(
             'templateButtons' => [
                 'new' => $permissions['recommender:recommender:create'],
             ],
-            'routeBase' => 'recommender',
+            'routeBase' => 'recommender_template',
         ]
     )
 );

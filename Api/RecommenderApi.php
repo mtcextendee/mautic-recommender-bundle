@@ -72,7 +72,7 @@ class RecommenderApi
 
         return;
 
-        $integration = $integrationHelper->getIntegrationObject('Recommender');
+        $integration = $integrationHelper->getIntegrationObject('RecommenderTemplate');
         if (($integration && $integration->getIntegrationSettings()->getIsPublished()) || isset($_POST['integration_details'])) {
 
             $keys = $integration->getDecryptedApiKeys();

@@ -14,7 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 use Mautic\CoreBundle\Controller\AjaxController as CommonAjaxController;
 use Mautic\CoreBundle\Helper\InputHelper;
 use MauticPlugin\MauticFocusBundle\Model\FocusModel;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -31,10 +31,10 @@ class AjaxController extends CommonAjaxController
         $data  = [];
         $recommender = $request->request->all();
 
-        if (isset($recommender['recommender'])) {
-            $recommenderEntity = new Recommender();
+        if (isset($recommender['recommender_templates'])) {
+            $recommenderEntity = new RecommenderTemplate();
             $accessor = PropertyAccess::createPropertyAccessor();
-            $recommenderArrays = InputHelper::_($recommender['recommender']);
+            $recommenderArrays = InputHelper::_($recommender['recommender_templates']);
             foreach ($recommenderArrays as $key=>$recommenderArray) {
              //   $accessor->setValue($recommenderEntity, $key, $recommenderArray);
                 $setter = 'set'.ucfirst($key);
@@ -43,7 +43,7 @@ class AjaxController extends CommonAjaxController
                 }
             }
             $data['content'] = $this->get('mautic.helper.templating')->getTemplating()->render(
-                'MauticRecommenderBundle:Builder\\'.ucfirst($recommenderEntity->getTemplateType()).':generator.html.php',
+                'MauticRecommenderBundle:Builder\\Page:generator.html.php',
                 [
                     'recommender'  => $recommenderEntity,
                     'settings'  => $this->get('mautic.helper.integration')->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings(),

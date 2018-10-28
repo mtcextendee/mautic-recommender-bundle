@@ -24,4 +24,12 @@ class PropertyRepository extends CommonRepository
     {
         return 'rip';
     }
+
+    public function findAllArray()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+                ->from('MauticRecommenderBundle:Property', 'p')
+                ->select('p')
+                ->getQuery()->getArrayResult();
+    }
 }

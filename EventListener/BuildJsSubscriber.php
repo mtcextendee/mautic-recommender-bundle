@@ -100,7 +100,7 @@ class BuildJsSubscriber extends CommonSubscriber
        
        MauticJS.onFirstEventDelivery(MauticJS.recommenderEvent);
 JS;
-        $event->appendJs($js, 'Recommender');
+        $event->appendJs($js, 'RecommenderTemplate');
     }
 
 

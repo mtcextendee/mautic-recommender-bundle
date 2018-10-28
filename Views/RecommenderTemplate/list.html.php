@@ -9,9 +9,9 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 if ($tmpl == 'index') {
-    $view->extend('MauticRecommenderBundle:Recommender:index.html.php');
+    $view->extend('MauticRecommenderBundle:RecommenderTemplate:index.html.php');
 }
-/* @var \MauticPlugin\MauticRecommenderBundle\Entity\Recommender[] $items */
+/* @var \MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate[] $items */
 ?>
 
 <?php if (count($items)): ?>
@@ -25,7 +25,7 @@ if ($tmpl == 'index') {
                     [
                         'checkall'        => 'true',
                         'target'          => '#msgTable',
-                        'routeBase'       => 'recommender',
+                        'routeBase'       => 'recommender_template',
                         'templateButtons' => [
                             'delete' => $permissions['recommender:recommender:deleteown']
                                 || $permissions['recommender:recommender:deleteother'],
@@ -79,7 +79,7 @@ if ($tmpl == 'index') {
                                         $item->getCreatedBy()
                                     ),
                                 ],
-                                'routeBase'  => 'recommender',
+                                'routeBase'  => 'recommender_template',
                                 'nameGetter' => 'getName',
                             ]
                         );
@@ -91,7 +91,7 @@ if ($tmpl == 'index') {
                             ['item' => $item, 'model' => 'recommender.recommender']
                         ); ?>
                         <a href="<?php echo $view['router']->generate(
-                            'mautic_recommender_action',
+                            'mautic_recommender_template_action',
                             ['objectAction' => 'view', 'objectId' => $item->getId()]
                         ); ?>" data-toggle="ajax">
                             <?php echo $item->getName(); ?>
@@ -110,8 +110,8 @@ if ($tmpl == 'index') {
                     'totalItems' => count($items),
                     'page'       => $page,
                     'limit'      => $limit,
-                    'menuLinkId' => 'mautic_recommender_index',
-                    'baseUrl'    => $view['router']->generate('mautic_recommender_index'),
+                    'menuLinkId' => 'mautic_recommender_template_index',
+                    'baseUrl'    => $view['router']->generate('mautic_recommender_template_index'),
                     'sessionVar' => 'recommender',
                 ]
             ); ?>

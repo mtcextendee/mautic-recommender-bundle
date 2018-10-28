@@ -13,24 +13,24 @@ namespace MauticPlugin\MauticRecommenderBundle\Event;
 
 use Mautic\CoreBundle\Event\CommonEvent;
 use MauticPlugin\MauticMTCPilotBundle\Entity\MTCPilot;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 
 class RecommenderEvent extends CommonEvent
 {
     /**
      * RecommenderEvent constructor.
      *
-     * @param Recommender $entity
-     * @param bool           $isNew
+     * @param RecommenderTemplate $entity
+     * @param bool                $isNew
      */
-    public function __construct(Recommender $entity, $isNew = false)
+    public function __construct(RecommenderTemplate $entity, $isNew = false)
     {
         $this->entity = $entity;
         $this->isNew  = $isNew;
     }
 
     /**
-     * @return Recommender
+     * @return RecommenderTemplate
      */
     public function getEntity()
     {
@@ -38,9 +38,9 @@ class RecommenderEvent extends CommonEvent
     }
 
     /**
-     * @param Recommender $entity
+     * @param RecommenderTemplate $entity
      */
-    public function setEntity(Recommender $entity)
+    public function setEntity(RecommenderTemplate $entity)
     {
         $this->entity = $entity;
     }

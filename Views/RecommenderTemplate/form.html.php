@@ -17,7 +17,7 @@ $view->extend('MauticCoreBundle:FormTheme:form_simple.html.php');
 $view['slots']->start('primaryFormContent');
 echo $view['assets']->includeStylesheet('plugins/MauticRecommenderBundle/Assets/css/recommender.css');
 echo $view['assets']->includeScript('plugins/MauticRecommenderBundle/Assets/js/recommender.js');
-/** @var \MauticPlugin\MauticRecommenderBundle\Entity\Recommender $recommender */
+/** @var \MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate $recommender */
 $recommender = $entity;
 ?>
 <div class="row">
@@ -27,14 +27,11 @@ $recommender = $entity;
     <!--<div class="col-md-3 recommender-preview">
         <?php /*echo $view['form']->row($form['numberOfItems']); */?>
     </div>-->
-    <div class="col-md-2">
+    <div class="col-md-3">
         <?php echo $view['form']->row($form['isPublished']); ?>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <?php echo $view['form']->row($form['templateMode']); ?>
-    </div>
-    <div class="col-md-2 recommender-preview">
-        <?php echo $view['form']->row($form['templateType']); ?>
     </div>
 </div>
 <div class="row">
@@ -42,7 +39,7 @@ $recommender = $entity;
         <div class="row">
             <div class="col-md-12">
                 <div id="recommender_properties_1"
-                     data-show-on="{&quot;recommender_templateMode_0&quot;:&quot;checked&quot;}">
+                     data-show-on="{&quot;recommender_templates_templateMode_0&quot;:&quot;checked&quot;}">
 
                     <h3><?php echo $view['translator']->trans('mautic.plugin.recommender.preview'); ?></h3>
                     <hr>
@@ -67,8 +64,7 @@ $recommender = $entity;
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div id="recommender_template_1" data-show-on="{&quot;recommender_templateMode_1&quot;:&quot;checked&quot;}">
-
+                <div id="recommender_template_1" data-show-on="{&quot;recommender_templates_templateMode_1&quot;:&quot;checked&quot;}">
                     <div class="form-control-custom">
                         <?php
                         echo $view['form']->widget($form['template']['header']);
@@ -97,7 +93,7 @@ $recommender = $entity;
 
 
 <div class="row">
-    <div id="recommender_template_2" data-show-on="{&quot;recommender_templateMode_0&quot;:&quot;checked&quot;}">
+    <div id="recommender_template_2" data-show-on="{&quot;recommender_templates_templateMode_0&quot;:&quot;checked&quot;}">
 
         <div class="panel-group recommender-preview" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
@@ -356,7 +352,7 @@ $recommender = $entity;
 
 <div class="row" style="margin-top:-10px;">
     <div class="col-md-12">
-        <div id="recommender_template" data-show-on="{&quot;recommender_templateMode_1&quot;:&quot;checked&quot;}">
+        <div id="recommender_template" data-show-on="{&quot;recommender_templates_templateMode_1&quot;:&quot;checked&quot;}">
 
             <div class="row">
                 <div class="col-xs-12">

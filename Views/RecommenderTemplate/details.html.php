@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-/** @var \MauticPlugin\MauticRecommenderBundle\Entity\Recommender $entity */
+/** @var \MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate $entity */
 $isEmbedded = false;
 if (!$isEmbedded) {
     $view->extend('MauticCoreBundle:Default:content.html.php');
@@ -44,7 +44,7 @@ if (!$isEmbedded) {
                         $entity->getCreatedBy()
                     ),
                 ],
-                'routeBase' => 'recommender',
+                'routeBase' => 'recommender_template',
             ]
         )
     );

@@ -22,7 +22,7 @@ use Mautic\LeadBundle\LeadEvent;
 use Mautic\PageBundle\Event\PageHitEvent;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
+use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenHTMLReplacer;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Recommender\RecommApi\Requests\AddDetailView;
@@ -122,8 +122,8 @@ class PageSubscriber extends CommonSubscriber
         }
 
         $request = $event->getRequest();
-        if (!empty($request->get('Recommender'))) {
-            $commands = \GuzzleHttp\json_decode($request->get('Recommender'), true);
+        if (!empty($request->get('RecommenderTemplate'))) {
+            $commands = \GuzzleHttp\json_decode($request->get('RecommenderTemplate'), true);
             foreach ($commands as $apiRequest => $options) {
                 $this->apiCommands->callCommand($apiRequest, $options);
             }

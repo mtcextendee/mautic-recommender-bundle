@@ -15,8 +15,8 @@ use Mautic\CoreBundle\Helper\TemplatingHelper;
 use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
+use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 use Recommender\RecommApi\Exceptions as Ex;
 use Recommender\RecommApi\Requests as Reqs;
 
@@ -26,7 +26,7 @@ class RecommenderGenerator
     private $recommenderApi;
 
     /**
-     * @var RecommenderModel
+     * @var TemplateModel
      */
     private $recommenderModel;
 
@@ -63,15 +63,15 @@ class RecommenderGenerator
     /**
      * RecommenderGenerator constructor.
      *
-     * @param RecommenderModel     $recommenderModel
-     * @param RecommenderApi       $recommenderApi
+     * @param TemplateModel     $recommenderModel
+     * @param RecommenderApi    $recommenderApi
      * @param LeadModel         $leadModel
      * @param \Twig_Environment $twig
      * @param ApiCommands       $apiCommands
      * @param TemplatingHelper  $templatingHelper
      */
     public function __construct(
-        RecommenderModel $recommenderModel,
+        TemplateModel $recommenderModel,
         RecommenderApi $recommenderApi,
         LeadModel $leadModel,
         \Twig_Environment $twig,
@@ -99,7 +99,7 @@ class RecommenderGenerator
 
         $recommender = $this->recommenderModel->getEntity($recommenderToken->getId());
 
-        if (!$recommender instanceof Recommender) {
+        if (!$recommender instanceof RecommenderTemplate) {
             return;
         }
 
@@ -150,10 +150,10 @@ class RecommenderGenerator
      */
     public function getContentByToken(RecommenderToken $recommenderToken)
     {
-        /** @var Recommender $recommender */
+        /** @var RecommenderTemplate $recommender */
         $recommender = $this->recommenderModel->getEntity($recommenderToken->getId());
 
-        if (!$recommender instanceof Recommender) {
+        if (!$recommender instanceof RecommenderTemplate) {
             return;
         }
 
@@ -161,21 +161,21 @@ class RecommenderGenerator
         if (empty($items)) {
             return;
         }
-        if ($recommender->getTemplateType() == 'basic') {
+        if ($recommender->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Recommender:generator-header.html.php',
+                'MauticRecommenderBundle:RecommenderTemplate:generator-header.html.php',
                 [
                     'recommender' => $recommender,
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Recommender:generator-footer.html.php',
+                'MauticRecommenderBundle:RecommenderTemplate:generator-footer.html.php',
                 [
                     'recommender' => $recommender,
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Recommender:generator-body.html.php',
+                'MauticRecommenderBundle:RecommenderTemplate:generator-body.html.php',
                 [
                     'recommender' => $recommender,
                 ]

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name'        => 'Recommender',
+    'name'        => 'RecommenderTemplate',
     'description' => 'Recomendations engine',
     'author'      => 'kuzmany.biz',
     'version'     => '0.0.1',
@@ -77,21 +77,30 @@ return [
             'mautic.recommender.model.recommender' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel::class,
             ],
+            'mautic.recommender.model.template' => [
+                'class' => MauticPlugin\MauticRecommenderBundle\Model\TemplateModel::class,
+            ],
+            'mautic.recommender.model.event' => [
+                'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderEventModel::class,
+            ],
             'mautic.recommender.model.client' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel::class,
                 'arguments' => ['mautic.tracker.contact']
             ],
-            'mautic.recommender.model.item' => [
-                'class' => MauticPlugin\MauticRecommenderBundle\Model\ItemModel::class,
-            ],
-            'mautic.recommender.model.event.log' => [
-                'class' => \MauticPlugin\MauticRecommenderBundle\Model\EventLogModel::class,
-            ],
         ],
         'forms'        => [
-            'mautic.form.type.recommender'         => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderType::class,
-                'alias'     => 'recommender',
+            'mautic.form.type.recommender.template'         => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTemplatesType::class,
+                'alias'     => 'recommender_templates',
+                'arguments' => [
+                    'mautic.security',
+                    'router',
+                    'translator',
+                ],
+            ],
+            'mautic.form.type.recommender.event'         => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderEventType::class,
+                'alias'     => 'recommender_event',
                 'arguments' => [
                     'mautic.security',
                     'router',
@@ -158,7 +167,7 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper::class,
                 'arguments' => [
                     'mautic.helper.integration',
-                    'mautic.recommender.model.recommender',
+                    'mautic.recommender.model.template',
                     'translator',
                     'mautic.security',
                     'doctrine.orm.entity_manager'
@@ -194,7 +203,7 @@ return [
             'mautic.recommender.service.token'               => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken::class,
                 'arguments' => [
-                    'mautic.recommender.model.recommender',
+                    'mautic.recommender.model.template',
                     'mautic.lead.model.lead',
                     'mautic.campaign.model.campaign',
                 ],
@@ -217,7 +226,7 @@ return [
             'mautic.recommender.service.token.generator'     => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Service\RecommenderGenerator::class,
                 'arguments' => [
-                    'mautic.recommender.model.recommender',
+                    'mautic.recommender.model.template',
                     'mautic.recommender.api.recommender',
                     'mautic.lead.model.lead',
                     'twig',
@@ -249,23 +258,31 @@ return [
     ],
     'routes'      => [
         'main'   => [
-            'mautic_recommender_index'  => [
-                'path'       => '/recommender/{page}',
-                'controller' => 'MauticRecommenderBundle:Recommender:index',
+            'mautic_recommender_template_index'  => [
+                'path'       => '/recommenderTemplate/{page}',
+                'controller' => 'MauticRecommenderBundle:RecommenderTemplate:index',
             ],
-            'mautic_recommender_action' => [
-                'path'       => '/recommender/{objectAction}/{objectId}',
-                'controller' => 'MauticRecommenderBundle:Recommender:execute',
+            'mautic_recommender_template_action' => [
+                'path'       => '/recommenderTemplate/{objectAction}/{objectId}',
+                'controller' => 'MauticRecommenderBundle:RecommenderTemplate:execute',
+            ],
+            'mautic_recommender_event_index'  => [
+                'path'       => '/recommenderEvent/{page}',
+                'controller' => 'MauticRecommenderBundle:RecommenderEvent:index',
+            ],
+            'mautic_recommender_event_action' => [
+                'path'       => '/recommenderEvent/{objectAction}/{objectId}',
+                'controller' => 'MauticRecommenderBundle:RecommenderEvent:execute',
             ],
         ],
         'public' => [
             'mautic_recommender_generate_template' => [
                 'path'       => '/recommender/template/{id}',
-                'controller' => 'MauticRecommenderBundle:Recommender:template',
+                'controller' => 'MauticRecommenderBundle:RecommenderTemplate:template',
             ],
             'mautic_recommender_process_action' => [
                 'path'       => '/recommender/send/event',
-                'controller' => 'MauticRecommenderBundle:Recommender:process',
+                'controller' => 'MauticRecommenderBundle:RecommenderTemplate:process',
             ],
         ],
         'api'    => [
@@ -280,7 +297,19 @@ return [
         'main' => [
             'items' => [
                 'mautic.plugin.recommender' => [
-                    'route'    => 'mautic_recommender_index',
+                    'access'   => ['recommender:recommender:viewown', 'recommender:recommender:viewother'],
+                    'iconClass' => 'fa fa-table',
+                    'checks'   => [
+                        'integration' => [
+                            'Recommender' => [
+                                'enabled' => true,
+                            ],
+                        ],
+                    ],
+                    'priority' => 70,
+                ],
+                'mautic.plugin.recommender.templates' => [
+                    'route'    => 'mautic_recommender_template_index',
                     'access'   => ['recommender:recommender:viewown', 'recommender:recommender:viewother'],
                     'checks'   => [
                         'integration' => [
@@ -289,7 +318,20 @@ return [
                             ],
                         ],
                     ],
-                    'parent'   => 'mautic.core.components',
+                    'parent'   => 'mautic.plugin.recommender',
+                    'priority' => 50,
+                ],
+                'mautic.plugin.recommender.event' => [
+                    'route'    => 'mautic_recommender_event_index',
+                    'access'   => ['recommender:recommenderEvent:viewown', 'recommender:recommenderEvent:viewother'],
+                    'checks'   => [
+                        'integration' => [
+                            'Recommender' => [
+                                'enabled' => true,
+                            ],
+                        ],
+                    ],
+                    'parent'   => 'mautic.plugin.recommender',
                     'priority' => 100,
                 ],
             ],

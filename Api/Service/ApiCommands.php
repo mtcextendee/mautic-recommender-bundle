@@ -93,7 +93,7 @@ class ApiCommands
      */
     public function callCommand($apiRequest, array $options = [])
     {
-        $this->recommenderApi->getClient()->send($apiRequest, $options);
+        return $this->recommenderApi->getClient()->send($apiRequest, $options);
     }
 
     public function ImportUser($lead)

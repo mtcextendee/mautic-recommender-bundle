@@ -15,10 +15,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 
 /**
- * Class RecommenderRepository
+ * Class RecommenderTemplateRepository
  * @package MauticPlugin\MauticRecommenderBundle\Entity
  */
-class RecommenderRepository extends CommonRepository
+class RecommenderTemplateRepository extends CommonRepository
 {
     /**
      * Get a list of entities.
@@ -32,7 +32,7 @@ class RecommenderRepository extends CommonRepository
         $q = $this->_em
             ->createQueryBuilder()
             ->select('e')
-            ->from('MauticRecommenderBundle:Recommender', 'e', 'e.id');
+            ->from('MauticRecommenderBundle:RecommenderTemplate', 'e', 'e.id');
 
 
         $args['qb'] = $q;

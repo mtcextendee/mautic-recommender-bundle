@@ -20,10 +20,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
- * Class Recommender
+ * Class RecommenderTemplate
  * @package MauticPlugin\MauticRecommenderBundle\Entity
  */
-class Recommender extends FormEntity
+class RecommenderTemplate extends FormEntity
 {
 
     /**
@@ -54,9 +54,6 @@ class Recommender extends FormEntity
     /** @var  string */
     private $templateMode;
 
-    /** @var  string */
-    private $templateType;
-
     /**
      * @var html
      */
@@ -68,7 +65,7 @@ class Recommender extends FormEntity
     private $properties;
 
     /**
-     * Recommender constructor.
+     * RecommenderTemplate constructor.
      */
     public function __construct()
     {
@@ -91,8 +88,8 @@ class Recommender extends FormEntity
     {
         $builder = new ClassMetadataBuilder($metadata);
 
-        $builder->setTable('recommender')
-            ->setCustomRepositoryClass('MauticPlugin\MauticRecommenderBundle\Entity\RecommenderRepository');
+        $builder->setTable('recommender_template')
+            ->setCustomRepositoryClass('MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplateRepository');
 
         $builder->addIdColumns('name', '');
 
@@ -105,11 +102,6 @@ class Recommender extends FormEntity
 
         $builder->createField('templateMode', 'string')
             ->columnName('template_mode')
-            ->nullable()
-            ->build();
-
-        $builder->createField('templateType', 'string')
-            ->columnName('template_type')
             ->nullable()
             ->build();
 
@@ -149,7 +141,6 @@ class Recommender extends FormEntity
                 'publishDown',
                 'template',
                 'templateMode',
-                'templateType',
                 'properties',
             ])
             ->build();
@@ -267,7 +258,7 @@ class Recommender extends FormEntity
     /**
      * @param mixed $properties
      *
-     * @return Recommender
+     * @return RecommenderTemplate
      */
     public function setProperties($properties)
     {
@@ -288,27 +279,6 @@ class Recommender extends FormEntity
     /**
      * @return string
      */
-    public function getTemplateType()
-    {
-        return $this->templateType;
-    }
-
-    /**
-     * @param string $templateType
-     *
-     * @return Recommender
-     */
-    public function setTemplateType($templateType)
-    {
-        $this->isChanged('templateType', $templateType);
-        $this->templateType = $templateType;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getTemplateMode()
     {
         return $this->templateMode;
@@ -317,7 +287,7 @@ class Recommender extends FormEntity
     /**
      * @param string $templateMode
      *
-     * @return Recommender
+     * @return RecommenderTemplate
      */
     public function setTemplateMode($templateMode)
     {

@@ -14,13 +14,13 @@ namespace MauticPlugin\MauticRecommenderBundle\Helper;
 use Doctrine\ORM\EntityManager;
 use Mautic\CoreBundle\Security\Permissions\CorePermissions;
 use Mautic\LeadBundle\Entity\Lead;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\PageBundle\Event\PageDisplayEvent;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
+use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 use Recommender\RecommApi\Client;
 use Recommender\RecommApi\Exceptions as Ex;
 use Recommender\RecommApi\Requests as Reqs;
@@ -42,7 +42,7 @@ class RecommenderHelper
     protected $integrationHelper;
 
     /**
-     * @var RecommenderModel $recommenderModel
+     * @var TemplateModel $recommenderModel
      */
     protected $recommenderModel;
 
@@ -71,14 +71,14 @@ class RecommenderHelper
      * RecommenderHelper constructor.
      *
      * @param IntegrationHelper   $integrationHelper
-     * @param RecommenderModel       $recommenderModel
+     * @param TemplateModel       $recommenderModel
      * @param TranslatorInterface $translator
      * @param CorePermissions     $security
      * @param EntityManager       $entityManager
      */
     public function __construct(
         IntegrationHelper $integrationHelper,
-        RecommenderModel $recommenderModel,
+        TemplateModel $recommenderModel,
         TranslatorInterface $translator,
         CorePermissions $security,
         EntityManager $entityManager

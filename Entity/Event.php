@@ -155,4 +155,20 @@ class Event
     {
         return $this->weight;
     }
+
+    public function getCreatedBy()
+    {
+
+    }
+
+    public function getHeader()
+    {
+
+    }
+
+    public function getPublishStatus()
+    {
+
+    }
+
 }

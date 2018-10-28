@@ -41,7 +41,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('mautic:recommender:import')
-            ->setDescription('Import data to Recommender')
+            ->setDescription('Import data to RecommenderTemplate')
             ->addOption(
                 '--type',
                 '-t',
@@ -86,7 +86,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     {
         /** @var IntegrationHelper $integrationHelper */
         $integrationHelper = $this->getContainer()->get('mautic.helper.integration');
-        $integrationObject = $integrationHelper->getIntegrationObject('Recommender');
+        $integrationObject = $integrationHelper->getIntegrationObject('RecommenderTemplate');
         /** @var Translator $translator */
         $translator = $this->getContainer()->get('translator');
 
@@ -172,7 +172,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         }
 
         // import Leads
-        $criteria['integration']       = 'Recommender';
+        $criteria['integration']       = 'RecommenderTemplate';
         $criteria['integrationEntity'] = 'users';
         $criteria['internalEntity']    = 'contacts';
         //$integrationEntity = $em->getRepository(IntegrationEntity::class)->findOneBy($criteria);

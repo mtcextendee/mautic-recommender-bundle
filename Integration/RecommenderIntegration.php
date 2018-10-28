@@ -34,7 +34,7 @@ class RecommenderIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'Recommender';
+        return 'RecommenderTemplate';
     }
 
     public function getIcon()
@@ -106,23 +106,6 @@ class RecommenderIntegration extends AbstractIntegration
                     ],
                 ]
             );
-
-
-            $builder->add(
-                'allowedEvents',
-                SortableListType::class,
-                [
-                    'label' => 'mautic.plugin.recommender.events',
-                    'attr' => [
-                        'tooltip' => 'mautic.plugin.recommender.events.tooltip'
-                    ],
-                    'option_required' => false,
-                    'with_labels'     => true,
-                    'required'        => false,
-                    'key_value_pairs' => true,
-                ]
-            );
-
 
 
             $builder->add(

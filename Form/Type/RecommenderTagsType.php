@@ -54,7 +54,7 @@ class RecommenderTagsType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => function (Options $options) {
-                $properties =  $this->apiCommands->callCommand('ListItemProperties');
+                $properties =  $this->apiCommands->callCommand('ListProperties');
                 $choices = [];
                 foreach ($properties as $property) {
                     $tag = '{{ '.$property['name'].' }}';

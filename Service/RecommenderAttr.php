@@ -12,7 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Service;
 
 use Mautic\LeadBundle\Entity\Lead;
-use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 
 class RecommenderAttr
 {

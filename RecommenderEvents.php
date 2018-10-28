@@ -12,7 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle;
 
 /**
- * Class RecommenderEvents
+ * Class RecommenderEvent
  * Events available for MauticRecommenderBundle.
  */
 final class RecommenderEvents

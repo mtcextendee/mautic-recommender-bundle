@@ -20,7 +20,7 @@ mQuery(document).on('change', '.recommender-preview input:radio', function(){
 Mautic.recommenderUpdatePreview = function () {
     mQuery('#recommender-preview').fadeTo('normal', 0.4);
     mQuery('#recommender-preview-loader').show();
-    var data = mQuery('form[name=recommender]').formToArray();
+    var data = mQuery('form[name=recommender_templates]').formToArray();
     Mautic.ajaxActionRequest('plugin:recommender:generatePreview', data, function (response) {
         if(response.content) {
             mQuery('#recommender-preview').html(response.content);
