@@ -2,19 +2,9 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Integration;
 
-use Mautic\CoreBundle\Form\Type\SortableListType;
 use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
-use Mautic\CoreBundle\Templating\Helper\AnalyticsHelper;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
-use MauticPlugin\MauticExtendeeAnalyticsBundle\Integration\EAnalyticsIntegration;
-use MauticPlugin\MauticRecommenderBundle\Api\Client\Request\Item;
-use MauticPlugin\MauticRecommenderBundle\Helper\GoogleAnalyticsHelper;
-use Recommender\RecommApi\Requests as Reqs;
-use Recommender\RecommApi\Exceptions as Ex;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RecommenderIntegration extends AbstractIntegration
 {
@@ -34,7 +24,7 @@ class RecommenderIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'RecommenderTemplate';
+        return 'Recommender';
     }
 
     public function getIcon()
@@ -107,7 +97,7 @@ class RecommenderIntegration extends AbstractIntegration
                 ]
             );
 
-
+/*
             $builder->add(
                 'abandoned_cart',
                 YesNoButtonGroupType::class,
@@ -147,7 +137,7 @@ class RecommenderIntegration extends AbstractIntegration
                     'multiple'   => false,
                     'expanded'   => false,
                 ]
-            );
+            );*/
         }
     }
 }
