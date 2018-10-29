@@ -68,7 +68,7 @@ class EmailSubscriber extends CommonSubscriber
     {
         if ($event->tokensRequested($this->recommenderHelper->getRecommenderRegex())) {
             $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
-            $event->addTokensFromHelper($tokenHelper, $this->recommenderHelper->getRecommenderRegex(), 'name', 'id', true);
+          //  $event->addTokensFromHelper($tokenHelper, $this->recommenderHelper->getRecommenderRegex(), 'name', 'id', true);
         }
     }
 
