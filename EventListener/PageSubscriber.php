@@ -103,8 +103,8 @@ class PageSubscriber extends CommonSubscriber
     public function onPageBuild(Events\PageBuilderEvent $event)
     {
         if ($event->tokensRequested($this->recommenderHelper->getRecommenderRegex())) {
-            $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
-            $event->addTokensFromHelper($tokenHelper, $this->recommenderHelper->getRecommenderRegex(), 'name', 'id', true);
+         //   $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
+        //    $event->addTokensFromHelper($tokenHelper, $this->recommenderHelper->getRecommenderRegex(), 'name', 'id', true);
         }
     }
 
