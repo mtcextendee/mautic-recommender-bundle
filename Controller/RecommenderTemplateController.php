@@ -181,7 +181,7 @@ class RecommenderTemplateController extends AbstractStandardFormController
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->get('mautic.recommender.service.api.commands');
         $eventLabel = $this->get('mautic.helper.core_parameters')->getParameter ('eventLabel');
-        $integrationSettings = $this->get('mautic.helper.integration')->getIntegrationObject('RecommenderTemplate')->getIntegrationSettings()->getFeatureSettings();
+        $integrationSettings = $this->get('mautic.helper.integration')->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
         $options           = $this->request->request->all();
         $recommender = $this->request->get('eventDetail');
         $eventDetail = json_decode(base64_decode($recommender), true);

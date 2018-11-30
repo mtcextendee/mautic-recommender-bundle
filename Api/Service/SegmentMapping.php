@@ -54,7 +54,7 @@ class SegmentMapping
     public function map($apiRequest, $userId)
     {
         $lead['id'] = $userId;
-        $settings   = $this->integrationHelper->getIntegrationObject('RecommenderTemplate')->getIntegrationSettings(
+        $settings   = $this->integrationHelper->getIntegrationObject('Recommender')->getIntegrationSettings(
         )->getFeatureSettings();
 
 

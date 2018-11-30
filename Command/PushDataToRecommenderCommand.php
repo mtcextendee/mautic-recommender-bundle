@@ -86,7 +86,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     {
         /** @var IntegrationHelper $integrationHelper */
         $integrationHelper = $this->getContainer()->get('mautic.helper.integration');
-        $integrationObject = $integrationHelper->getIntegrationObject('RecommenderTemplate');
+        $integrationObject = $integrationHelper->getIntegrationObject('Recommender');
         /** @var Translator $translator */
         $translator = $this->getContainer()->get('translator');
 

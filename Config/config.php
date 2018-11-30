@@ -7,6 +7,12 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
+            'mautic.recommender.segment.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\SegmentFiltersSubscriber::class,
+                'arguments' => [
+                    'mautic.lead.model.list'
+                ],
+            ],
             'mautic.recommender.js.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
                 'arguments' => [
