@@ -90,5 +90,7 @@ final class RecommenderEvents
      */
     const ON_CAMPAIGN_TRIGGER_DECISION = 'mautic.plugin.recommender.on_campaign_trigger_decision';
 
+    const ON_RECOMMENDER_FILTER_FORM_DISPLAY= 'mautic.plugin.recommender.in_filter_form_display';
+
 
 }

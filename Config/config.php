@@ -7,6 +7,11 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
+            'mautic.recommender.filter.display.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormSubscriber::class,
+                'arguments' => [
+                ],
+            ],
             'mautic.recommender.segment.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\SegmentFiltersSubscriber::class,
                 'arguments' => [
@@ -145,6 +150,9 @@ return [
             'mautic.form.type.recommender.options.type' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderOptionsType::class,
                 'alias' => 'recommender_options_type',
+                'arguments' => [
+                    'event_dispatcher'
+                ]
             ],
             'mautic.form.type.recommender.tags'         => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTagsType::class,

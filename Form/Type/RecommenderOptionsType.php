@@ -11,6 +11,10 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
+use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
+use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,89 +27,34 @@ use Symfony\Component\Validator\Constraints\Range;
 class RecommenderOptionsType extends AbstractType
 {
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
+     * RecommenderOptionsType constructor.
+     *
+     * @param EventDispatcher $dispatcher
+     */
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add(
-            'type',
-            'choice',
-            [
-                'choices'     => [
-                    'recommend_items_to_user' => 'mautic.plugin.recommender.form.type.recommend_items_to_user',
-                    /*'recommend_items_to_item' => 'mautic.plugin.recommender.form.type.recommend_items_to_item',*/
-                    'abandoned_cart'  => 'mautic.plugin.recommender.form.type.abandoned_cart',
-                    'advanced'        => 'mautic.plugin.recommender.form.type.advanced',
-                ],
-                'expanded'    => false,
-                'multiple'    => false,
-                'label'       => 'mautic.plugin.recommender.form.recommendations.type',
-                'label_attr'  => ['class' => ''],
-                'empty_value' => false,
-                'required'    => true,
-                'constraints' => [
-                    new NotBlank(
-                        [
-                            'message' => 'mautic.core.value.required',
-                        ]
-                    ),
-                ],
-            ]
-        );
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_DISPLAY)) {
+            $event = new FilterFormEvent($builder);
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_DISPLAY, $event);
+            unset($event);
+        }
 
-       /* $builder->add(
-            'numberOfItems',
-            NumberType::class,
-            [
-                'label'       => 'mautic.plugin.recommender.form.number_of_items',
-                'label_attr'  => ['class' => 'control-label'],
-                'attr'        => [
-                    'class'   => 'form-control',
-                    'tooltip' => 'mautic.plugin.recommender.form.number_of_items.tooltip',
-                ],
-                'required'    => false,
-                'constraints' => [
-                    new Range(
-                        [
-                            'min' => 1,
-                        ]
-                    ),
-                ],
-            ]
-        );*/
-
-        $builder->add(
-            'filter',
-            'text',
-            [
-                'label'      => 'mautic.plugin.recommender.form.type.filter',
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'class' => 'form-control',
-                    'tooltip'=>'mautic.plugin.recommender.form.type.filter.tooltip',
-                    'data-show-on' => '{"campaignevent_properties_type_type":["advanced"]}',
-                ],
-                'required'   => false,
-            ]
-        );
-
-        $builder->add(
-            'booster',
-            'text',
-            [
-                'label'      => 'mautic.plugin.recommender.form.type.booster',
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'class' => 'form-control',
-                    'tooltip'=>'mautic.plugin.recommender.form.type.booster.tooltip',
-                    'data-show-on' => '{"campaignevent_properties_type_type":["advanced"]}',
-
-                ],
-                'required'   => false,
-            ]
-        );
     }
 
     /**
