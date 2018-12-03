@@ -10,7 +10,8 @@ return [
             'mautic.recommender.segment.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\SegmentFiltersSubscriber::class,
                 'arguments' => [
-                    'mautic.lead.model.list'
+                    'mautic.lead.model.list',
+                    'mautic.recommender.model.client'
                 ],
             ],
             'mautic.recommender.js.subscriber'  => [

@@ -20,6 +20,8 @@ use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\Event\LeadListQueryBuilderGeneratedEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Model\ListModel;
+use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SegmentFiltersSubscriber extends CommonSubscriber
@@ -30,14 +32,21 @@ class SegmentFiltersSubscriber extends CommonSubscriber
     private $listModel;
 
     /**
+     * @var RecommenderClientModel
+     */
+    private $recommenderClientModel;
+
+    /**
      * SegmentFiltersSubscriber constructor.
      *
-     * @param ListModel $listModel
+     * @param ListModel              $listModel
+     * @param RecommenderClientModel $recommenderClientModel
      */
-    public function __construct(ListModel $listModel)
+    public function __construct(ListModel $listModel, RecommenderClientModel $recommenderClientModel)
     {
 
         $this->listModel = $listModel;
+        $this->recommenderClientModel = $recommenderClientModel;
     }
 
     /**
@@ -81,17 +90,19 @@ class SegmentFiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersGenerate(LeadListFiltersChoicesEvent $event)
     {
+        $properties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
 
-        //'redirect_id' => [
-       // 'label'      => $this->translator->trans('mautic.lead.list.filter.redirect_id'),
-        $config = [
-            'label'      => 'mautic.core.yes',
-            'properties' => [
-                'type' => 'text',
-            ],
-            'operators' => $this->listModel->getOperatorsForFieldType('default'),
-        ];
-        $event->addChoice('lead', 'customfilter', $config);
+        foreach ($properties as $property) {
+            $type = RecommenderHelper::typeToTypeTranslator($property['type']);
+            $config = [
+                'label'      => $property['name'],
+                'properties' => [
+                    'type' => $type,
+                ],
+                'operators' => $this->listModel->getOperatorsForFieldType($type),
+            ];
+            $event->addChoice('lead', $property['id'], $config);
+        }
     }
 
 

@@ -34,6 +34,11 @@ class Property
     protected $type;
 
     /**
+     * @var bool
+     */
+    protected $segmentFilter;
+
+    /**
      * @var string
      */
     protected $value;
@@ -64,7 +69,7 @@ class Property
             ->addNamedField('name', 'string', 'name')
             ->addNamedField('type', 'string', 'type')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
-
+            $builder->addNullableField('segmentFilter', Type::BOOLEAN, 'segment_filter');
     }
 
     /**
@@ -181,5 +186,25 @@ class Property
     public function getDateAdded()
     {
         return $this->dateAdded;
+    }
+
+    /**
+     * @param boolean $segmentFilter
+     *
+     * @return Property
+     */
+    public function setSegmentFilter(bool $segmentFilter)
+    {
+        $this->segmentFilter = $segmentFilter;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSegmentFilter()
+    {
+        return $this->segmentFilter;
     }
 }

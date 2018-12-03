@@ -24,4 +24,18 @@ class ItemPropertyValueRepository extends CommonRepository
         return 'ripv';
     }
 
+    /**
+     * @return array
+     */
+    public function getItemValueProperties()
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('DISTINCT v.property_id as id, p.name, p.type')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_item_property_value', 'v');
+        $qb->join('v', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'v.property_id = p.id');
+        $qb->where($qb->expr()->eq('p.segment_filter', true));
+        return $qb->execute()->fetchAll();
+
+    }
+
 }

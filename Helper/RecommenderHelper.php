@@ -21,9 +21,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Mautic\PageBundle\Event\PageDisplayEvent;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
-use Recommender\RecommApi\Client;
-use Recommender\RecommApi\Exceptions as Ex;
-use Recommender\RecommApi\Requests as Reqs;
 
 const NUM                   = 50;
 const PROBABILITY_PURCHASED = 0.2;
@@ -88,6 +85,28 @@ class RecommenderHelper
         $this->translator        = $translator;
         $this->security          = $security;
         $this->entityManager     = $entityManager;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return string
+     */
+    public static function typeToTypeTranslator($type)
+    {
+        switch ($type) {
+            case 'string':
+            case 'float':
+                return 'text';
+            case 'set':
+                return 'select';
+            case 'boolean':
+                return 'bool';
+            case 'datetime':
+                return 'date';
+            default:
+                return 'default';
+        }
     }
 
     /**

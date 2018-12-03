@@ -15,6 +15,7 @@ use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
+use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 
 class ImportItems extends AbstractRequest
 {
