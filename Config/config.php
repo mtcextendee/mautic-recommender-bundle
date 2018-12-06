@@ -55,6 +55,13 @@ return [
                         'mautic.notification.api',
                     ],
             ],
+            'mautic.recommender.campaignbundle.send.email.subscriber'  => [
+                    'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignSendEmailSubscriber::class,
+                    'arguments' => [
+                        'mautic.email.model.email',
+                        'mautic.recommender.service.replacer',
+                    ],
+            ],
             'mautic.recommender.dynamic.content.token.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\DynamicContentTokenSubscriber::class,
                 'arguments' => [
@@ -236,7 +243,6 @@ return [
                     'mautic.recommender.service.token',
                     'mautic.recommender.service.token.finder',
                     'mautic.recommender.service.token.generator',
-                    'mautic.page.model.trackable',
                 ],
             ],
             'mautic.recommender.service.token.generator'     => [

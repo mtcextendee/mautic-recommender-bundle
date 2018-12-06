@@ -180,7 +180,6 @@ class CampaignSubscriber extends CommonSubscriber
         return [
             CampaignEvents::CAMPAIGN_ON_BUILD             => ['onCampaignBuild', 0],
             RecommenderEvents::ON_CAMPAIGN_TRIGGER_ACTION    => [
-                ['onCampaignTriggerActionSendRecommenderEmail', 0],
                 ['onCampaignTriggerActionSendNotification', 2],
                 ['onCampaignTriggerActionDynamiContent', 3],
                 ['onCampaignTriggerActionDynamiContentRemove', 4],
@@ -211,21 +210,6 @@ class CampaignSubscriber extends CommonSubscriber
                      'channelIdField'  => 'focus',
                  ]
              );
-
-
-
-        $event->addAction(
-            'recommender.email.send',
-            [
-                'label'           => 'mautic.recommender.email.campaign.event.send',
-                'description'     => 'mautic.recommender.email.campaign.event.send.desc',
-                'eventName'       => RecommenderEvents::ON_CAMPAIGN_TRIGGER_ACTION,
-                'formType'        => RecommenderEmailSendType::class,
-                'formTypeOptions' => ['update_select' => 'campaignevent_properties_email'],
-                'channel'         => 'email',
-                'channelIdField'  => 'email',
-            ]
-        );
 
         $event->addAction(
             'recommender.dynamic.content',
