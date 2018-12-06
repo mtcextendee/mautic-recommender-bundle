@@ -25,4 +25,24 @@ class ItemRepository extends CommonRepository
         return 'ri';
     }
 
+    /**
+     * @param null $contactId
+     * @param int  $max
+     *
+     * @return array
+     */
+    public function getContactsItemsByPoints($contactId = null, $max = 10)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('DISTINCT ri.id as id, SUM(e.weight) as totalWeight')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'ri')
+            ->join('ri', MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el', 'el.item_id = ri.id')
+            ->join('el', MAUTIC_TABLE_PREFIX.'recommender_event', 'e', 'el.item_id = e.id')
+            ->where($qb->expr()->eq('el.lead_id', ':contactId'))
+            ->orderBy('SUM(e.weight)', 'DESC')
+            ->setMaxResults($max)
+            ->setParameter('contactId', $contactId);
+        return $qb->execute()->fetchAll();
+    }
+
 }

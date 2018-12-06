@@ -115,7 +115,7 @@ class RecommenderTokenReplacer
     {
         $recommenderToken->setAddOptions($options);
         $this->recommenderGenerator->getResultByToken($recommenderToken, $options);
-        $content = $this->recommenderGenerator->replaceTagsFromContent($content);;
+        $content = $this->recommenderGenerator->replaceTagsFromContent($content);
         $this->replacedTokens[] = $content;
 
         return $content;

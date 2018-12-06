@@ -96,6 +96,15 @@ class ApiCommands
         return $this->recommenderApi->getClient()->send($apiRequest, $options);
     }
 
+    /**
+     * @param RecommenderToken $recommenderToken
+     */
+    public function getResults(RecommenderToken $recommenderToken)
+    {
+        return $this->recommenderApi->getClient()->display($recommenderToken);
+
+    }
+
     public function ImportUser($lead)
     {
     }

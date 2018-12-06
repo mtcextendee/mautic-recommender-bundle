@@ -48,7 +48,6 @@ class RecommenderOptionsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_DISPLAY)) {
             $event = new FilterFormEvent($builder);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_DISPLAY, $event);

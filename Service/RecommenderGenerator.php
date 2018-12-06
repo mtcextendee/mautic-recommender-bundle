@@ -17,8 +17,6 @@ use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
-use Recommender\RecommApi\Exceptions as Ex;
-use Recommender\RecommApi\Requests as Reqs;
 
 class RecommenderGenerator
 {
@@ -92,22 +90,33 @@ class RecommenderGenerator
      */
     public function getResultByToken(RecommenderToken $recommenderToken, $options = [])
     {
-        $hash = md5(\GuzzleHttp\json_encode($recommenderToken).\GuzzleHttp\json_encode($options));
-        if (!empty($this->cache[$hash])) {
-            return $this->cache[$hash];
-        }
-
         $recommender = $this->recommenderModel->getEntity($recommenderToken->getId());
 
         if (!$recommender instanceof RecommenderTemplate) {
             return;
         }
 
+        $recommenderToken->setAddOptions($options);
+
+        return $this->apiCommands->getResults($recommenderToken);
+
+            /*switch ($recommenderToken->getType()) {
+                case "RecommendItemsToUser":
+                    $this->apiCommands->callCommand(
+                        'RecommendItemsToUser',
+                        $recommenderToken->getOptions(['userId', 'limit'])
+                    );
+                    $items = $this->apiCommands->getCommandOutput();
+                    break;
+            }
+            $this->items = $items['recomms'];
+            $this->cache[$hash] = $this->items;
+            return $this->items;*///
+
         //$options['filter']           = $recommender->getFilter();
         //$options['booster']          = $recommender->getBoost();
-        $options['returnProperties'] = true;
+        /*$options['returnProperties'] = true;
         $recommenderToken->setAddOptions($options);
-        try {
             switch ($recommenderToken->getType()) {
                 case "RecommendItemsToUser":
                     $this->apiCommands->callCommand(
@@ -119,18 +128,7 @@ class RecommenderGenerator
             }
             $this->items = $items['recomms'];
             $this->cache[$hash] = $this->items;
-            return $this->items;
-
-        } catch (Ex\ApiTimeoutException $e) {
-            die(print_r($e->getMessage()));
-            //Handle timeout => use fallback
-        } catch (Ex\ResponseException $e) {
-            die(print_r($e->getMessage()));
-            //Handle errorneous request => use fallback
-        } catch (Ex\ApiException $e) {
-            die(print_r($e->getMessage()));
-            //ApiException is parent of both ResponseException and ApiTimeoutException
-        }
+            return $this->items;*/
     }
 
     /**
@@ -163,19 +161,19 @@ class RecommenderGenerator
         }
         if ($recommender->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:RecommenderTemplate:generator-header.html.php',
+                'MauticRecommenderBundle:Builder\Email:generator-header.html.php',
                 [
                     'recommender' => $recommender,
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:RecommenderTemplate:generator-footer.html.php',
+                'MauticRecommenderBundle:Builder\Email:generator-footer.html.php',
                 [
                     'recommender' => $recommender,
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:RecommenderTemplate:generator-body.html.php',
+                'MauticRecommenderBundle:Builder\Email:generator-body.html.php',
                 [
                     'recommender' => $recommender,
                 ]

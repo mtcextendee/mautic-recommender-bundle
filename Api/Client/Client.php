@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Api\Client;
 
 use MauticPlugin\MauticRecommender\Exception\ApiEndpointNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
+use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class Client
@@ -56,6 +57,19 @@ class Client
         $this->options = $options;
         $this->optionsResolver = new Options($this);
         $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$endpoint;
+        if (!class_exists($class)) {
+            throw new ApiEndpointNotFoundException('Class '.$class.' doesn\'t exist.');
+        }
+        $loader = new $class($this);
+        return $loader->run();
+    }
+
+    public function display(RecommenderToken $recommenderToken)
+    {
+        $this->endpoint = $recommenderToken->getType();
+        $this->options = $recommenderToken->getOptions(true);
+        $this->optionsResolver = new Options($this);
+        $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$this->endpoint;
         if (!class_exists($class)) {
             throw new ApiEndpointNotFoundException('Class '.$class.' doesn\'t exist.');
         }

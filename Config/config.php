@@ -10,6 +10,7 @@ return [
             'mautic.recommender.filter.display.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormSubscriber::class,
                 'arguments' => [
+                    'event_dispatcher'
                 ],
             ],
             'mautic.recommender.segment.subscriber'  => [

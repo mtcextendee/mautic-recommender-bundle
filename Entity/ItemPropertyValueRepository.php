@@ -35,7 +35,22 @@ class ItemPropertyValueRepository extends CommonRepository
         $qb->join('v', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'v.property_id = p.id');
         $qb->where($qb->expr()->eq('p.segment_filter', true));
         return $qb->execute()->fetchAll();
-
     }
 
+    /**
+     * @param null $itemId
+     *
+     * @return array
+     */
+    public function getValues($itemId = null)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('p.name, pv.value')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'i')
+            ->join('i', MAUTIC_TABLE_PREFIX.'recommender_item_property_value', 'pv', 'pv.item_id = i.id')
+            ->join('pv', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'pv.property_id = p.id')
+            ->where($qb->expr()->eq('i.id', ':itemId'))
+            ->setParameter('itemId', $itemId);
+        return $qb->execute()->fetchAll();
+    }
 }

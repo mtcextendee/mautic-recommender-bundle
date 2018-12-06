@@ -20,15 +20,29 @@ use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\Event\LeadListQueryBuilderGeneratedEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Model\ListModel;
+use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FilterFormSubscriber extends CommonSubscriber
 {
+
+    /**
+     * FilterFormSubscriber constructor.
+     *
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function __construct(EventDispatcherInterface $dispatcher)
+    {
+
+        $this->dispatcher = $dispatcher;
+    }
+
     /**
      * @return array
      */
@@ -46,18 +60,25 @@ class FilterFormSubscriber extends CommonSubscriber
      */
     public function onFilterFormDisplay(FilterFormEvent $event)
     {
+        $choices = [
+            'recommend_items_to_user' => 'mautic.plugin.recommender.form.type.recommend_items_to_user',
+            'abandoned_cart'          => 'mautic.plugin.recommender.form.type.abandoned_cart',
+            'advanced'                => 'mautic.plugin.recommender.form.type.advanced',
+        ];
+
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE)) {
+            $event = new FilterChoiceFormEvent($choices);
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $event);
+            $choices = $event->getChoices();
+            unset($event);
+        }
 
         $builder = $event->getBuilder();
         $builder->add(
             'type',
             'choice',
             [
-                'choices'     => [
-                    'recommend_items_to_user' => 'mautic.plugin.recommender.form.type.recommend_items_to_user',
-                    /*'recommend_items_to_item' => 'mautic.plugin.recommender.form.type.recommend_items_to_item',*/
-                    'abandoned_cart'  => 'mautic.plugin.recommender.form.type.abandoned_cart',
-                    'advanced'        => 'mautic.plugin.recommender.form.type.advanced',
-                ],
+                'choices'     => $choices,
                 'expanded'    => false,
                 'multiple'    => false,
                 'label'       => 'mautic.plugin.recommender.form.recommendations.type',
