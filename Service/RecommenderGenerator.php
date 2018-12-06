@@ -97,8 +97,8 @@ class RecommenderGenerator
         }
 
         $recommenderToken->setAddOptions($options);
-
-        return $this->apiCommands->getResults($recommenderToken);
+        $this->items =  $this->apiCommands->getResults($recommenderToken);
+        return $this->items;
 
             /*switch ($recommenderToken->getType()) {
                 case "RecommendItemsToUser":
@@ -138,7 +138,7 @@ class RecommenderGenerator
      */
     public function replaceTagsFromContent($content)
     {
-        return $this->twig->createTemplate($content)->render($this->getFirstItem()['values']);
+        return $this->twig->createTemplate($content)->render($this->getFirstItem());
     }
 
     /**
@@ -161,19 +161,19 @@ class RecommenderGenerator
         }
         if ($recommender->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Builder\Email:generator-header.html.php',
+                'MauticRecommenderBundle:Builder/Page:generator-header.html.php',
                 [
                     'recommender' => $recommender,
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Builder\Email:generator-footer.html.php',
+                'MauticRecommenderBundle:Builder/Page:generator-footer.html.php',
                 [
                     'recommender' => $recommender,
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Builder\Email:generator-body.html.php',
+                'MauticRecommenderBundle:Builder/Page:generator-body.html.php',
                 [
                     'recommender' => $recommender,
                 ]
@@ -197,11 +197,11 @@ class RecommenderGenerator
      */
     private function getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate)
     {
-        $output = $headerTemplate->render($this->getFirstItem()['values']);
+        $output = $headerTemplate->render($this->getFirstItem());
         foreach ($this->getItems() as $item) {
-            $output .= $bodyTemplate->render($item['values']);
+            $output .= $bodyTemplate->render($item);
         }
-        $output.= $footerTemplate->render($this->getFirstItem()['values']);
+        $output.= $footerTemplate->render($this->getFirstItem());
         return $output;
     }
 
@@ -229,12 +229,12 @@ class RecommenderGenerator
     {
         $keys = $this->getItemsKeys();
         foreach ($this->items as &$item) {
-            foreach ($item['values'] as $key => &$ite) {
+            foreach ($item as $key => &$ite) {
                 if (is_array($ite)) {
                     $ite = implode(', ', $ite);
                 }
             }
-            $item['values']['keys'] = $keys;
+            $item['keys'] = $keys;
         }
         return $this->items;
     }
@@ -256,7 +256,7 @@ class RecommenderGenerator
      */
     private function getItemsKeys($separator = ',')
     {
-        return  implode($separator, array_column($this->items, 'id'));
+        return  implode($separator, array_column($this->items, 'itemId'));
     }
 
     /**

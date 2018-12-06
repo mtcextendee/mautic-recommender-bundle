@@ -10,7 +10,12 @@
  */
 
 $class = 'recommender-template-'.$recommender->getId();
-
+if(!isset($preview)) {
+    $preview = false;
+}
+if(!isset($settings)) {
+    $settings = [];
+}
 ?>
 <?php
 echo $view->render(

@@ -9,7 +9,12 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-
+if(!isset($preview)) {
+    $preview = false;
+}
+if(!isset($settings)) {
+    $settings = [];
+}
 ?>
 <div class="recommender-col">
     <?php if (!empty($recommender->getProperties()['itemImage'])): ?>

@@ -11,6 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
+use Mautic\CoreBundle\Helper\InputHelper;
 use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
 use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
@@ -23,7 +24,12 @@ class RecommendItemsToUser extends AbstractRequest
         $results = $this->getModel()->getRepository()->getContactsItemsByPoints($this->getOptions()['userId'], $this->getOptions()['limit']);
         foreach ($results as &$result) {
             $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;
-            $result = array_merge($result, array_combine(array_column($properties, 'name'), array_column($properties, 'value')));
+            $properties = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
+            $translatedProperties = [];
+            foreach ($properties as $property=>$value) {
+                $translatedProperties[InputHelper::alphanum(InputHelper::transliterate($property))] = $value;
+            }
+            $result = array_merge($result, $translatedProperties);
         }
         return $results;
     }

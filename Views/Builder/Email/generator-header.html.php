@@ -10,7 +10,9 @@
  */
 
 $class = 'recommender-template-'.$recommender->getId();
-
+if(!isset($preview)) {
+    $preview = false;
+}
 ?>
 <center>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F2F2F2" class="recommender-global-row <?php echo $class ?>">

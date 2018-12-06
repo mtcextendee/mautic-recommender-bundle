@@ -11,6 +11,8 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
+use JMS\Serializer\Tests\Fixtures\Input;
+use Mautic\CoreBundle\Helper\InputHelper;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,8 +59,8 @@ class RecommenderTagsType extends AbstractType
                 $properties =  $this->apiCommands->callCommand('ListProperties');
                 $choices = [];
                 foreach ($properties as $property) {
-                    $tag = '{{ '.$property['name'].' }}';
-                    $choices[$tag] = $tag;
+                    $tag = '{{ '.InputHelper::alphanum(InputHelper::transliterate($property['name'])).' }}';
+                    $choices[$tag] = $property['name'];
                 }
 
                 return $choices;
