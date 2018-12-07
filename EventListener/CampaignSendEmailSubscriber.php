@@ -63,6 +63,17 @@ class CampaignSendEmailSubscriber extends CommonSubscriber
      */
     public function onCampaignBuild(CampaignBuilderEvent $event)
     {
+        // add restriction for email decision (opens, click, reply)
+        if (method_exists($event, 'addConnectionRestriction')) {
+            $decisions        = $event->getDecisions();
+            $allowedDecisions = ['email.open', 'email.click', 'email.reply'];
+            foreach ($decisions as $key => $decision) {
+                if (in_array($key, $allowedDecisions)) {
+                    $event->addConnectionRestriction('decisions', $key, 'action', 'recommender.email.send');
+                }
+            }
+        }
+
         $event->addAction(
             'recommender.email.send',
             [
@@ -113,12 +124,9 @@ class CampaignSendEmailSubscriber extends CommonSubscriber
         ];
 
         $event->setChannel('recommender-email', $emailId);
-        $email->setCustomHtml(
-            $this->recommenderTokenReplacer->replaceTokensFromContent(
-                $email->getCustomHtml(),
-                $this->getOptionsBasedOnRecommendationsType($config['type'], $campaignId, $leadId)
-            )
-        );
+
+        $this->recommenderTokenReplacer->getRecommenderToken()->setConfig($leadId, 'campaign', $campaignId, $config, $email->getCustomHtml());
+        $email->setCustomHtml($this->recommenderTokenReplacer->getReplacedContent());
 
         // check if cart has some items
         if (!$this->recommenderTokenReplacer->hasItems()) {

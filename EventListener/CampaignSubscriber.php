@@ -507,14 +507,6 @@ class CampaignSubscriber extends CommonSubscriber
                 $seconds = $this->campaignLeadDetails->getDiffSecondsFromAddedTime($campaignId, $leadId);
                 $options = $this->getAbandonedCartOptions(1, $seconds);
                 break;
-            case 'advanced':
-                if (!empty($config['filter'])) {
-                    $options['filter'] = $config['filter'];
-                }
-                if (!empty($config['booster'])) {
-                    $options['booster'] = $config['booster'];
-                }
-                break;
         }
 
         return $options;

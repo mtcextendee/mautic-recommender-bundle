@@ -42,10 +42,8 @@ class RecommenderTokenFinder
             return;
         }
         foreach ($matches[1] as $key => $match) {
-            $this->recommenderToken->parseToken($match);
-            if ($this->recommenderToken->isIsToken()) {
-                $this->recommenderTokens[$matches[0][$key]] = $this->recommenderToken;
-            }
+            $this->recommenderToken->setId($match);
+            $this->recommenderTokens[$matches[0][$key]] = $this->recommenderToken;
         }
         return $this->recommenderTokens;
     }

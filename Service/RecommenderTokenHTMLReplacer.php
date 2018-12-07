@@ -50,7 +50,7 @@ class RecommenderTokenHTMLReplacer
         $divContent = $xpath->query('//*[@class="mautic-recommender"]');
         for ($i = 0; $i < $divContent->length; ++$i) {
             $recommenderBlock = $divContent->item($i);
-            $this->recommenderToken->setToken($this->parseData($recommenderBlock));
+            //$this->recommenderToken->setToken($this->parseData($recommenderBlock));
             $newContent = $this->recommenderGenerator->getContentByToken($this->recommenderToken, $content);
             $newnode    = $dom->createDocumentFragment();
             $newnode->appendXML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));

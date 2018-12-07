@@ -32,6 +32,9 @@ class Client
 
     private $endpoint;
 
+    /** @var  RecommenderToken */
+    private $token;
+
     /**
      * Client constructor.
      *
@@ -67,7 +70,8 @@ class Client
     public function display(RecommenderToken $recommenderToken)
     {
         $this->endpoint = $recommenderToken->getType();
-        $this->options = $recommenderToken->getOptions(true);
+        $this->token = $recommenderToken;
+        $this->options = $recommenderToken->getOptions();
         $this->optionsResolver = new Options($this);
         $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$this->endpoint;
         if (!class_exists($class)) {
@@ -97,7 +101,7 @@ class Client
     /**
      * @return RecommenderClientModel
      */
-    public function getClientModel(): RecommenderClientModel
+    public function getClientModel()
     {
         return $this->clientModel;
     }

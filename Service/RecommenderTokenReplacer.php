@@ -11,9 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Service;
 
-use Mautic\PageBundle\Model\TrackableModel;
-use Recommender\RecommApi\Exceptions as Ex;
-use Recommender\RecommApi\Requests as Reqs;
 
 class RecommenderTokenReplacer
 {
@@ -32,12 +29,9 @@ class RecommenderTokenReplacer
      */
     private $recommenderGenerator;
 
-    private $replacedTokens;
+    private $replacedTokens = [];
 
-    /**
-     * @var TrackableModel
-     */
-    private $trackableModel;
+    private $customOptions = [];
 
     /**
      * RecommenderTokenReplacer constructor.
@@ -45,18 +39,15 @@ class RecommenderTokenReplacer
      * @param RecommenderToken       $recommenderToken
      * @param RecommenderTokenFinder $recommenderTokenFinder
      * @param RecommenderGenerator   $recommenderGenerator
-     * @param TrackableModel      $trackableModel
      */
     public function __construct(
         RecommenderToken $recommenderToken,
         RecommenderTokenFinder $recommenderTokenFinder,
-        RecommenderGenerator $recommenderGenerator,
-        TrackableModel $trackableModel
+        RecommenderGenerator $recommenderGenerator
     ) {
         $this->recommenderToken       = $recommenderToken;
         $this->recommenderTokenFinder = $recommenderTokenFinder;
         $this->recommenderGenerator   = $recommenderGenerator;
-        $this->trackableModel = $trackableModel;
     }
 
     /**
@@ -76,47 +67,57 @@ class RecommenderTokenReplacer
     }
 
     /**
-     * @param       $content
-     * @param array $options
+     * @param string $content
      *
-     * @return mixed
-     * @internal param $event
+     * @return string
      */
-    public function replaceTokensFromContent($content, $options = [])
+    public function replaceTokensFromContent($content)
     {
-        $tokens = $this->recommenderTokenFinder->findTokens($content);
-        if (!empty($tokens)) {
-            /**
-             * @var  $key
-             * @var  RecommenderToken $token
-             */
-            foreach ($tokens as $key => $token) {
-                $token->setAddOptions($options);
-                $tokenContent = $this->recommenderGenerator->getContentByToken($token);
-                if (!empty($tokenContent)) {
-                    $content      = str_replace($key, $tokenContent, $content);
-                    $this->replacedTokens[$key] = $tokenContent;
-                }else{
-                    // no content, no token
-                    $content      = str_replace($key, '', $content);
-                }
-            }
+        $replacedTokens = $this->getReplacedTokensFromContent($content);
+        foreach ($replacedTokens as $token=>$tokenContent) {
+            $content = str_replace($token, $tokenContent, $content);
+        }
+        return $content;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getReplacedContent()
+    {
+        $content = $this->getRecommenderToken()->getContent();
+        $replacedTokens = $this->getReplacedTokensFromContent($content);
+        foreach ($replacedTokens as $token=>$replace) {
+            $content = str_replace($token, $replace, $content);
         }
 
         return $content;
     }
 
-    /**
-     * @param               $content
-     * @param RecommenderToken $recommenderToken
-     * @param array $options
-     */
-    public function replaceTagsFromContent($content, RecommenderToken $recommenderToken, $options = [])
+
+
+    public function getReplacedTokensFromContent($content)
     {
-        $recommenderToken->setAddOptions($options);
-        $this->recommenderGenerator->getResultByToken($recommenderToken, $options);
+        $tokens = $this->recommenderTokenFinder->findTokens($content);
+        if (!empty($tokens)) {
+            /** @var RecommenderToken $token **/
+            foreach ($tokens as $key => $token) {
+                $tokenContent = $this->recommenderGenerator->getContentByToken($token);
+                if (!empty($tokenContent)) {
+                    $this->replacedTokens[$key] = $tokenContent;
+                }else{
+                    $this->replacedTokens[$key] = '';
+                }
+            }
+        }
+        return $this->replacedTokens;
+    }
+
+
+    public function replaceTagsFromContent($content, RecommenderToken $recommenderToken)
+    {
+        $this->recommenderGenerator->getResultByToken($recommenderToken);
         $content = $this->recommenderGenerator->replaceTagsFromContent($content);
-        $this->replacedTokens[] = $content;
 
         return $content;
     }

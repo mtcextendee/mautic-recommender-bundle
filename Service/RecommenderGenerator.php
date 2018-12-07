@@ -96,7 +96,6 @@ class RecommenderGenerator
             return;
         }
 
-        $recommenderToken->setAddOptions($options);
         $this->items =  $this->apiCommands->getResults($recommenderToken);
         return $this->items;
 
@@ -155,10 +154,12 @@ class RecommenderGenerator
             return;
         }
 
-        $items = $this->getResultByToken($recommenderToken);
-        if (empty($items)) {
+        $this->items = $this->getResultByToken($recommenderToken);
+
+        if (empty($this->items)) {
             return;
         }
+
         if ($recommender->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-header.html.php',

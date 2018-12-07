@@ -21,40 +21,13 @@ class RecommenderToken
 
     private $id;
 
-    private $itemId;
-
     private $userId;
 
     private $type;
-
-    private $token;
-
-    private $isToken = false;
-
-    private $limit;
-
-    /** @var  RecommenderTemplate $entity */
-    private $entity;
-
     /**
      * @var TemplateModel
      */
     private $recommenderModel;
-
-    /**
-     * @var ContactTracker
-     */
-    private $contactTracker;
-
-    /**
-     * @var array
-     */
-    private $addOptions = [];
-
-    /**
-     * @var
-     */
-    private $event;
 
     /**
      * @var CampaignModel
@@ -62,14 +35,20 @@ class RecommenderToken
     private $campaignModel;
 
     /**
-     * @var
-     */
-    private $minAge;
-
-    /**
      * @var LeadModel
      */
     private $leadModel;
+
+    /** @var  string */
+    private $source;
+
+    /** @var  int */
+    private $sourceId;
+
+    /** @var array  */
+    private $properties = [];
+
+    private $content = '';
 
 
     /**
@@ -86,43 +65,6 @@ class RecommenderToken
         $this->leadModel = $leadModel;
     }
 
-
-    public function setToken($values)
-    {
-        $this->setIsToken(TRUE);
-        foreach ($values as $key => $value) {
-            $setter = 'set'.ucfirst($key);
-            if (method_exists($this, $setter)) {
-                $this->$setter($value);
-            }
-        }
-    }
-
-    /**
-     * @param $tokenValue
-     */
-    public function parseToken($tokenValue)
-    {
-        $tokenData = explode('|', $tokenValue);
-
-        if (empty($tokenData['0'])) {
-            return;
-        }
-
-        // first must be recombe ID
-        $this->setId($tokenData['0']);
-        array_shift($tokenData);
-
-        // Then parse all optional
-        $values = [];
-        if (!empty($tokenData)) {
-            foreach ($tokenData as $value) {
-                list($key, $val) = explode("=", $value);
-                $values[$key] = $val;
-            }
-        }
-        $this->setToken($values);
-    }
 
     /**
      * @return mixed
@@ -168,20 +110,13 @@ class RecommenderToken
     }
 
     /**
-     * @return mixed
+     * @param mixed $id
      */
-    public function getItemId()
+    public function setId($id)
     {
-        return $this->itemId;
+        $this->id = $id;
     }
 
-    /**
-     * @param mixed $itemId
-     */
-    public function setItemId($itemId)
-    {
-        $this->itemId = $itemId;
-    }
 
     /**
      * @return mixed
@@ -192,146 +127,91 @@ class RecommenderToken
     }
 
     /**
-     * @param mixed $id
+     * @return string
      */
-    public function setId($id)
+    public function getSource()
     {
-        if ($this->id != $id) {
-            $entity = $this->recommenderModel->getEntity($id);
-            if ($entity instanceof RecommenderTemplate && $entity->getId()) {
-                $this->setEntity($entity);
-            }
-        }
-
-        $this->id = $id;
+        return $this->source;
     }
 
     /**
-     * @return mixed
+     * @param string $source
      */
-    public function getToken()
+    public function setSource($source)
     {
-        return $this->token;
+        $this->source = $source;
     }
 
     /**
-     * @return boolean
+     * @return int
      */
-    public function isIsToken()
+    public function getSourceId()
     {
-        return $this->isToken;
+        return $this->sourceId;
     }
+
 
     /**
-     * @return mixed
+     * @param int $sourceId
      */
-    public function getLimit()
+    public function setSourceId($sourceId)
     {
-        if (!$this->limit && $this->entity) {
-            return $this->entity->getNumberOfItems();
-        }
-
-        return $this->limit;
-    }
-
-    /**
-     * @param mixed $limit
-     */
-    public function setLimit($limit)
-    {
-        $this->limit = $limit;
-    }
-
-    /**
-     * @param boolean $isToken
-     */
-    public function setIsToken($isToken)
-    {
-        $this->isToken = $isToken;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntity()
-    {
-        return $this->entity;
-    }
-
-    /**
-     * @param mixed $entity
-     */
-    public function setEntity($entity)
-    {
-        $this->entity = $entity;
-    }
-
-    public function getOptions($addKeys = [])
-    {
-        // use default set of keys
-        if ($addKeys === true) {
-            $addKeys = ['itemsId', 'userId', 'limit'];
-        }
-        $tokenOptions = [];
-
-        foreach ($addKeys as $key) {
-            $getter = 'get'.ucfirst($key);
-            if (method_exists($this, $getter)) {
-                $tokenOptions[$key] = $this->$getter();
-            }
-        }
-        return array_merge($tokenOptions, $this->getAddOptions());
+        $this->sourceId = $sourceId;
     }
 
     /**
      * @return array
      */
-    public function getAddOptions()
+    public function getProperties()
     {
-        return $this->addOptions;
+        return $this->properties;
     }
 
     /**
-     * @param array $addOptions
+     * @param array $properties
      */
-    public function setAddOptions(array $addOptions)
+    public function setProperties($properties)
     {
-        $this->addOptions = array_merge($this->addOptions, $addOptions);
+        $this->properties = $properties;
     }
 
     /**
-     * @return mixed
+     * @param int    $userId
+     * @param string $source
+     * @param int    $sourceId
+     * @param array  $properties
+     * @param string $content
      */
-    public function getEvent()
+    public function setConfig($userId, $source, $sourceId, $properties, $content)
     {
-        return $this->event;
+        $this->setUserId($userId);
+        $this->setSource($source);
+        $this->setSourceId($sourceId);
+        $this->setProperties($properties);
+        $this->setContent($content);
     }
 
     /**
-     * @param mixed $event
+     * @return string
      */
-    public function setEvent($event)
+    public function getContent()
     {
-        $this->event = $event;
+        return $this->content;
     }
 
     /**
-     * @return mixed
+     * @param string $content
      */
-    public function getMinAge()
+    public function setContent($content)
     {
-        return $this->minAge;
+        $this->content = $content;
     }
 
-    /**
-     * @param mixed $minAge
-     */
-    public function setMinAge($minAge)
+    public function getOptions()
     {
-        $this->minAge = $minAge;
+        $this->properties['userId'] = $this->userId;
+        $this->properties['limit'] = 9;
+        return $this->properties;
     }
-
-
-
 }
 

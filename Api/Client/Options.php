@@ -80,7 +80,6 @@ class Options
         }
 
 
-
         return array_merge($this->getOptions(), $addOptions);
     }
 
