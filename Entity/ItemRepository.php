@@ -37,9 +37,10 @@ class ItemRepository extends CommonRepository
         $qb->select('DISTINCT ri.id as id, SUM(e.weight) as totalWeight')
             ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'ri')
             ->join('ri', MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el', 'el.item_id = ri.id')
-            ->join('el', MAUTIC_TABLE_PREFIX.'recommender_event', 'e', 'el.item_id = e.id')
+            ->join('el', MAUTIC_TABLE_PREFIX.'recommender_event', 'e', 'el.event_id = e.id')
             ->where($qb->expr()->eq('el.lead_id', ':contactId'))
             ->orderBy('SUM(e.weight)', 'DESC')
+            ->groupBy('ri.id')
             ->setMaxResults($max)
             ->setParameter('contactId', $contactId);
         return $qb->execute()->fetchAll();

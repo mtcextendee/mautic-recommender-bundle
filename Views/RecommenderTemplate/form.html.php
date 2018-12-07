@@ -24,9 +24,6 @@ $recommender = $entity;
     <div class="col-md-6">
         <?php echo $view['form']->row($form['name']); ?>
     </div>
-    <!--<div class="col-md-3 recommender-preview">
-        <?php /*echo $view['form']->row($form['numberOfItems']); */?>
-    </div>-->
     <div class="col-md-3">
         <?php echo $view['form']->row($form['isPublished']); ?>
     </div>
@@ -44,27 +41,37 @@ $recommender = $entity;
                     <h3><?php echo $view['translator']->trans('mautic.plugin.recommender.preview'); ?></h3>
                     <hr>
                     <div id="recommender-preview-case">
-                        <div style="display:none"  id="recommender-preview-loader" class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                    <div id="recommender-preview">
-                        <?php
+                        <div style="display:none" id="recommender-preview-loader" class="lds-roller">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div id="recommender-preview">
+                            <?php
 
-                        echo $view->render(
-                            'MauticRecommenderBundle:Builder\Page:generator.html.php',
-                            [
-                                'recommender' => $recommender,
-                                'settings' => $settings,
-                                'preview'  => true,
-                            ]
-                        );
-                        ?>
+                            echo $view->render(
+                                'MauticRecommenderBundle:Builder\Page:generator.html.php',
+                                [
+                                    'recommender' => $recommender,
+                                    'settings'    => $settings,
+                                    'preview'     => true,
+                                ]
+                            );
+                            ?>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div id="recommender_template_1" data-show-on="{&quot;recommender_templates_templateMode_1&quot;:&quot;checked&quot;}">
+                <div id="recommender_template_1"
+                     data-show-on="{&quot;recommender_templates_templateMode_1&quot;:&quot;checked&quot;}">
                     <div class="form-control-custom">
                         <?php
                         echo $view['form']->widget($form['template']['header']);
@@ -93,7 +100,8 @@ $recommender = $entity;
 
 
 <div class="row">
-    <div id="recommender_template_2" data-show-on="{&quot;recommender_templates_templateMode_0&quot;:&quot;checked&quot;}">
+    <div id="recommender_template_2"
+         data-show-on="{&quot;recommender_templates_templateMode_0&quot;:&quot;checked&quot;}">
 
         <div class="panel-group recommender-preview" id="accordion" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
@@ -111,6 +119,7 @@ $recommender = $entity;
                     <div class="panel-body">
                         <?php
                         echo $view['form']->row($form['properties']['columns']);
+                        echo $view['form']->row($form['numberOfItems']);
                         echo $view['form']->row($form['properties']['background']);
                         echo $view['form']->row($form['properties']['font']);
                         echo $view['form']->row($form['properties']['padding']);
@@ -191,7 +200,8 @@ $recommender = $entity;
                     <h4 class="panel-title">
                         <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
                            href="#itemShortDescription" aria-expanded="false" aria-controls="itemShortDescription">
-                            <i class="fa fa-check <?php if (!empty($recommender->getProperties()['itemShortDescription'])
+                            <i class="fa fa-check <?php if (!empty($recommender->getProperties(
+                            )['itemShortDescription'])
                             ): echo 'text-success'; endif; ?>"></i> <?php echo $view['translator']->trans(
                                 'mautic.plugin.recommender.item.short.description'
                             ); ?>
@@ -352,7 +362,8 @@ $recommender = $entity;
 
 <div class="row" style="margin-top:-10px;">
     <div class="col-md-12">
-        <div id="recommender_template" data-show-on="{&quot;recommender_templates_templateMode_1&quot;:&quot;checked&quot;}">
+        <div id="recommender_template"
+             data-show-on="{&quot;recommender_templates_templateMode_1&quot;:&quot;checked&quot;}">
 
             <div class="row">
                 <div class="col-xs-12">

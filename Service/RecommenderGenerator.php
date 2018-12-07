@@ -86,13 +86,10 @@ class RecommenderGenerator
 
     /**
      * @param RecommenderToken $recommenderToken
-     * @param array         $options
      */
-    public function getResultByToken(RecommenderToken $recommenderToken, $options = [])
+    public function getResultByToken(RecommenderToken $recommenderToken)
     {
-        $recommender = $this->recommenderModel->getEntity($recommenderToken->getId());
-
-        if (!$recommender instanceof RecommenderTemplate) {
+        if (!$recommenderToken->getTemplate() instanceof RecommenderTemplate) {
             return;
         }
 
@@ -147,13 +144,10 @@ class RecommenderGenerator
      */
     public function getContentByToken(RecommenderToken $recommenderToken)
     {
-        /** @var RecommenderTemplate $recommender */
-        $recommender = $this->recommenderModel->getEntity($recommenderToken->getId());
-
-        if (!$recommender instanceof RecommenderTemplate) {
+        if (!$recommenderToken->getTemplate() instanceof RecommenderTemplate) {
             return;
         }
-
+        $recommender = $recommenderToken->getTemplate();
         $this->items = $this->getResultByToken($recommenderToken);
 
         if (empty($this->items)) {

@@ -78,14 +78,9 @@ class RecommenderTemplatesType extends AbstractType
                     'class'   => 'form-control',
                     'tooltip' => 'mautic.plugin.recommender.form.number_of_items.tooltip',
                 ],
-                'required'    => true,
+                'required'    => false,
                 'data'        => $options['data']->getNumberOfItems(),
                 'constraints' => [
-                    new NotBlank(
-                        [
-                            'message' => 'mautic.core.value.required',
-                        ]
-                    ),
                     new Range(
                         [
                             'min' => 1,

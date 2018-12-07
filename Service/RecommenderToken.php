@@ -50,6 +50,9 @@ class RecommenderToken
 
     private $content = '';
 
+    /** @var  RecommenderTemplate */
+    private $template;
+
 
     /**
      * RecommenderToken constructor.
@@ -125,6 +128,17 @@ class RecommenderToken
     {
         return $this->id;
     }
+
+    /**
+     * @return RecommenderTemplate|null
+     */
+    public function getTemplate()
+    {
+        if ($this->id && (!$this->template || ($this->template && $this->template->getId() != $this->id))) {
+            return $this->recommenderModel->getEntity($this->id);
+        }
+    }
+
 
     /**
      * @return string
@@ -210,8 +224,16 @@ class RecommenderToken
     public function getOptions()
     {
         $this->properties['userId'] = $this->userId;
-        $this->properties['limit'] = 9;
+        $this->properties['limit'] = $this->getLimit();
         return $this->properties;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    private function getLimit()
+    {
+        return $this->getTemplate()->getNumberOfItems();
     }
 }
 
