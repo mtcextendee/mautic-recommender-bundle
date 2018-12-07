@@ -92,6 +92,7 @@ final class RecommenderEvents
 
     const ON_RECOMMENDER_FILTER_FORM_DISPLAY= 'mautic.plugin.recommender.in_filter_form_display';
     const ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE= 'mautic.plugin.recommender.in_filter_form_choices_generate';
+    const ON_RECOMMENDER_FILTER_RESULTS= 'mautic.plugin.recommender.filter_results';
 
 
 }

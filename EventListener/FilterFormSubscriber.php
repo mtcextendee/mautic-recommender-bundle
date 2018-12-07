@@ -11,22 +11,11 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
-use Mautic\CoreBundle\CoreEvents;
-use Mautic\CoreBundle\Event\BuildJsEvent;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
-use Mautic\CoreBundle\Helper\CoreParametersHelper;
-use Mautic\LeadBundle\Event\LeadListFilteringEvent;
-use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
-use Mautic\LeadBundle\Event\LeadListQueryBuilderGeneratedEvent;
-use Mautic\LeadBundle\LeadEvents;
-use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
-use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FilterFormSubscriber extends CommonSubscriber
@@ -60,20 +49,17 @@ class FilterFormSubscriber extends CommonSubscriber
      */
     public function onFilterFormDisplay(FilterFormEvent $event)
     {
-        $choices = [
-            'recommend_items_to_user' => 'mautic.plugin.recommender.form.type.recommend_items_to_user',
-            'abandoned_cart'          => 'mautic.plugin.recommender.form.type.abandoned_cart',
-            'advanced'                => 'mautic.plugin.recommender.form.type.advanced',
-        ];
-
-        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE)) {
-            $event = new FilterChoiceFormEvent($choices);
-            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $event);
-            $choices = $event->getChoices();
-            unset($event);
-        }
 
         $builder = $event->getBuilder();
+
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE)) {
+            $choiceEvent = new FilterChoiceFormEvent();
+            $choiceEvent->addChoice('type', 'mautic.plugin.recommender.form.type.recommend_items_to_user_events', 'user_events');
+            $choiceEvent->addChoice('type', 'mautic.plugin.recommender.form.type.recommend_items_to_items_events', 'item_events');
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $choiceEvent);
+        }
+
+        $choices = $choiceEvent->getChoices('type');
         $builder->add(
             'type',
             'choice',
@@ -83,7 +69,7 @@ class FilterFormSubscriber extends CommonSubscriber
                 'multiple'    => false,
                 'label'       => 'mautic.plugin.recommender.form.recommendations.type',
                 'label_attr'  => ['class' => ''],
-                'empty_value' => false,
+                'empty_value' => '',
                 'required'    => true,
                 'constraints' => [
                     new NotBlank(
@@ -95,57 +81,75 @@ class FilterFormSubscriber extends CommonSubscriber
             ]
         );
 
-        /* $builder->add(
-             'numberOfItems',
-             NumberType::class,
-             [
-                 'label'       => 'mautic.plugin.recommender.form.number_of_items',
-                 'label_attr'  => ['class' => 'control-label'],
-                 'attr'        => [
-                     'class'   => 'form-control',
-                     'tooltip' => 'mautic.plugin.recommender.form.number_of_items.tooltip',
-                 ],
-                 'required'    => false,
-                 'constraints' => [
-                     new Range(
-                         [
-                             'min' => 1,
-                         ]
-                     ),
-                 ],
-             ]
-         );*/
+        $choices =  $choiceEvent->getChoices('user_events_filter');
 
         $builder->add(
-            'filter',
-            'text',
+            'user_events_filter',
+            'choice',
             [
-                'label'      => 'mautic.plugin.recommender.form.type.filter',
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'class' => 'form-control',
-                    'tooltip'=>'mautic.plugin.recommender.form.type.filter.tooltip',
-                    'data-show-on' => '{"campaignevent_properties_type_type":["advanced"]}',
+                'choices'     => $choices,
+                'expanded'    => false,
+                'multiple'    => false,
+                'label'       => '',
+                'label_attr'  => ['class' => ''],
+                'empty_value' => '',
+                'required'    => true,
+                'attr'=>[
+                    'data-show-on' => '{"campaignevent_properties_type_type":"user_events"}',
                 ],
-                'required'   => false,
             ]
         );
 
-        $builder->add(
-            'booster',
-            'text',
-            [
-                'label'      => 'mautic.plugin.recommender.form.type.booster',
-                'label_attr' => ['class' => 'control-label'],
-                'attr'       => [
-                    'class' => 'form-control',
-                    'tooltip'=>'mautic.plugin.recommender.form.type.booster.tooltip',
-                    'data-show-on' => '{"campaignevent_properties_type_type":["advanced"]}',
+        $choices =  $choiceEvent->getChoices('user_events_filter');
 
+        $builder->add(
+            'item_events_filter',
+            'choice',
+            [
+                'choices'     => $choices,
+                'expanded'    => false,
+                'multiple'    => false,
+                'label'       => '',
+                'label_attr'  => ['class' => ''],
+                'required'    => true,
+                'empty_value' => '',
+                'attr'=>[
+                    'data-show-on' => '{"campaignevent_properties_type_type":"item_events"}',
                 ],
-                'required'   => false,
             ]
         );
+
+        $options = $builder->getData();
+        print_r($options);
+        $builder->add(
+            'daterange_filter',
+            'choice',
+            [
+                'choices' => [
+                    'midnight'  => 'mautic.core.daterange.0days',
+                    '-24 hours' => 'mautic.core.daterange.1days',
+                    '-1 week'   => $this->translator->transChoice('mautic.core.daterange.week', 1, ['%count%' => 1]),
+                    '-2 weeks'  => $this->translator->transChoice('mautic.core.daterange.week', 2, ['%count%' => 2]),
+                    '-3 weeks'  => $this->translator->transChoice('mautic.core.daterange.week', 3, ['%count%' => 3]),
+                    '-1 month'  => $this->translator->transChoice('mautic.core.daterange.month', 1, ['%count%' => 1]),
+                    '-2 months' => $this->translator->transChoice('mautic.core.daterange.month', 2, ['%count%' => 2]),
+                    '-3 months' => $this->translator->transChoice('mautic.core.daterange.month', 3, ['%count%' => 3]),
+                    '-1 year'   => $this->translator->transChoice('mautic.core.daterange.year', 1, ['%count%' => 1]),
+                    '-2 years'  => $this->translator->transChoice('mautic.core.daterange.year', 2, ['%count%' => 2]),
+                ],
+                'expanded'   => false,
+                'multiple'   => false,
+                'label'      => 'mautic.plugin.recommender.form.type.date_range',
+                'label_attr' => ['class' => 'control-label'],
+                'attr'       => [
+                    'class'   => 'form-control',
+                ],
+                'required'    => false,
+                'empty_value' => false,
+                //'data'=> isset($options['data']['daterange_filter']) ? $options['data']['daterange_filter'] : '-1 month',
+            ]
+        );
+
     }
 
 }

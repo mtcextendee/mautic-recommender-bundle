@@ -13,6 +13,18 @@ return [
                     'event_dispatcher'
                 ],
             ],
+            'mautic.recommender.filter.display.user_events.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormUserEventsSubscriber::class,
+            ],
+            'mautic.recommender.filter.display.item_events.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormItemsEventsSubscriber::class,
+            ],
+            'mautic.recommender.filter.results'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterResultsSubscriber::class,
+                'arguments' => [
+                    'mautic.recommender.service.api.commands'
+                ]
+            ],
             'mautic.recommender.segment.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\SegmentFiltersSubscriber::class,
                 'arguments' => [
@@ -253,7 +265,8 @@ return [
                     'mautic.lead.model.lead',
                     'twig',
                     'mautic.recommender.service.api.commands',
-                    'mautic.helper.templating'
+                    'mautic.helper.templating',
+                    'event_dispatcher'
                 ],
             ],
             'mautic.recommender.service.token.html.replacer' => [

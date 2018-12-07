@@ -16,43 +16,36 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class FilterChoiceFormEvent extends CommonEvent
 {
-
     /** @var array  */
     protected $choices;
 
     /**
-     * FilterChoiceFormEvent constructor.
-     *
-     * @param array $choices
-     */
-    public function __construct($choices)
-    {
-        $this->choices = $choices;
-    }
-
-    /**
+     * @param $alias
      * @param $label
      * @param $value
      */
-    public function addChoice($label, $value)
+    public function addChoice($alias, $label, $value)
     {
-        $this->choices[$value] = $label;
+        $this->choices[$alias][$value] = $label;
     }
 
     /**
-     * @param array $choices
+     * @param $alias
+     * @param $choices
      */
-    public function setChoices($choices)
+    public function setChoices($alias, $choices)
     {
-        $this->choices = $choices;
+        $this->choices[$alias] = $choices;
     }
 
     /**
-     * @return array
+     * @param $alias
+     *
+     * @return mixed
      */
-    public function getChoices()
+    public function getChoices($alias)
     {
-        return $this->choices;
+        return $this->choices[$alias];
     }
 
 }

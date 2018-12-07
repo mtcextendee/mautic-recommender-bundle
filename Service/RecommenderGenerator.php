@@ -16,7 +16,10 @@ use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
+use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
+use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class RecommenderGenerator
 {
@@ -59,14 +62,20 @@ class RecommenderGenerator
     private $cache = [];
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * RecommenderGenerator constructor.
      *
-     * @param TemplateModel     $recommenderModel
-     * @param RecommenderApi    $recommenderApi
-     * @param LeadModel         $leadModel
-     * @param \Twig_Environment $twig
-     * @param ApiCommands       $apiCommands
-     * @param TemplatingHelper  $templatingHelper
+     * @param TemplateModel            $recommenderModel
+     * @param RecommenderApi           $recommenderApi
+     * @param LeadModel                $leadModel
+     * @param \Twig_Environment        $twig
+     * @param ApiCommands              $apiCommands
+     * @param TemplatingHelper         $templatingHelper
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         TemplateModel $recommenderModel,
@@ -74,7 +83,8 @@ class RecommenderGenerator
         LeadModel $leadModel,
         \Twig_Environment $twig,
         ApiCommands $apiCommands,
-        TemplatingHelper $templatingHelper
+        TemplatingHelper $templatingHelper,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->recommenderApi    = $recommenderApi;
         $this->recommenderModel  = $recommenderModel;
@@ -82,6 +92,7 @@ class RecommenderGenerator
         $this->twig           = $twig;
         $this->apiCommands    = $apiCommands;
         $this->templateHelper = $templatingHelper;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -93,7 +104,12 @@ class RecommenderGenerator
             return;
         }
 
-        $this->items =  $this->apiCommands->getResults($recommenderToken);
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS)) {
+            $resultEvent = new FilterResultsEvent($recommenderToken);
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS, $resultEvent);
+        }
+        //$this->items =  $this->apiCommands->getResults($recommenderToken);
+        $this->items =  $resultEvent->getItems();
         return $this->items;
 
             /*switch ($recommenderToken->getType()) {
