@@ -74,12 +74,11 @@ return [
                         'mautic.recommender.service.replacer',
                     ],
             ],
-            'mautic.recommender.dynamic.content.token.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\DynamicContentTokenSubscriber::class,
+            'mautic.recommender.campaignbundle.dynamic.content.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignDynamicContentSubscriber::class,
                 'arguments' => [
+                    'mautic.dynamicContent.model.dynamicContent',
                     'mautic.recommender.service.replacer',
-                    'doctrine.orm.entity_manager',
-                    'mautic.recommender.service.campaign.lead.details'
                 ],
             ],
             'mautic.recommender.leadbundle.subscriber'  => [

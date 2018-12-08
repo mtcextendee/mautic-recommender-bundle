@@ -124,10 +124,9 @@ class CampaignSendEmailSubscriber extends CommonSubscriber
         ];
 
         $event->setChannel('recommender-email', $emailId);
-
+        $backupContent = $email->getCustomHtml();
         $this->recommenderTokenReplacer->getRecommenderToken()->setConfig($leadId, 'campaign', $campaignId, $config, $email->getCustomHtml());
         $email->setCustomHtml($this->recommenderTokenReplacer->getReplacedContent());
-
         // check if cart has some items
         if (!$this->recommenderTokenReplacer->hasItems()) {
             return $event->setFailed(
@@ -138,6 +137,7 @@ class CampaignSendEmailSubscriber extends CommonSubscriber
         $email->setSubject($this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($email->getSubject()));
 
         $result = $this->emailModel->sendEmail($email, $leadCredentials, $options);
+        $email->setCustomHtml($backupContent);
         if (is_array($result)) {
             $errors = implode('<br />', $result);
 

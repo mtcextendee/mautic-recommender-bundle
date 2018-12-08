@@ -181,8 +181,6 @@ class CampaignSubscriber extends CommonSubscriber
             CampaignEvents::CAMPAIGN_ON_BUILD             => ['onCampaignBuild', 0],
             RecommenderEvents::ON_CAMPAIGN_TRIGGER_ACTION    => [
                 ['onCampaignTriggerActionSendNotification', 2],
-                ['onCampaignTriggerActionDynamiContent', 3],
-                ['onCampaignTriggerActionDynamiContentRemove', 4],
             ],
             RecommenderEvents::ON_CAMPAIGN_TRIGGER_CONDITION => ['onCampaignTriggerCondition', 0],
             RecommenderEvents::ON_CAMPAIGN_TRIGGER_DECISION => ['onCampaignTriggerDecisionInjectRecommenderFocus', 0],
@@ -211,27 +209,6 @@ class CampaignSubscriber extends CommonSubscriber
                  ]
              );
 
-        $event->addAction(
-            'recommender.dynamic.content',
-            [
-                'label'           => 'mautic.recommender.dynamic.content.campaign.event',
-                'description'     => 'mautic.recommender.dynamic.content.campaign.event.desc',
-                'eventName'       => RecommenderEvents::ON_CAMPAIGN_TRIGGER_ACTION,
-                'formType'        => RecommenderDynamicContentType::class,
-                'formTypeOptions' => ['update_select' => 'campaignevent_properties_dynamicContent'],
-                'channel'         => 'dynamicContent',
-                'channelIdField'  => 'dynamic_content',
-            ]
-        );
-
-        $event->addAction(
-            'recommender.dynamic.content.remove',
-            [
-                'label'           => 'mautic.recommender.dynamic.content.remove.campaign.event',
-                'eventName'       => RecommenderEvents::ON_CAMPAIGN_TRIGGER_ACTION,
-                'formType'        => RecommenderDynamicContentRemoveType::class,
-            ]
-        );
 
         $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
         if ($integration && $integration->getIntegrationSettings()->getIsPublished()) {
@@ -395,76 +372,6 @@ class CampaignSubscriber extends CommonSubscriber
         ];
         $this->trackingHelper->updateSession($values);
         return $event->setResult(array_merge($this->getDefaultRecommenderResults($event), ['event'=>$event, 'tokens'=>$tokens]));
-    }
-
-
-    /**
-     * @param CampaignExecutionEvent $event
-     */
-    public function onCampaignTriggerActionDynamiContent(CampaignExecutionEvent $event)
-    {
-
-        if (!$event->checkContext('recommender.dynamic.content')) {
-            return;
-        }
-
-        $slot             = $event->getConfig()['slot'];
-        $dynamicContentId = (int) $event->getConfig()['dynamic_content'];
-        $lead             = $event->getLead();
-
-        if (!$dynamicContentId) {
-            return $event->setResult('Dynamic COntent ID #'.$dynamicContentId.' doesn\'t exist.');
-        }
-
-        /** @var DynamicContent $dwc */
-        $dwc = $this->dynamicContentModel->getEntity($dynamicContentId);;
-
-        if ($dwc instanceof DynamicContent) {
-            // Use translation if available
-            list($ignore, $dwc) = $this->dynamicContentModel->getTranslatedEntity($dwc, $lead);
-
-            if ($slot) {
-                $this->dynamicContentModel->setSlotContentForLead($dwc, $lead, $slot);
-            }
-
-            $this->dynamicContentModel->createStatEntry($dwc, $lead, $slot);
-            $event->setChannel('recommender-dynamic-content', $dynamicContentId);
-            $result = [
-                'type'       => $event->getConfig()['type'],
-                'campaignId' => $event->getEvent()['campaign']['id'],
-                'slot'       => $slot,
-            ];
-
-            return $event->setResult($result);
-        }
-
-        $this->setResults($event);
-        return $event->setResult(array_merge($event->getResult(), ['slot'=> $slot]));
-    }
-
-    /**
-     * @param CampaignExecutionEvent $event
-     */
-    public function onCampaignTriggerActionDynamiContentRemove(CampaignExecutionEvent $event)
-    {
-
-        if (!$event->checkContext('recommender.dynamic.content.remove')) {
-            return;
-        }
-
-        $slot             = $event->getConfig()['slot'];
-        $lead             = $event->getLead();
-
-        $qb = $this->em->getConnection()->createQueryBuilder();
-        $qb->delete(MAUTIC_TABLE_PREFIX.'dynamic_content_lead_data')
-            ->andWhere($qb->expr()->eq('slot', ':slot'))
-            ->andWhere($qb->expr()->eq('lead_id', ':lead_id'))
-            ->setParameter('slot', $slot)
-            ->setParameter('lead_id', $lead->getId())
-            ->execute();
-
-        $event->setChannel('recommender-dynamic-content');
-        return $this->setResults($event);
     }
 
     /**
