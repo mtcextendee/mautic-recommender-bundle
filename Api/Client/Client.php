@@ -74,11 +74,10 @@ class Client
         $this->options = $recommenderToken->getOptions();
         $this->optionsResolver = new Options($this);
         $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$this->endpoint;
-        if (!class_exists($class)) {
-            throw new ApiEndpointNotFoundException('Class '.$class.' doesn\'t exist.');
+        if (class_exists($class)) {
+            $loader = new $class($this);
+            return $loader->run();
         }
-        $loader = new $class($this);
-        return $loader->run();
     }
 
     /**

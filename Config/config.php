@@ -7,17 +7,9 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
-            'mautic.recommender.filter.display.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormSubscriber::class,
-                'arguments' => [
-                    'event_dispatcher'
-                ],
-            ],
-            'mautic.recommender.filter.display.user_events.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormUserEventsSubscriber::class,
-            ],
-            'mautic.recommender.filter.display.item_events.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterFormItemsEventsSubscriber::class,
+            'mautic.recommender.filter.abandoned_cart'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Filters\AbandonedCartFilterSubscriber::class,
+                'arguments' => ['mautic.recommender.service.campaign.lead.details']
             ],
             'mautic.recommender.filter.results'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterResultsSubscriber::class,
@@ -188,6 +180,10 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderNotificationSendType::class,
                 'arguments' => 'router',
                 'alias'     => 'recommender_notificationsend_list',
+            ],
+            'mautic.form.type.recommender.events_list' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Form\Type\EventsListType::class,
+                'arguments' => ['mautic.recommender.model.event'],
             ],
         ],
         'other'        => [

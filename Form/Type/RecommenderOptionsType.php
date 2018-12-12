@@ -11,15 +11,13 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
-use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
+use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * Class RecommenderOptionsType.
@@ -48,12 +46,32 @@ class RecommenderOptionsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_DISPLAY)) {
-            $event = new FilterFormEvent($builder);
-            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_DISPLAY, $event);
-            unset($event);
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE)) {
+            $choiceEvent = new FilterChoiceFormEvent();
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $choiceEvent);
         }
 
+        $choices = $choiceEvent->getChoices('type');
+        $builder->add(
+            'type',
+            'choice',
+            [
+                'choices'     => $choices,
+                'expanded'    => false,
+                'multiple'    => false,
+                'label'       => 'mautic.plugin.recommender.form.recommendations.type',
+                'label_attr'  => ['class' => ''],
+                'empty_value' => '',
+                'required'    => true,
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'message' => 'mautic.core.value.required',
+                        ]
+                    ),
+                ],
+            ]
+        );
     }
 
     /**
