@@ -203,6 +203,10 @@ class RecommenderToken
         $this->setSourceId($sourceId);
         $this->setProperties($properties);
         $this->setContent($content);
+
+        if (isset($properties['type']['type'])) {
+            $this->setType($properties['type']['type']);
+        }
     }
 
     /**
@@ -231,7 +235,7 @@ class RecommenderToken
     /**
      * @return int|mixed
      */
-    private function getLimit()
+    public function getLimit()
     {
         return $this->getTemplate()->getNumberOfItems();
     }

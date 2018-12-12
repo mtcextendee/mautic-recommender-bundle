@@ -12,9 +12,12 @@
 namespace MauticPlugin\MauticRecommenderBundle\Api\Service;
 
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
+use MauticPlugin\MauticRecommenderBundle\Event\SentEvent;
+use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ApiCommands
@@ -64,20 +67,27 @@ class ApiCommands
     private $recommenderTokenFinder;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * ApiCommands constructor.
      *
-     * @param RecommenderApi         $recommenderApi
-     * @param LoggerInterface     $logger
-     * @param TranslatorInterface $translator
-     * @param SegmentMapping      $segmentMapping
-     * @param RecommenderTokenFinder $recommenderTokenFinder
+     * @param RecommenderApi           $recommenderApi
+     * @param LoggerInterface          $logger
+     * @param TranslatorInterface      $translator
+     * @param SegmentMapping           $segmentMapping
+     * @param RecommenderTokenFinder   $recommenderTokenFinder
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         RecommenderApi $recommenderApi,
         LoggerInterface $logger,
         TranslatorInterface $translator,
         SegmentMapping $segmentMapping,
-        RecommenderTokenFinder $recommenderTokenFinder
+        RecommenderTokenFinder $recommenderTokenFinder,
+        EventDispatcherInterface $dispatcher
     ) {
 
         $this->recommenderApi         = $recommenderApi;
@@ -85,6 +95,7 @@ class ApiCommands
         $this->translator          = $translator;
         $this->segmentMapping      = $segmentMapping;
         $this->recommenderTokenFinder = $recommenderTokenFinder;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -93,7 +104,21 @@ class ApiCommands
      */
     public function callCommand($apiRequest, array $options = [])
     {
-        return $this->recommenderApi->getClient()->send($apiRequest, $options);
+        try{
+            $return = $this->recommenderApi->getClient()->send($apiRequest, $options);
+        }catch (\Exception $e)
+        {
+            $return = false;
+        }
+
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_EVENT_SENT)) {
+            $event = new SentEvent($apiRequest, $options, $return);
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_EVENT_SENT, $event);
+            $return = $event->getReturn();
+            unset($event);
+        }
+
+        return $return;
     }
 
     /**

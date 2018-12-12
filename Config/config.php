@@ -11,11 +11,9 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Filters\AbandonedCartFilterSubscriber::class,
                 'arguments' => ['mautic.recommender.service.campaign.lead.details']
             ],
-            'mautic.recommender.filter.results'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FilterResultsSubscriber::class,
-                'arguments' => [
-                    'mautic.recommender.service.api.commands'
-                ]
+            'mautic.recommender.filter.points'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Filters\PointsFilterSubscriber::class,
+                'arguments' => ['mautic.recommender.model.client']
             ],
             'mautic.recommender.segment.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\SegmentFiltersSubscriber::class,
@@ -221,6 +219,7 @@ return [
                     'translator',
                     'mautic.recommender.service.api.segment.mapping',
                     'mautic.recommender.service.token.finder',
+                    'event_dispatcher'
                 ],
             ],
             'mautic.recommender.service.api.segment.mapping' => [

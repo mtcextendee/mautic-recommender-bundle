@@ -19,6 +19,7 @@ use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 
 class AbandonedCartFilterSubscriber extends CommonSubscriber
 {
+    CONST TYPE = 'abandoned_cart';
     /**
      * @var CampaignLeadDetails
      */
@@ -44,9 +45,9 @@ class AbandonedCartFilterSubscriber extends CommonSubscriber
             RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE => [
                 ['onFilterFormChoicesGenerate', 0],
             ],
-            RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS => [
-                ['onFilterResults', 0],
-            ]
+            RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS               => [
+                ['onFilterResults', -5],
+            ],
         ];
     }
 
@@ -63,12 +64,12 @@ class AbandonedCartFilterSubscriber extends CommonSubscriber
      */
     public function onFilterResults(FilterResultsEvent $event)
     {
-        $recombeeTokne =  $event->getRecommenderToken();
-        if ('campaign' === $recombeeTokne->getSource()) {
-            //$seconds = $this->campaignLeadDetails->getDiffSecondsFromAddedTime($recombeeTokne->getSourceId(), $recombeeTokne->getUserId());
-
+        $recombeeTokne = $event->getRecommenderToken();
+        if ($recombeeTokne->getType() == self::TYPE) {
+            if ('campaign' === $recombeeTokne->getSource()) {
+                $event->setItems(['fffffffffff']);
+            }
         }
-        $event->setItems([]);
     }
 
 }
