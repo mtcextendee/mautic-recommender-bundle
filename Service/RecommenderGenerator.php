@@ -150,7 +150,9 @@ class RecommenderGenerator
      */
     public function replaceTagsFromContent($content)
     {
-        return $this->twig->createTemplate($content)->render($this->getFirstItem());
+        if ($this->getFirstItem()) {
+            return $this->twig->createTemplate($content)->render($this->getFirstItem());
+        }
     }
 
     /**

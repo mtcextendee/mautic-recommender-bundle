@@ -193,21 +193,6 @@ class CampaignSubscriber extends CommonSubscriber
      */
     public function onCampaignBuild(CampaignBuilderEvent $event)
     {
-          $event->addDecision(
-                 'recommender.focus.insert',
-                 [
-                     'label'                  => 'mautic.recommender.focus.insert.campaign.event.send',
-                     'description'            => 'mautic.recommender.focus.insert.campaign.event.send.desc',
-                     'eventName'              => RecommenderEvents::ON_CAMPAIGN_TRIGGER_DECISION,
-                     'formType'               => RecommenderFocusType::class,
-                     'formTypeOptions'        => [
-                         'update_select' => 'campaignevent_properties_focus',
-                         'urls'          => true,
-                     ],
-                     'channel'         => 'focus',
-                     'channelIdField'  => 'focus',
-                 ]
-             );
 
 
         $integration = $this->integrationHelper->getIntegrationObject('OneSignal');
@@ -304,75 +289,6 @@ class CampaignSubscriber extends CommonSubscriber
         return $event->setResult($result);
     }
 
-    /**
-     * @param CampaignExecutionEvent $event
-     */
-    public function onCampaignTriggerDecisionInjectRecommenderFocus(CampaignExecutionEvent $event)
-    {
-        if (!$event->checkContext('recommender.focus.insert')) {
-            return;
-        }
-        $focusId = (int) $event->getConfig()['focus']['focus'];
-        if (!$focusId) {
-            return $event->setFailed('Focus ID #'.$focusId.' doesn\'t exist.');
-        }
-        /** @var Focus $focus */
-        $focus = $this->focusModel->getEntity($focusId);
-
-        // Stop If Focus not exist or not published
-        if (!$focus || !$focus->isPublished()) {
-            return $event->setFailed('Focus ID #'.$focusId.' doesn\'t exist or is not  published.');
-        }
-
-        $eventDetails = $event->getEventDetails();
-        $eventConfig = $event->getConfig();
-        // STOP sent campaignEventModel just if Focus Item is opened
-        if (!empty($eventDetails['hit'])) {
-            $hit = $eventDetails['hit'];
-            $includeUrls = (array) $eventConfig['includeUrls']['list'];
-            if (!empty($includeUrls)) {
-                if (UrlMatcher::hasMatch($includeUrls, $hit->getUrl()) === false) {
-                    return $event->setResult(false);
-                }
-            }
-            $excludeUrls = (array) $eventConfig['excludeUrls']['list'];
-            if (!empty($excludeUrls)) {
-                if (UrlMatcher::hasMatch($excludeUrls, $hit->getUrl())) {
-                    return $event->setResult(false);
-                }
-            }
-        }
-        $campaignId = $event->getEvent()['campaign']['id'];
-        $leadId     = $event->getLead()->getId();
-
-
-        $event->setChannel('recommender-focus', $focusId);
-        $focusContent = $this->focusModel->getContent($focus->toArray());
-        $this->recommenderTokenReplacer->replaceTokensFromContent(
-                $focusContent['focus'],
-                $this->getOptionsBasedOnRecommendationsType($event->getConfig()['type'], $campaignId, $leadId)
-            );
-
-        // check if cart has some items
-        if (!$this->recommenderTokenReplacer->hasItems()) {
-            return $event->setFailed(
-                'No recommender results for this contact #'.$leadId.' and  focus  #'.$focusId
-            );
-        }
-        $tokens      = $this->recommenderTokenReplacer->getReplacedTokens();
-        $contentHash = md5(serialize($tokens));
-        $this->session->set($contentHash, serialize($tokens));
-        $values['focus_item'][] = [
-            'id' => $focusId,
-            'js' => $this->router->generate(
-                'mautic_focus_generate',
-                ['id' => $focusId, 'recommender' => $contentHash],
-                true
-            ),
-        ];
-        $this->trackingHelper->updateSession($values);
-        return $event->setResult(array_merge($this->getDefaultRecommenderResults($event), ['event'=>$event, 'tokens'=>$tokens]));
-    }
 
     /**
      * @param CampaignExecutionEvent $event

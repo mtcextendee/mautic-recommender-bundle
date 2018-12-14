@@ -71,11 +71,13 @@ return [
                     'mautic.recommender.service.replacer',
                 ],
             ],
-            'mautic.recommender.leadbundle.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\LeadSubscriber::class,
+            'mautic.recommender.campaignbundle.focus.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignFocusSubscriber::class,
                 'arguments' => [
-                    'mautic.recommender.helper',
-                    'mautic.recommender.service.api.commands',
+                    'mautic.focus.model.focus',
+                    'mautic.recommender.service.replacer',
+                    'mautic.page.helper.tracking',
+                    'session'
                 ],
             ],
             'mautic.recommender.emailbundle.subscriber' => [
@@ -83,14 +85,6 @@ return [
                 'arguments' => [
                     'mautic.recommender.helper',
                     'mautic.recommender.service.replacer',
-                ],
-            ],
-            'mautic.recommender.focus.token.subscriber'     => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\FocusTokenSubscriber::class,
-                'arguments' => [
-                    'session',
-                     'mautic.campaign.model.event',
-                     'mautic.focus.model.focus'
                 ],
             ],
         ],
