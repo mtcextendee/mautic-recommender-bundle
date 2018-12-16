@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 use Mautic\CampaignBundle\CampaignEvents;
 use Mautic\CampaignBundle\Event\CampaignBuilderEvent;
 use Mautic\CampaignBundle\Event\CampaignExecutionEvent;
+use Mautic\CoreBundle\Event\TokenReplacementEvent;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\EmailBundle\Model\EmailModel;
 use Mautic\PageBundle\Helper\TrackingHelper;
@@ -142,7 +143,6 @@ class CampaignFocusSubscriber extends CommonSubscriber
         $campaignId = $event->getEvent()['campaign']['id'];
         $leadId     = $event->getLead()->getId();
         $config = $event->getConfig();
-
         $event->setChannel('recommender-focus', $focusId);
         $this->recommenderTokenReplacer->getRecommenderToken()->setConfig($leadId, 'campaign', $campaignId, $config, $this->focusModel->getContent($focus->toArray()));
         // check if cart has some items

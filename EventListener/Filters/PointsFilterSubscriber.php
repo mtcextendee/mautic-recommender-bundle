@@ -82,7 +82,7 @@ class PointsFilterSubscriber extends CommonSubscriber
                 }
                 $result = array_merge($result, $translatedProperties);
             }
-            return $results;
+            $event->setItems($results);
         }
     }
 

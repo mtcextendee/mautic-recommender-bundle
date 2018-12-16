@@ -122,10 +122,6 @@ return [
                     'translator',
                 ],
             ],
-            'mautic.form.type.recommender.types'             => [
-                'class' => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTypesType::class,
-                'alias' => 'recommender_types',
-            ],
             'mautic.form.type.recommender.recommender_template' => [
                 'class' => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTemplateType::class,
                 'alias' => 'recommender_template',

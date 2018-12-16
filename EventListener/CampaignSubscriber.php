@@ -183,7 +183,6 @@ class CampaignSubscriber extends CommonSubscriber
                 ['onCampaignTriggerActionSendNotification', 2],
             ],
             RecommenderEvents::ON_CAMPAIGN_TRIGGER_CONDITION => ['onCampaignTriggerCondition', 0],
-            RecommenderEvents::ON_CAMPAIGN_TRIGGER_DECISION => ['onCampaignTriggerDecisionInjectRecommenderFocus', 0],
 
         ];
     }

@@ -67,7 +67,7 @@ class AbandonedCartFilterSubscriber extends CommonSubscriber
         $recombeeTokne = $event->getRecommenderToken();
         if ($recombeeTokne->getType() == self::TYPE) {
             if ('campaign' === $recombeeTokne->getSource()) {
-                $event->setItems(['fffffffffff']);
+
             }
         }
     }
