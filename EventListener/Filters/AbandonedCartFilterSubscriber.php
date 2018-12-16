@@ -65,7 +65,7 @@ class AbandonedCartFilterSubscriber extends CommonSubscriber
     public function onFilterResults(FilterResultsEvent $event)
     {
         $recombeeTokne = $event->getRecommenderToken();
-        if ($recombeeTokne->getType() == self::TYPE) {
+        if ($recombeeTokne->getRecommender()->getFilter() == self::TYPE) {
             if ('campaign' === $recombeeTokne->getSource()) {
 
             }

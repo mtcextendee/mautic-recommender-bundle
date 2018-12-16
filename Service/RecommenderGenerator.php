@@ -15,6 +15,7 @@ use Mautic\CoreBundle\Helper\TemplatingHelper;
 use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
+use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
@@ -100,7 +101,7 @@ class RecommenderGenerator
      */
     public function getResultByToken(RecommenderToken $recommenderToken)
     {
-        if (!$recommenderToken->getTemplate() instanceof RecommenderTemplate) {
+        if (!$recommenderToken->getRecommender() instanceof Recommender) {
             return;
         }
 
@@ -108,7 +109,6 @@ class RecommenderGenerator
             $resultEvent = new FilterResultsEvent($recommenderToken);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS, $resultEvent);
         }
-        //$this->items =  $this->apiCommands->getResults($recommenderToken);
         $this->items =  $resultEvent->getItems();
         return $this->items;
 
@@ -162,33 +162,33 @@ class RecommenderGenerator
      */
     public function getContentByToken(RecommenderToken $recommenderToken)
     {
-        if (!$recommenderToken->getTemplate() instanceof RecommenderTemplate) {
+        if (!$recommenderToken->getRecommender() instanceof Recommender) {
             return;
         }
-        $recommender = $recommenderToken->getTemplate();
+        $recommenderTemplate = $recommenderToken->getRecommender()->getTemplate();
         $this->items = $this->getResultByToken($recommenderToken);
 
         if (empty($this->items)) {
             return;
         }
 
-        if ($recommender->getTemplateMode() == 'basic') {
+        if ($recommenderTemplate->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-header.html.php',
                 [
-                    'recommender' => $recommender,
+                    'recommender' => $recommenderTemplate,
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-footer.html.php',
                 [
-                    'recommender' => $recommender,
+                    'recommender' => $recommenderTemplate,
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-body.html.php',
                 [
-                    'recommender' => $recommender,
+                    'recommender' => $recommenderTemplate,
                 ]
             );
             $headerTemplate = $this->twig->createTemplate($headerTemplateCore);
@@ -196,9 +196,9 @@ class RecommenderGenerator
             $bodyTemplate   = $this->twig->createTemplate($bodyTemplateCore);
 
         } else {
-            $headerTemplate = $this->twig->createTemplate($recommender->getTemplate()['header']);
-            $footerTemplate = $this->twig->createTemplate($recommender->getTemplate()['footer']);
-            $bodyTemplate   = $this->twig->createTemplate($recommender->getTemplate()['body']);
+            $headerTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['header']);
+            $footerTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['footer']);
+            $bodyTemplate   = $this->twig->createTemplate($recommenderTemplate->getTemplate()['body']);
         }
 
         return $this->getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate);

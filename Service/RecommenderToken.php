@@ -13,7 +13,9 @@ namespace MauticPlugin\MauticRecommenderBundle\Service;
 
 use Mautic\CampaignBundle\Model\CampaignModel;
 use Mautic\LeadBundle\Model\LeadModel;
+use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 
 class RecommenderToken
@@ -23,75 +25,38 @@ class RecommenderToken
 
     private $userId;
 
-    private $type;
-    /**
-     * @var TemplateModel
-     */
-    private $recommenderModel;
-
-    /**
-     * @var CampaignModel
-     */
-    private $campaignModel;
-
     /**
      * @var LeadModel
      */
     private $leadModel;
 
-    /** @var  string */
-    private $source;
-
-    /** @var  int */
-    private $sourceId;
-
-    /** @var array  */
-    private $properties = [];
-
     private $content = '';
 
-    /** @var  RecommenderTemplate */
-    private $template;
+    /**
+     * @var Recommender
+     */
+    private $recommender;
+
+    /**
+     * @var RecommenderModel
+     */
+    private $recommenderModel;
 
 
     /**
      * RecommenderToken constructor.
      *
-     * @param TemplateModel $recommenderModel
-     * @param LeadModel     $leadModel
-     * @param CampaignModel $campaignModel
+     * @param RecommenderModel $recommenderModel
+     * @param LeadModel        $leadModel
      */
-    public function __construct(TemplateModel $recommenderModel, LeadModel $leadModel, CampaignModel $campaignModel)
+    public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel)
     {
-        $this->recommenderModel  = $recommenderModel;
-        $this->campaignModel = $campaignModel;
-        $this->leadModel = $leadModel;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        // default type
-        if (!$this->type) {
-            return 'RecommendItemsToUser';
-        }
-
-        return $this->type;
+        $this->leadModel     = $leadModel;
+        $this->recommenderModel = $recommenderModel;
     }
 
     /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return mixed
+     * @return int
      */
     public function getUserId()
     {
@@ -105,7 +70,7 @@ class RecommenderToken
     }
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      */
     public function setUserId($userId)
     {
@@ -113,7 +78,7 @@ class RecommenderToken
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      */
     public function setId($id)
     {
@@ -122,91 +87,11 @@ class RecommenderToken
 
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return RecommenderTemplate|null
-     */
-    public function getTemplate()
-    {
-        if ($this->id && (!$this->template || ($this->template && $this->template->getId() != $this->id))) {
-            return $this->recommenderModel->getEntity($this->id);
-        }
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getSource()
-    {
-        return $this->source;
-    }
-
-    /**
-     * @param string $source
-     */
-    public function setSource($source)
-    {
-        $this->source = $source;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSourceId()
-    {
-        return $this->sourceId;
-    }
-
-
-    /**
-     * @param int $sourceId
-     */
-    public function setSourceId($sourceId)
-    {
-        $this->sourceId = $sourceId;
-    }
-
-    /**
-     * @return array
-     */
-    public function getProperties()
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @param array $properties
-     */
-    public function setProperties($properties)
-    {
-        $this->properties = $properties;
-    }
-
-    /**
-     * @param int    $userId
-     * @param string $source
-     * @param int    $sourceId
-     * @param array  $properties
-     * @param string $content
-     */
-    public function setConfig($userId, $source, $sourceId, $properties, $content)
-    {
-        $this->setUserId($userId);
-        $this->setSource($source);
-        $this->setSourceId($sourceId);
-        $this->setProperties($properties);
-        $this->setContent($content);
-
-        if (isset($properties['type']['type'])) {
-            $this->setType($properties['type']['type']);
-        }
     }
 
     /**
@@ -225,19 +110,33 @@ class RecommenderToken
         $this->content = $content;
     }
 
-    public function getOptions()
-    {
-        $this->properties['userId'] = $this->userId;
-        $this->properties['limit'] = $this->getLimit();
-        return $this->properties;
-    }
 
     /**
      * @return int|mixed
      */
     public function getLimit()
     {
-        return $this->getTemplate()->getNumberOfItems();
+        return $this->getRecommender()->getTemplate()->getNumberOfItems();
+    }
+
+    /**
+     * @return Recommender
+     */
+    public function getRecommender()
+    {
+        if ($this->id && (!$this->recommender || ($this->recommender && $this->recommender->getId() != $this->id))) {
+            $this->recommender = $this->recommenderModel->getEntity($this->id);
+        }
+        return $this->recommender;
+
+    }
+
+    /**
+     * @param Recommender $recommender
+     */
+    public function setRecommender($recommender)
+    {
+        $this->recommender = $recommender;
     }
 }
 

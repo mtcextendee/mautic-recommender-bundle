@@ -71,7 +71,7 @@ class PointsFilterSubscriber extends CommonSubscriber
     {
         /** @var RecommenderToken $recommenderToken */
         $recommenderToken = $event->getRecommenderToken();
-        if ($recommenderToken->getType() == self::TYPE) {
+        if ($recommenderToken->getRecommender()->getFilter() == self::TYPE) {
             $results = $this->getModel()->getRepository()->getContactsItemsByPoints($recommenderToken->getUserId(), $recommenderToken->getLimit());
             foreach ($results as &$result) {
                 $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;

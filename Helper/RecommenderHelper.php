@@ -31,7 +31,7 @@ const PROBABILITY_PURCHASED = 0.2;
 class RecommenderHelper
 {
 
-    private $recommenderRegex = '{recommender=(.*?)}';
+    public static $recommenderRegex = '{recommender=(.*?)}';
 
     /**
      * @var IntegrationHelper
@@ -107,14 +107,6 @@ class RecommenderHelper
             default:
                 return 'default';
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getRecommenderRegex()
-    {
-        return $this->recommenderRegex;
     }
 
     /**

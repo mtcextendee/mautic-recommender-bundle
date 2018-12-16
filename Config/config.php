@@ -31,53 +31,16 @@ return [
             'mautic.recommender.pagebundle.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\PageSubscriber::class,
                 'arguments' => [
-                    'mautic.recommender.helper',
                     'mautic.recommender.service.replacer',
-                    'mautic.recommender.service.api.commands',
-                    'mautic.recommender.service.token.html.replacer',
-                    'mautic.campaign.model.event'
+                    'mautic.tracker.contact'
                 ],
             ],
-            'mautic.recommender.campaignbundle.subscriber'  => [
-                    'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignSubscriber::class,
-                    'arguments' => [
-                        'mautic.lead.model.lead',
-                        'mautic.email.model.email',
-                        'mautic.campaign.model.event',
-                        'mautic.email.model.send_email_to_user',
-                        'mautic.recommender.service.replacer',
-                        'mautic.recommender.service.campaign.lead.details',
-                        'mautic.page.helper.tracking',
-                        'mautic.focus.model.focus',
-                        'session',
-                        'mautic.helper.integration',
-                        'mautic.dynamicContent.model.dynamicContent',
-                        'doctrine.orm.entity_manager',
-                        'mautic.notification.model.notification',
-                        'mautic.notification.api',
-                    ],
-            ],
-            'mautic.recommender.campaignbundle.send.email.subscriber'  => [
-                    'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignSendEmailSubscriber::class,
-                    'arguments' => [
-                        'mautic.email.model.email',
-                        'mautic.recommender.service.replacer',
-                    ],
-            ],
-            'mautic.recommender.campaignbundle.dynamic.content.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignDynamicContentSubscriber::class,
+            'mautic.recommender.token.replacer.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\TokenReplacementSubscriber::class,
                 'arguments' => [
+                    'mautic.recommender.service.replacer',
                     'mautic.dynamicContent.model.dynamicContent',
-                    'mautic.recommender.service.replacer',
-                ],
-            ],
-            'mautic.recommender.campaignbundle.focus.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\CampaignFocusSubscriber::class,
-                'arguments' => [
                     'mautic.focus.model.focus',
-                    'mautic.recommender.service.replacer',
-                    'mautic.page.helper.tracking',
-                    'session'
                 ],
             ],
             'mautic.recommender.emailbundle.subscriber' => [
@@ -233,9 +196,8 @@ return [
             'mautic.recommender.service.token'               => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken::class,
                 'arguments' => [
-                    'mautic.recommender.model.template',
+                    'mautic.recommender.model.recommender',
                     'mautic.lead.model.lead',
-                    'mautic.campaign.model.campaign',
                 ],
             ],
             'mautic.recommender.service.token.finder'        => [

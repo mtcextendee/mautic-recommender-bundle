@@ -66,9 +66,9 @@ class EmailSubscriber extends CommonSubscriber
      */
     public function onPageBuild(EmailBuilderEvent $event)
     {
-        if ($event->tokensRequested($this->recommenderHelper->getRecommenderRegex())) {
+        if ($event->tokensRequested(RecommenderHelper::$recommenderRegex)) {
             $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
-            $event->addTokensFromHelper($tokenHelper, $this->recommenderHelper->getRecommenderRegex(), 'name', 'id', true);
+            $event->addTokensFromHelper($tokenHelper, RecommenderHelper::$recommenderRegex, 'name', 'id', true);
         }
     }
 
@@ -85,8 +85,11 @@ class EmailSubscriber extends CommonSubscriber
      */
     public function onEmailGenerate(EmailSendEvent $event)
     {
-        if ($event->getEmail() && $event->getEmail()->getId()) {
-            $event->setContent($this->recommenderTokenReplacer->replaceTokensFromContent($event->getContent()));
+        if ($event->getEmail() && $event->getEmail()->getId() && !empty($event->getLead()['id'])) {
+            $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
+            $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
+            $event->setContent($this->recommenderTokenReplacer->getReplacedContent());
+            $event->setSubject($this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject()));
         }
     }
 }
