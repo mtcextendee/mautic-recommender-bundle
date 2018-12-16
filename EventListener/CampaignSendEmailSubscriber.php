@@ -51,7 +51,6 @@ class CampaignSendEmailSubscriber extends CommonSubscriber
     public static function getSubscribedEvents()
     {
         return [
-            CampaignEvents::CAMPAIGN_ON_BUILD             => ['onCampaignBuild', 0],
             RecommenderEvents::ON_CAMPAIGN_TRIGGER_ACTION    => [
                 ['onCampaignTriggerActionSendRecommenderEmail', 0],
             ],

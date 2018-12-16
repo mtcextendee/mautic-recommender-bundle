@@ -56,7 +56,7 @@ class AbandonedCartFilterSubscriber extends CommonSubscriber
      */
     public function onFilterFormChoicesGenerate(FilterChoiceFormEvent $event)
     {
-        $event->addChoice('type', 'mautic.plugin.recommender.form.type.abandoned_cart', 'abandoned_cart');
+        $event->addChoice('filter', 'mautic.plugin.recommender.form.type.abandoned_cart', 'abandoned_cart');
     }
 
     /**

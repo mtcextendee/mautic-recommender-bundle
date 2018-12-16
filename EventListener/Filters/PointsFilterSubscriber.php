@@ -48,7 +48,7 @@ class PointsFilterSubscriber extends CommonSubscriber
     {
         return [
             RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE => [
-                ['onFilterFormChoicesGenerate', 0],
+                ['onFilterFormChoicesGenerate', 1],
             ],
             RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS               => [
                 ['onFilterResults', -5],
@@ -61,7 +61,7 @@ class PointsFilterSubscriber extends CommonSubscriber
      */
     public function onFilterFormChoicesGenerate(FilterChoiceFormEvent $event)
     {
-        $event->addChoice('type', 'mautic.plugin.recommender.form.type.points', 'points');
+        $event->addChoice('filter', 'mautic.plugin.recommender.form.type.points', 'points');
     }
 
     /**

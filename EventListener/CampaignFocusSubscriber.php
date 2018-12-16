@@ -74,32 +74,8 @@ class CampaignFocusSubscriber extends CommonSubscriber
     public static function getSubscribedEvents()
     {
         return [
-            CampaignEvents::CAMPAIGN_ON_BUILD             => ['onCampaignBuild', 0],
-            RecommenderEvents::ON_CAMPAIGN_TRIGGER_DECISION => ['onCampaignTriggerDecisionInjectRecommenderFocus', 0],
             FocusEvents::TOKEN_REPLACEMENT => ['onTokenReplacement', 200],
         ];
-    }
-
-    /**
-     * @param CampaignBuilderEvent $event
-     */
-    public function onCampaignBuild(CampaignBuilderEvent $event)
-    {
-        $event->addDecision(
-            'recommender.focus.insert',
-            [
-                'label'                  => 'mautic.recommender.focus.insert.campaign.event.send',
-                'description'            => 'mautic.recommender.focus.insert.campaign.event.send.desc',
-                'eventName'              => RecommenderEvents::ON_CAMPAIGN_TRIGGER_DECISION,
-                'formType'               => RecommenderFocusType::class,
-                'formTypeOptions'        => [
-                    'update_select' => 'campaignevent_properties_focus',
-                    'urls'          => true,
-                ],
-                'channel'         => 'focus',
-                'channelIdField'  => 'focus',
-            ]
-        );
     }
 
     /**

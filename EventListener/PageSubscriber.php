@@ -122,8 +122,8 @@ class PageSubscriber extends CommonSubscriber
         }
 
         $request = $event->getRequest();
-        if (!empty($request->get('RecommenderTemplate'))) {
-            $commands = \GuzzleHttp\json_decode($request->get('RecommenderTemplate'), true);
+        if (!empty($request->get('recommender'))) {
+            $commands = \GuzzleHttp\json_decode($request->get('recommender'), true);
             foreach ($commands as $apiRequest => $options) {
                 $this->apiCommands->callCommand($apiRequest, $options);
             }
