@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderEventModel;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -76,6 +77,6 @@ class EventsListType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
 }

@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 class EventLogValueRepository extends CommonRepository
 {
@@ -22,6 +23,18 @@ class EventLogValueRepository extends CommonRepository
     public function getTableAlias()
     {
         return 'elv';
+    }
+
+    /**
+     * @return array
+     */
+    public function getValueProperties()
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('DISTINCT v.property_id as id, p.name, p.type')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log_property_value', 'v');
+        $qb->join('v', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'v.property_id = p.id');
+        return $qb->execute()->fetchAll();
     }
 
 }

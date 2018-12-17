@@ -62,7 +62,7 @@ class RecommenderTemplate extends FormEntity
     /**
      * @var
      */
-    private $properties;
+    private $properties = [];
 
     /**
      * RecommenderTemplate constructor.

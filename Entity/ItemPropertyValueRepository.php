@@ -11,8 +11,9 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
+use MauticPlugin\MauticRecommenderBundle\Helper;
+
 
 class ItemPropertyValueRepository extends CommonRepository
 {

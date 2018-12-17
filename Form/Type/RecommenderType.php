@@ -14,6 +14,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Mautic\CoreBundle\Form\DataTransformer\IdToEntityModelTransformer;
+use Mautic\DynamicContentBundle\Form\Type\DwcEntryFiltersType;
+use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -117,6 +119,45 @@ class RecommenderType extends AbstractType
                 ],
             ]
         )->addModelTransformer($transformer)
+        );
+
+      //  $filterModalTransformer = new FieldFilterTransformer($this->translator);
+        $builder->add(
+            $builder->create(
+                'filters',
+                'collection',
+                [
+                    'type'    => DwcEntryFiltersType::class,
+                    'options' => [
+                        'countries'    => [],
+                        'regions'      => [],
+                        'timezones'    => [],
+                        'locales'      => [],
+                        'fields'       => [
+                            'test'=>[
+                            'date_added' => [
+                            'label'      => 'nothing',
+                            'properties' => ['type' => 'date'],
+                            'operators'  => [
+                                '=',
+                                '!=',
+                                'empty',],
+                            'object'     => 'test',
+                        ]
+                            ]
+                        ],
+                        'deviceTypes'  => [],
+                        'deviceBrands' => [],
+                        'deviceOs'     => [],
+                        'tags'         => [],
+                    ],
+                    'error_bubbling' => false,
+                    'mapped'         => true,
+                    'allow_add'      => true,
+                    'allow_delete'   => true,
+                ]
+            )
+                //->addModelTransformer($filterModalTransformer)
         );
 
 

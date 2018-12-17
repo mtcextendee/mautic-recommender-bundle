@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -29,7 +30,7 @@ class RecommenderPropertiesType extends AbstractType
     {
         $builder->add(
             'columns',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => [
                     '2' => '6',

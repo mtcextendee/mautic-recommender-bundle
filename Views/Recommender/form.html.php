@@ -25,6 +25,7 @@ $recommender = $entity;
     </div>
     <div class="col-md-4">
         <?php echo $view['form']->row($form['filter']); ?>
+        <?php echo $view['form']->row($form['filters']); ?>
     </div>
 </div>
 

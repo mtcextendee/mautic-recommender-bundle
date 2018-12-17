@@ -15,10 +15,13 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
+use Mautic\CoreBundle\Entity\FiltersEntityTrait;
 
 
 class Recommender
 {
+    use FiltersEntityTrait;
+
     /**
      * @var int
      */
@@ -64,6 +67,7 @@ class Recommender
             'template',
             'MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate'
         )->addJoinColumn('template_id', 'id', true, false, 'CASCADE')->build();
+        self::addFiltersMetadata($builder);
 
     }
 
@@ -80,6 +84,7 @@ class Recommender
                     'id',
                     'name',
                     'filter',
+                    'filters',
                     'template',
                     'dateAdded',
                 ]

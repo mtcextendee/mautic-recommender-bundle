@@ -69,20 +69,9 @@ class SegmentFiltersSubscriber extends CommonSubscriber
     {
         $qb =$event->getQueryBuilder();
         $details = $event->getDetails();
-        if ($details['field'] == 'customfilter') {
-        /*
-         * (
-    [glue] => and
-    [field] => customfilter
-    [object] => lead
-    [type] => text
-    [filter] => something
-    [display] =>
-    [operator] => =
-)
-
-         * */
-        }
+        //$event->setFilteringStatus(true);
+        //$qb = $event->getQueryBuilder();
+        //$event->setSubQuery();
     }
 
     /**
@@ -90,8 +79,36 @@ class SegmentFiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersGenerate(LeadListFiltersChoicesEvent $event)
     {
-        $properties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
+        $config = [
+            'label'      => 'Event',
+            'properties' => [
+                'type' => 'multiselect',
+                'list' => $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices(),
+            ],
+            'icon'       => 'fa-question',
+            'operators'  => $this->listModel->getOperatorsForFieldType(
+                [
+                    'include' => [
+                        'in',
+                        '!in',
+                    ],
+                ]
+            ),
+        ];
+        $event->addChoice('event', 'event', $config);
 
+        $config = [
+            'label'      => 'Event Date',
+            'properties' => [
+                'type'     => 'date',
+            ],
+            'icon'       => 'fa-question',
+            'operators'  => $this->listModel->getOperatorsForFieldType('date'),
+        ];
+        $event->addChoice('event', 'event_date', $config);
+
+
+        $properties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
         foreach ($properties as $property) {
             $type = RecommenderHelper::typeToTypeTranslator($property['type']);
             $config = [
@@ -99,11 +116,10 @@ class SegmentFiltersSubscriber extends CommonSubscriber
                 'properties' => [
                     'type' => $type,
                 ],
+                'icon'          => 'fa-question',
                 'operators' => $this->listModel->getOperatorsForFieldType($type),
             ];
-            $event->addChoice('lead', $property['id'], $config);
+            $event->addChoice('event_property', $property['id'], $config);
         }
     }
-
-
 }

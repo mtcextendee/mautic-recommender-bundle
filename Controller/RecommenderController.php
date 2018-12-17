@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
 use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RecommenderController extends AbstractStandardFormController
 {

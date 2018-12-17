@@ -20,5 +20,17 @@ use Mautic\CoreBundle\Entity\CommonRepository;
  */
 class EventRepository extends CommonRepository
 {
+    public function findAllArray()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->from('MauticRecommenderBundle:Event', 'p')
+            ->select('p')
+            ->getQuery()->getArrayResult();
+    }
 
+    public function getEventNamesAsChoices()
+    {
+        $events = $this->findAllArray();
+        return array_combine(array_column($events, 'id'), array_column($events, 'name'));
+    }
 }
