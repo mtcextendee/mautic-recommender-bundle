@@ -67,6 +67,13 @@ return [
             ],
         ],
         'forms'        => [
+            'mautic.form.type.recommender.filters'         => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\FilterType::class,
+                'alias'     => 'recommender_filters',
+                'arguments' => [
+                    'translator',
+                ],
+            ],
             'mautic.form.type.recommender.template'         => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTemplatesType::class,
                 'alias'     => 'recommender_templates',
@@ -144,7 +151,10 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderType::class,
                 'arguments' => [
                     'event_dispatcher',
-                    'doctrine.orm.entity_manager'
+                    'doctrine.orm.entity_manager',
+                    'translator',
+                    'mautic.lead.model.list',
+                    'mautic.recommender.model.client'
                 ],
             ],
         ],

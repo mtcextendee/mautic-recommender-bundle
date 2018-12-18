@@ -12,17 +12,21 @@
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Mautic\CoreBundle\Form\DataTransformer\IdToEntityModelTransformer;
-use Mautic\DynamicContentBundle\Form\Type\DwcEntryFiltersType;
 use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
+use Mautic\LeadBundle\Model\LeadModel;
+use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
+use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RecommenderType extends AbstractType
@@ -39,16 +43,40 @@ class RecommenderType extends AbstractType
     private $entityManager;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /** @var  array */
+    private $fieldChoices;
+
+    /**
+     * @var ListModel
+     */
+    private $listModel;
+
+    /**
+     * @var RecommenderClientModel
+     */
+    private $recommenderClientModel;
+
+    /**
      * RecommenderType constructor.
      *
      * @param EventDispatcherInterface $dispatcher
      * @param EntityManager            $entityManager
+     * @param TranslatorInterface      $translator
+     * @param ListModel                $listModel
+     * @param RecommenderClientModel   $recommenderClientModel
      */
-    public function __construct(EventDispatcherInterface $dispatcher, EntityManager $entityManager)
+    public function __construct(EventDispatcherInterface $dispatcher, EntityManager $entityManager, TranslatorInterface $translator, ListModel $listModel, RecommenderClientModel $recommenderClientModel)
     {
 
         $this->dispatcher = $dispatcher;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
+        $this->listModel = $listModel;
+        $this->recommenderClientModel = $recommenderClientModel;
     }
 
     /**
@@ -82,7 +110,6 @@ class RecommenderType extends AbstractType
             $choiceEvent = new FilterChoiceFormEvent();
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $choiceEvent);
         }
-
         $choices = $choiceEvent->getChoices('filter');
         $builder->add(
             'filter',
@@ -105,7 +132,6 @@ class RecommenderType extends AbstractType
             ]
         );
 
-
         $transformer = new IdToEntityModelTransformer($this->entityManager, 'MauticRecommenderBundle:RecommenderTemplate', 'id');
         $builder->add(
         $builder->create(
@@ -121,35 +147,16 @@ class RecommenderType extends AbstractType
         )->addModelTransformer($transformer)
         );
 
-      //  $filterModalTransformer = new FieldFilterTransformer($this->translator);
+        $this->filterFieldChoices();
+        $filterModalTransformer = new FieldFilterTransformer($this->translator);
         $builder->add(
             $builder->create(
                 'filters',
                 'collection',
                 [
-                    'type'    => DwcEntryFiltersType::class,
+                    'type'    => FilterType::class,
                     'options' => [
-                        'countries'    => [],
-                        'regions'      => [],
-                        'timezones'    => [],
-                        'locales'      => [],
-                        'fields'       => [
-                            'test'=>[
-                            'date_added' => [
-                            'label'      => 'nothing',
-                            'properties' => ['type' => 'date'],
-                            'operators'  => [
-                                '=',
-                                '!=',
-                                'empty',],
-                            'object'     => 'test',
-                        ]
-                            ]
-                        ],
-                        'deviceTypes'  => [],
-                        'deviceBrands' => [],
-                        'deviceOs'     => [],
-                        'tags'         => [],
+                        'fields' => $this->fieldChoices,
                     ],
                     'error_bubbling' => false,
                     'mapped'         => true,
@@ -157,7 +164,7 @@ class RecommenderType extends AbstractType
                     'allow_delete'   => true,
                 ]
             )
-                //->addModelTransformer($filterModalTransformer)
+                ->addModelTransformer($filterModalTransformer)
         );
 
 
@@ -166,6 +173,27 @@ class RecommenderType extends AbstractType
             'buttons',
             'form_buttons'
         );
+    }
+
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['fields'] = $this->fieldChoices;
+    }
+
+    private function filterFieldChoices()
+    {
+        $properties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
+        foreach ($properties as $property) {
+            $type = RecommenderHelper::typeToTypeTranslator($property['type']);
+            $this->fieldChoices['event_property'][$property['name']] = [
+                'label'      => $property['name'],
+                'properties' => [
+                    'type' => $type,
+                ],
+                'icon'          => 'fa-question',
+                'operators' => $this->listModel->getOperatorsForFieldType($type),
+            ];
+        }
     }
 
     /**

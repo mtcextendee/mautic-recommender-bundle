@@ -204,4 +204,9 @@ class Recommender
     {
 
     }
+
+    public function isChanged()
+    {
+
+    }
 }

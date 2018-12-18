@@ -13,6 +13,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
 use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RecommenderController extends AbstractStandardFormController
@@ -130,6 +132,7 @@ class RecommenderController extends AbstractStandardFormController
         );
     }
 
+
     /**
      * @param $objectId
      *
@@ -138,6 +141,10 @@ class RecommenderController extends AbstractStandardFormController
     protected function deleteAction($objectId)
     {
         return $this->deleteStandard($objectId);
+    }
+    protected function beforeFormProcessed($entity, Form $form, $action, $isPost, $objectId = null, $isClone = false)
+    {
+        $this->setFormTheme($form, 'MauticRecommenderBundle:Recommender:form.html.php', 'MauticRecommenderBundle:FormTheme\Filter');
     }
 
     /**
