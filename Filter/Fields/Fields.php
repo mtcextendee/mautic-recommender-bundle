@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\MauticRecommenderBundle\Filter\FilterFields;
+namespace MauticPlugin\MauticRecommenderBundle\Filter\Fields;
 
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 
@@ -46,7 +46,7 @@ class Fields
     {
         // Load fields from recommender_event_log db table
         if ($table == 'recommender_event_log' && !isset($this->fields[$table])) {
-            $this->fields['recommender_event_log']['name']        =
+            $this->fields['recommender_event_log']['event_id']        =
                 [
                     'name'       => 'mautic.plugin.recommender.form.event.name',
                     'properties' => [
@@ -54,7 +54,7 @@ class Fields
                         'list' => $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices(),
                     ],
                 ];
-            $this->fields['recommender_event_log']['date_addded'] =
+            $this->fields['recommender_event_log']['date_added'] =
                 [
                     'name'       => 'mautic.plugin.recommender.form.event.date_added',
                     'properties' => [

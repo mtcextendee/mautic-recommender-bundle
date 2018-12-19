@@ -8,14 +8,9 @@ return [
     'services'    => [
         'events'       => [
             'mautic.recommender.segment.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\Filter\EventListener\SegmentFiltersSubscriber::class,
+                'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\FiltersSubscriber::class,
                 'arguments' => [
-                    'mautic.lead.model.list',
-                    'mautic.recommender.model.client',
-                    'mautic.lead.model.lead_segment_decorator_factory',
-                    '@service_container',
-                    'mautic.lead.model.lead_segment_schema_cache',
-                    'mautic.recommender.event.decoration',
+                    'mautic.recommender.filter.segment.factory',
                     'mautic.recommender.filter.fields.segment'
                 ],
             ],
@@ -166,27 +161,49 @@ return [
         ],
         'other'        => [
             /* Filters */
+            'mautic.recommender.filter.segment.factory'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\SegmentFilterFactory::class,
+                'arguments' => [
+                    '@service_container',
+                    'mautic.lead.model.lead_segment_schema_cache',
+                    'mautic.recommender.segment.decoration',
+                    'mautic.recommender.filter.fields.segment'
+                ]
+            ],
             'mautic.recommender.filter.fields.segment'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\FilterFields\SegmentChoices::class,
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\Choices::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
-                    'mautic.lead.model.list'
+                    'mautic.lead.model.list',
+                    'translator'
                 ]
             ],
             'mautic.recommender.filter.fields'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\FilterFields\Fields::class,
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields::class,
                 'arguments' => [
                     'mautic.recommender.model.client'
                 ]
             ],
-
-            'mautic.recommender.event.decoration' => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\EventDecorator::class,
+            'mautic.recommender.segment.decoration' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator::class,
                 'arguments' => [
                     'mautic.lead.model.lead_segment_filter_operator',
                     'mautic.lead.repository.lead_segment_filter_descriptor',
+                    'mautic.recommender.filter.fields.dictionary'
                 ],
             ],
+            'mautic.recommender.filter.fields.dictionary'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Dictionary::class,
+                'arguments' => [
+                    'mautic.recommender.filter.fields',
+                ]
+            ],
+            'mautic.recommender.query.builder.event.property'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+
+            /* Client */
             'mautic.recommender.client'=> [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Api\Client\Client::class,
                 'arguments' => [
