@@ -72,6 +72,21 @@ class PointsFilterSubscriber extends CommonSubscriber
         /** @var RecommenderToken $recommenderToken */
         $recommenderToken = $event->getRecommenderToken();
         if ($recommenderToken->getRecommender()->getFilter() == self::TYPE) {
+            $filter = $recommenderToken->getRecommender()->getFilters();
+             $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
+
+             $decorator = $this->decoratorFactory->getDecoratorForFilter($contactSegmentFilterCrate);
+
+             $filterQueryBuilder = $this->getQueryBuilderForFilter($decorator, $contactSegmentFilterCrate);
+
+             $contactSegmentFilter = new ContactSegmentFilter($contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder);
+
+             $contactSegmentFilters->addContactSegmentFilter($contactSegmentFilter);
+            die();
+            //$event->setFilteringStatus(true);
+            //$qb = $event->getQueryBuilder();
+            //$event->setSubQuery();
+
             $results = $this->getModel()->getRepository()->getContactsItemsByPoints($recommenderToken->getUserId(), $recommenderToken->getLimit());
             foreach ($results as &$result) {
                 $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;

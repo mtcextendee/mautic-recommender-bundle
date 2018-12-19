@@ -7,6 +7,19 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
+            'mautic.recommender.segment.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\Filter\EventListener\SegmentFiltersSubscriber::class,
+                'arguments' => [
+                    'mautic.lead.model.list',
+                    'mautic.recommender.model.client',
+                    'mautic.lead.model.lead_segment_decorator_factory',
+                    '@service_container',
+                    'mautic.lead.model.lead_segment_schema_cache',
+                    'mautic.recommender.event.decoration',
+                    'mautic.recommender.filter.fields.segment'
+                ],
+            ],
+
             'mautic.recommender.filter.abandoned_cart'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Filters\AbandonedCartFilterSubscriber::class,
                 'arguments' => ['mautic.recommender.service.campaign.lead.details']
@@ -14,13 +27,6 @@ return [
             'mautic.recommender.filter.points'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Filters\PointsFilterSubscriber::class,
                 'arguments' => ['mautic.recommender.model.client']
-            ],
-            'mautic.recommender.segment.subscriber'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\SegmentFiltersSubscriber::class,
-                'arguments' => [
-                    'mautic.lead.model.list',
-                    'mautic.recommender.model.client'
-                ],
             ],
             'mautic.recommender.js.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
@@ -159,12 +165,35 @@ return [
             ],
         ],
         'other'        => [
+            /* Filters */
+            'mautic.recommender.filter.fields.segment'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\FilterFields\SegmentChoices::class,
+                'arguments' => [
+                    'mautic.recommender.filter.fields',
+                    'mautic.lead.model.list'
+                ]
+            ],
+            'mautic.recommender.filter.fields'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\FilterFields\Fields::class,
+                'arguments' => [
+                    'mautic.recommender.model.client'
+                ]
+            ],
+
+            'mautic.recommender.event.decoration' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\EventDecorator::class,
+                'arguments' => [
+                    'mautic.lead.model.lead_segment_filter_operator',
+                    'mautic.lead.repository.lead_segment_filter_descriptor',
+                ],
+            ],
             'mautic.recommender.client'=> [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Api\Client\Client::class,
                 'arguments' => [
                     'mautic.recommender.model.client',
                 ],
             ],
+
             'mautic.recommender.helper'                      => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper::class,
                 'arguments' => [
