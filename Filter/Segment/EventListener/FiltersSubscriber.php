@@ -67,9 +67,12 @@ class FiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersFiltering(LeadListFilteringEvent $event)
     {
-        $qb = $event->getQueryBuilder();
-        $this->segmentFilterFactory->applySegmentQuery($event->getDetails(), $qb);
-        $event->setFilteringStatus(true);
+        $qb     = $event->getQueryBuilder();
+        $filter = $event->getDetails();
+        if (false !== strpos($filter['object'], 'recommender')) {
+            $this->segmentFilterFactory->applySegmentQuery($filter, $qb);
+            $event->setFilteringStatus(true);
+        }
     }
 
 
