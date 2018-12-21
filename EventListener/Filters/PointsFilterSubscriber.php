@@ -16,6 +16,8 @@ use Mautic\CoreBundle\Helper\InputHelper;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
 use MauticPlugin\MauticRecommenderBundle\EventListener\Service\CampaignLeadDetails;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\RecommenderQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
@@ -29,16 +31,23 @@ class PointsFilterSubscriber extends CommonSubscriber
      */
     private $clientModel;
 
+    /**
+     * @var RecommenderQueryBuilder
+     */
+    private $recommenderQueryBuilder;
+
 
     /**
      * PointsFilterSubscriber constructor.
      *
-     * @param RecommenderClientModel $clientModel
+     * @param RecommenderClientModel  $clientModel
+     * @param RecommenderQueryBuilder $recommenderQueryBuilder
      */
-    public function __construct(RecommenderClientModel $clientModel)
+    public function __construct(RecommenderClientModel $clientModel, RecommenderQueryBuilder $recommenderQueryBuilder)
     {
 
         $this->clientModel = $clientModel;
+        $this->recommenderQueryBuilder = $recommenderQueryBuilder;
     }
 
     /**
@@ -72,6 +81,11 @@ class PointsFilterSubscriber extends CommonSubscriber
         /** @var RecommenderToken $recommenderToken */
         $recommenderToken = $event->getRecommenderToken();
         if ($recommenderToken->getRecommender()->getFilter() == self::TYPE) {
+            $recommenderFilters = $recommenderToken->getRecommender()->getFilters();
+            $qb = $this->recommenderQueryBuilder->assembleContactsSegmentQueryBuilder($recommenderFilters);
+            $qb->setMaxResults(5);
+            $results = $qb->execute()->fetchAll();
+            /*
             $filter = $recommenderToken->getRecommender()->getFilters();
              $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
 
@@ -81,13 +95,14 @@ class PointsFilterSubscriber extends CommonSubscriber
 
              $contactSegmentFilter = new ContactSegmentFilter($contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder);
 
-             $contactSegmentFilters->addContactSegmentFilter($contactSegmentFilter);
-            die();
+             $contactSegmentFilters->addContactSegmentFilter($contactSegmentFilter);*/
+
+         //   die();
             //$event->setFilteringStatus(true);
             //$qb = $event->getQueryBuilder();
             //$event->setSubQuery();
 
-            $results = $this->getModel()->getRepository()->getContactsItemsByPoints($recommenderToken->getUserId(), $recommenderToken->getLimit());
+        //    $results = $this->getModel()->getRepository()->getContactsItemsByPoints($recommenderToken->getUserId(), $recommenderToken->getLimit());
             foreach ($results as &$result) {
                 $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;
                 $properties = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
@@ -97,6 +112,7 @@ class PointsFilterSubscriber extends CommonSubscriber
                 }
                 $result = array_merge($result, $translatedProperties);
             }
+
             $event->setItems($results);
         }
     }

@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator;
+namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 
 
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
@@ -18,11 +18,13 @@ use Mautic\LeadBundle\Segment\Query\Filter\ComplexRelationValueFilterQueryBuilde
 use Mautic\LeadBundle\Segment\Query\Filter\ForeignValueFilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemPropertyFilterQueryBuilder;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class Dictionary
 {
-    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item_property_value'];
+    CONST ALLOWED_TABLES = ['recommender_item','recommender_item_property_value', 'recommender_event_log'];
 
     /**
      * @var Fields
@@ -47,19 +49,18 @@ class Dictionary
         foreach (self::ALLOWED_TABLES as $table) {
             $fields = $this->fields->getFields($table);
             foreach ($fields as $key => $field) {
-                if (!isset($field['type'])) {
+                if (isset($field['type'])) {
                     $dictionary[$key] = [
-                        'type'          => ForeignValueFilterQueryBuilder::getServiceId(),
+                        'type'          => ItemFilterQueryBuilder::getServiceId(),
                         'foreign_table' => $table,
                         'field'         => $key,
-                    ];
+                        ];
                 }else{
                     $dictionary[$key] = [
-                        'type'          => EventPropertyFilterQueryBuilder::getServiceId(),
+                        'type'          => ItemPropertyFilterQueryBuilder::getServiceId(),
                         'foreign_table' => $table,
-                        'foreign_table_field' => 'event_log_id',
-                        'table_field'         => 'event_log_id',
-                        'field'       => $key,
+                        'foreign_table_field' => $key,
+                        'field'       => 'value',
                     ];
                 }
             }

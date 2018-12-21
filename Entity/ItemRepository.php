@@ -47,4 +47,24 @@ class ItemRepository extends CommonRepository
         return $qb->execute()->fetchAll();
     }
 
+    /**
+     * @return array
+     */
+    public function findAllArray()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->from('MauticRecommenderBundle:Item', 'i')
+            ->select('i')
+            ->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getEventNamesAsChoices()
+    {
+        $events = $this->findAllArray();
+        return array_combine(array_column($events, 'id'), array_column($events, 'itemId'));
+    }
+
 }

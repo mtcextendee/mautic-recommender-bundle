@@ -17,6 +17,7 @@ use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
 use Mautic\LeadBundle\Model\LeadModel;
 use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
@@ -61,6 +62,11 @@ class RecommenderType extends AbstractType
     private $recommenderClientModel;
 
     /**
+     * @var Choices
+     */
+    private $choices;
+
+    /**
      * RecommenderType constructor.
      *
      * @param EventDispatcherInterface $dispatcher
@@ -68,8 +74,9 @@ class RecommenderType extends AbstractType
      * @param TranslatorInterface      $translator
      * @param ListModel                $listModel
      * @param RecommenderClientModel   $recommenderClientModel
+     * @param Choices                  $choices
      */
-    public function __construct(EventDispatcherInterface $dispatcher, EntityManager $entityManager, TranslatorInterface $translator, ListModel $listModel, RecommenderClientModel $recommenderClientModel)
+    public function __construct(EventDispatcherInterface $dispatcher, EntityManager $entityManager, TranslatorInterface $translator, ListModel $listModel, RecommenderClientModel $recommenderClientModel, Choices $choices)
     {
 
         $this->dispatcher = $dispatcher;
@@ -77,6 +84,7 @@ class RecommenderType extends AbstractType
         $this->translator = $translator;
         $this->listModel = $listModel;
         $this->recommenderClientModel = $recommenderClientModel;
+        $this->choices = $choices;
     }
 
     /**
@@ -147,7 +155,7 @@ class RecommenderType extends AbstractType
         )->addModelTransformer($transformer)
         );
 
-        $this->filterFieldChoices();
+        $this->fieldChoices = $this->choices->addChoices('recommender_event');
         $filterModalTransformer = new FieldFilterTransformer($this->translator);
         $builder->add(
             $builder->create(
@@ -178,22 +186,6 @@ class RecommenderType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['fields'] = $this->fieldChoices;
-    }
-
-    private function filterFieldChoices()
-    {
-        $properties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
-        foreach ($properties as $property) {
-            $type = RecommenderHelper::typeToTypeTranslator($property['type']);
-            $this->fieldChoices['event_property'][$property['name']] = [
-                'label'      => $property['name'],
-                'properties' => [
-                    'type' => $type,
-                ],
-                'icon'          => 'fa-question',
-                'operators' => $this->listModel->getOperatorsForFieldType($type),
-            ];
-        }
     }
 
     /**

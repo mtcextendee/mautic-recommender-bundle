@@ -28,6 +28,9 @@ class EventRepository extends CommonRepository
             ->getQuery()->getArrayResult();
     }
 
+    /**
+     * @return array
+     */
     public function getEventNamesAsChoices()
     {
         $events = $this->findAllArray();

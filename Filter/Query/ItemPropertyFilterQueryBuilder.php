@@ -15,14 +15,14 @@ use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 
-class EventPropertyFilterQueryBuilder extends PropertyFilterQueryBuilder
+class ItemPropertyFilterQueryBuilder extends PropertyFilterQueryBuilder
 {
     /**
      * {@inheritdoc}
      */
     public static function getServiceId()
     {
-        return 'mautic.recommender.query.builder.event.property';
+        return 'mautic.recommender.query.builder.item.property';
     }
 
     /**
@@ -30,7 +30,7 @@ class EventPropertyFilterQueryBuilder extends PropertyFilterQueryBuilder
      */
     private function getIdentificator()
     {
-        return 'lead_id';
+        return 'item_id';
     }
 
 }

@@ -50,18 +50,35 @@ class SegmentFilterFactory
      * @param Decorator               $decorator
      * @param Choices                 $segmentChoices
      */
-    public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache, Decorator $decorator, Choices $segmentChoices)
+    public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache, Decorator $decorator)
     {
 
         $this->container = $container;
         $this->schemaCache = $schemaCache;
         $this->decorator = $decorator;
-        $this->segmentChoices = $segmentChoices;
     }
 
-    public function applySegmentQuery($filter, QueryBuilder $qb)
+    /**
+     * @param $filter
+     *
+     * @return ContactSegmentFilter
+     */
+    public function getContactSegmentFilter($filter, $dictionary = 'mautic.recommender.filter.fields.dictionary')
     {
         $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
+        $this->decorator->setDictionary($this->container->get($dictionary)->getDictionary());
+        $filterQueryBuilder = $this->container->get($this->decorator->getQueryType($contactSegmentFilterCrate));
+        return  new ContactSegmentFilter($contactSegmentFilterCrate, $this->decorator, $this->schemaCache, $filterQueryBuilder);
+    }
+
+    /**
+     * @param              $filter
+     * @param QueryBuilder $qb
+     */
+    public function applySegmentQuery($filter, QueryBuilder $qb, $dictionary = 'mautic.recommender.filter.fields.dictionary')
+    {
+        $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
+        $this->decorator->setDictionary($this->container->get($dictionary)->getDictionary());
         $filterQueryBuilder = $this->container->get($this->decorator->getQueryType($contactSegmentFilterCrate));
         $contactSegmentFilter = new ContactSegmentFilter($contactSegmentFilterCrate, $this->decorator, $this->schemaCache, $filterQueryBuilder);
         $filterQueryBuilder->applyQuery($qb, $contactSegmentFilter);

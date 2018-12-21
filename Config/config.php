@@ -7,6 +7,14 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
+
+            'mautic.recommender.recommender.filter.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\FiltersSubscriber::class,
+                'arguments' => [
+                    'mautic.recommender.filter.segment.factory',
+                ],
+            ],
+
             'mautic.recommender.segment.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\FiltersSubscriber::class,
                 'arguments' => [
@@ -21,7 +29,10 @@ return [
             ],
             'mautic.recommender.filter.points'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Filters\PointsFilterSubscriber::class,
-                'arguments' => ['mautic.recommender.model.client']
+                'arguments' => [
+                    'mautic.recommender.model.client',
+                    'mautic.recommender.filter.recommender'
+                ]
             ],
             'mautic.recommender.js.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
@@ -155,7 +166,8 @@ return [
                     'doctrine.orm.entity_manager',
                     'translator',
                     'mautic.lead.model.list',
-                    'mautic.recommender.model.client'
+                    'mautic.recommender.model.client',
+                    'mautic.recommender.filter.fields.recommender'
                 ],
             ],
         ],
@@ -167,7 +179,6 @@ return [
                     '@service_container',
                     'mautic.lead.model.lead_segment_schema_cache',
                     'mautic.recommender.segment.decoration',
-                    'mautic.recommender.filter.fields.segment'
                 ]
             ],
             'mautic.recommender.filter.fields.segment'  => [
@@ -189,7 +200,6 @@ return [
                 'arguments' => [
                     'mautic.lead.model.lead_segment_filter_operator',
                     'mautic.lead.repository.lead_segment_filter_descriptor',
-                    'mautic.recommender.filter.fields.dictionary'
                 ],
             ],
             'mautic.recommender.filter.fields.dictionary'  => [
@@ -201,6 +211,39 @@ return [
             'mautic.recommender.query.builder.event.property'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+
+            /* Filters  */
+            'mautic.recommender.filter.recommender.dictionary'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Dictionary::class,
+                'arguments' => [
+                    'mautic.recommender.filter.fields',
+                ]
+            ],
+            'mautic.recommender.query.builder.item.property'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemPropertyFilterQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.item'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemFilterQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.filter.recommender'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\RecommenderQueryBuilder::class,
+                'arguments' => [
+                    'doctrine.orm.entity_manager',
+                    'mautic.lead.model.random_parameter_name',
+                    'event_dispatcher',
+                    'mautic.recommender.filter.segment.factory'
+                ]
+            ],
+            'mautic.recommender.filter.fields.recommender'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices::class,
+                'arguments' => [
+                    'mautic.recommender.filter.fields',
+                    'mautic.lead.model.list',
+                    'translator'
+                ]
             ],
 
             /* Client */
