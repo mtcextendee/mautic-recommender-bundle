@@ -5,7 +5,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Integration;
 use Mautic\CampaignBundle\Form\Type\CampaignListType;
 use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
-use MauticPlugin\MauticRecommenderBundle\Form\Type\EventsListType;
+use MauticPlugin\MauticRecommenderBundle\Form\Type\ListTemplateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RecommenderIntegration extends AbstractIntegration
@@ -109,7 +109,7 @@ class RecommenderIntegration extends AbstractIntegration
 
             $builder->add(
                 'event_add_to_cart',
-                EventsListType::class,
+                ListTemplateType::class,
                 [
                     'multiple'    => false,
                     'label'       => 'mautic.recommender.abandoned.cart.add_to_cart',
@@ -123,7 +123,7 @@ class RecommenderIntegration extends AbstractIntegration
 
             $builder->add(
                 'event_purchase',
-                EventsListType::class,
+                ListTemplateType::class,
                 [
                     'multiple'    => false,
                     'label'       => 'mautic.recommender.abandoned.cart.purchase',

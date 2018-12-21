@@ -65,6 +65,8 @@ class Dictionary
                 }
             }
         }
+
+        die(print_r($dictionary));
         return $dictionary;
     }
 }

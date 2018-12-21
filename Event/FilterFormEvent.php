@@ -16,8 +16,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class FilterFormEvent extends CommonEvent
 {
-
-
     /**
      * @var FormBuilderInterface
      */

@@ -20,7 +20,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TemplatesListType extends AbstractType
+class ListTemplatesType extends AbstractType
 {
 
     /**

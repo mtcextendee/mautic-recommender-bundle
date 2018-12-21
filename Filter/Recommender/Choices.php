@@ -78,8 +78,7 @@ class Choices
                     $properties['type'] = $field['type'];
                 }
                 if (isset($properties['type'])) {
-                    $properties['type'] = RecommenderHelper::typeToTypeTranslator($properties['type']);
-
+                 //   $properties['type'] = RecommenderHelper::typeToTypeTranslator($properties['type']);
                 }
 
                 $choices[$table][$key] = [

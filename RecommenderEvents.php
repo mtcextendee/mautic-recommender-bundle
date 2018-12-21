@@ -88,13 +88,13 @@ final class RecommenderEvents
      *
      * @var string
      */
-    const ON_CAMPAIGN_TRIGGER_DECISION = 'mautic.plugin.recommender.on_campaign_trigger_decision';
+    const ON_CAMPAIGN_TRIGGER_DECISION                = 'mautic.plugin.recommender.on_campaign_trigger_decision';
 
-    const ON_RECOMMENDER_FILTER_FORM_DISPLAY= 'mautic.plugin.recommender.in_filter_form_display';
-    const ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE= 'mautic.plugin.recommender.in_filter_form_choices_generate';
-    const ON_RECOMMENDER_FILTER_RESULTS= 'mautic.plugin.recommender.filter_results';
-    const ON_RECOMMENDER_EVENT_SENT = 'mautic.plugin.recommender.before_send_event';
-    const LIST_FILTERS_ON_FILTERING = 'mautic.plugin.recommender.filters_filtering';
+    const ON_RECOMMENDER_FORM_FILTER_GENERATE         = 'mautic.plugin.recommender.in_filter_form_display';
+    const ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE = 'mautic.plugin.recommender.in_filter_form_choices_generate';
+    const ON_RECOMMENDER_FILTER_RESULTS               = 'mautic.plugin.recommender.filter_results';
+    const ON_RECOMMENDER_EVENT_SENT                   = 'mautic.plugin.recommender.before_send_event';
+    const LIST_FILTERS_ON_FILTERING                   = 'mautic.plugin.recommender.filters_filtering';
 
 
 }

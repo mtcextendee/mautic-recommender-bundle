@@ -32,6 +32,9 @@ class Recommender
      */
     protected $name;
 
+    /** @var  array */
+    protected $properties;
+
     /**
      * @var string
      */
@@ -61,6 +64,7 @@ class Recommender
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('filter', Type::STRING, 'filter')
+            ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
         $builder->createManyToOne(
@@ -84,6 +88,7 @@ class Recommender
                     'id',
                     'name',
                     'filter',
+                    'properties',
                     'filters',
                     'template',
                     'dateAdded',
@@ -208,5 +213,25 @@ class Recommender
     public function isChanged()
     {
 
+    }
+
+    /**
+     * @param array $properties
+     *
+     * @return Recommender
+     */
+    public function setProperties($properties)
+    {
+        $this->properties = $properties;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProperties()
+    {
+        return $this->properties;
     }
 }

@@ -97,8 +97,6 @@ class RecommenderQueryBuilder
 
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
-        print_r(SqlQuery::getQuery($queryBuilder));
-        die(print_r($queryBuilder->execute()->fetchAll()));
         return $queryBuilder;
     }
 

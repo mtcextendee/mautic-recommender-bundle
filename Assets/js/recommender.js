@@ -1,5 +1,8 @@
 Mautic.recommenderOnLoad = function (container, response) {
+    var availableFilters = mQuery('div.dwc-filter').find('select[data-mautic="available_filters"]');
+    Mautic.activateChosenSelect(availableFilters, false);
 
+    Mautic.leadlistOnLoad('div.dwc-filter');
 }
 mQuery('.recommender-preview .editor-basic').on('froalaEditor.contentChanged', function(){
         Mautic.recommenderUpdatePreview();

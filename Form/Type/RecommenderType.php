@@ -17,6 +17,7 @@ use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
 use Mautic\LeadBundle\Model\LeadModel;
 use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
+use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
@@ -114,6 +115,30 @@ class RecommenderType extends AbstractType
             ]
         );
 
+        $transformer = new IdToEntityModelTransformer($this->entityManager, 'MauticRecommenderBundle:RecommenderTemplate', 'id');
+        $builder->add(
+        $builder->create(
+            'template',
+            ListTemplatesType::class,
+            [
+                'multiple'    => false,
+                'label'       => 'mautic.plugin.recommender.template',
+                'attr'        => [
+                    'class'        => 'form-control',
+                ],
+                'required'    => true,
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'message' => 'mautic.core.value.required',
+                        ]
+                    )
+                ]
+            ]
+        )->addModelTransformer($transformer)
+
+        );
+
         if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE)) {
             $choiceEvent = new FilterChoiceFormEvent();
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $choiceEvent);
@@ -140,21 +165,6 @@ class RecommenderType extends AbstractType
             ]
         );
 
-        $transformer = new IdToEntityModelTransformer($this->entityManager, 'MauticRecommenderBundle:RecommenderTemplate', 'id');
-        $builder->add(
-        $builder->create(
-            'template',
-            TemplatesListType::class,
-            [
-                'multiple'    => false,
-                'label'       => 'mautic.plugin.recommender.template',
-                'attr'        => [
-                    'class'        => 'form-control',
-                ],
-            ]
-        )->addModelTransformer($transformer)
-        );
-
         $this->fieldChoices = $this->choices->addChoices('recommender_event');
         $filterModalTransformer = new FieldFilterTransformer($this->translator);
         $builder->add(
@@ -170,12 +180,23 @@ class RecommenderType extends AbstractType
                     'mapped'         => true,
                     'allow_add'      => true,
                     'allow_delete'   => true,
+                    'constraints' => [
+                        new NotBlank(
+                            [
+                                'message' => $this->translator->trans('mautic.plugin.recommender.form.filter.empty'),
+                            ]
+                        ),
+                    ],
                 ]
             )
                 ->addModelTransformer($filterModalTransformer)
         );
 
-
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FORM_FILTER_GENERATE)) {
+            $builderEvent = new FilterFormEvent($builder);
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FORM_FILTER_GENERATE, $builderEvent);
+            unset($builderEvent);
+        }
 
         $builder->add(
             'buttons',

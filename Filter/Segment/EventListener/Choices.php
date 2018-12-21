@@ -51,11 +51,17 @@ class Choices
         $this->translator = $translator;
     }
 
+    /**
+     * @param LeadListFiltersChoicesEvent $event
+     * @param                             $object
+     */
     public function addChoices(LeadListFiltersChoicesEvent $event, $object)
     {
         $choices = $this->getChoices();
-        foreach ($choices as $key=>$options) {
-            $event->addChoice($object, $key, $options);
+        foreach (self::ALLOWED_TABLES as $table) {
+            foreach ($choices[$table] as $key=>$options) {
+                $event->addChoice($table, $key, $options);
+            }
         }
     }
 
@@ -72,7 +78,7 @@ class Choices
                     $properties['type'] = $field['type'];
                 }
 
-                $choices[$key] = [
+                $choices[$table][$key] = [
                     'label'      => $this->translator->trans('mautic.plugin.recommender.form.event').' '.$this->translator->trans($field['name']),
                     'properties' => $properties,
                     'operators'  => $this->listModel->getOperatorsForFieldType(
