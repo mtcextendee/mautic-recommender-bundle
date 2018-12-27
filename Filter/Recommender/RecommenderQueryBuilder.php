@@ -85,6 +85,16 @@ class RecommenderQueryBuilder
         $queryBuilder = new QueryBuilder($connection);
 
         $queryBuilder->select('l.id')->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'l');
+
+        if(false !== strpos(implode(',', array_column($recombeeFilters, 'object')), 'recommender_event_log')){
+            $tableAlias = $queryBuilder->getTableAlias('recommender_event_log');
+            if (!$tableAlias) {
+                $tableAlias = $this->generateRandomParameterName();
+                $queryBuilder->leftJoin('l', 'recommender_event_log', $tableAlias, $tableAlias.'.item_id = l.id');
+            }
+            $queryBuilder->andWhere($tableAlias.'.lead_id = '.$recommenderToken->getUserId());
+        }
+
         $filters = [];
         $this->decorator->setRecommenderToken($recommenderToken);
         foreach ($recombeeFilters as $filter) {
@@ -92,35 +102,13 @@ class RecommenderQueryBuilder
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
 
+
         $queryBuilder->groupBy('l.id');
         $queryBuilder->setMaxResults($recommenderToken->getLimit());
 
         return $queryBuilder;
     }
 
-    /**
-     * @param ContactSegmentFilter $filter
-     * @param QueryBuilder         $queryBuilder
-     *
-     * @throws PluginHandledFilterException
-     */
-    private function dispatchPluginFilteringEvent(ContactSegmentFilter $filter, QueryBuilder $queryBuilder)
-    {
-        if ($this->dispatcher->hasListeners(RecommenderEvents::LIST_FILTERS_ON_FILTERING)) {
-            //  This has to run for every filter
-            $filterCrate = $filter->contactSegmentFilterCrate->getArray();
-            $filterCrate['filter']= $filter;
-            $filterCrate['crate']= $filter->contactSegmentFilterCrate;
-            $alias = $this->generateRandomParameterName();
-            $event = new LeadListFilteringEvent($filterCrate, null, $alias, $filterCrate['operator'], $queryBuilder, $this->entityManager);
-            $this->dispatcher->dispatch(RecommenderEvents::LIST_FILTERS_ON_FILTERING, $event);
-            if ($event->isFilteringDone()) {
-                $queryBuilder->addLogic($event->getSubQuery(), $filter->getGlue());
-
-                throw new PluginHandledFilterException();
-            }
-        }
-    }
 
     /**
      * Generate a unique parameter name.

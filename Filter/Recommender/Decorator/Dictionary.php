@@ -16,6 +16,8 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\BaseFilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQueryBuilder;
 
@@ -65,16 +67,17 @@ class Dictionary
                         break;
                     case 'recommender_event_log':
                         $dictionary[$key] = [
-                            'type'          => ItemFilterQueryBuilder::getServiceId(),
+                            'type'          => ItemEventQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
                             'foreign_table_field' => $key,
                         ];
                         break;
                     case 'recommender_event_log_property_value':
                         $dictionary[$key] = [
-                            'type'          => ItemFilterQueryBuilder::getServiceId(),
+                            'type'          => ItemEventValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
-                            'foreign_table_field' => $key,
+                            'field' => $key,
+                            'foreign_table_field' => 'value',
                         ];
                         break;
                 }
