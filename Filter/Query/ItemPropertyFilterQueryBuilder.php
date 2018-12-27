@@ -28,7 +28,7 @@ class ItemPropertyFilterQueryBuilder extends PropertyFilterQueryBuilder
     /**
      * @return string
      */
-    private function getIdentificator()
+    public function getIdentificator()
     {
         return 'item_id';
     }

@@ -12,8 +12,18 @@
 namespace MauticPlugin\MauticRecommenderBundle\Helper;
 
 
+use MauticPlugin\MauticCrmBundle\Integration\Salesforce\QueryBuilder;
+
 class SqlQuery
 {
+
+    public static $query;
+
+    /**
+     * @param QueryBuilder $query
+     *
+     * @return string
+     */
     public static function getQuery($query)
     {
         $q = $query->getSQL();
@@ -24,5 +34,13 @@ class SqlQuery
         }
 
         return $q;
+    }
+
+    /**
+     * @param QueryBuilder $query
+     */
+    public static function debugQuery($query)
+    {
+        self::$query = self::getQuery($query);
     }
 }

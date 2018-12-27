@@ -17,7 +17,8 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\FiltersFilterSubscriber::class,
                 'arguments' => [
                     'mautic.recommender.model.client',
-                    'mautic.recommender.filter.recommender'
+                    'mautic.recommender.filter.recommender',
+                    'mautic.recommender.filter.factory'
                 ]
             ],
 
@@ -25,7 +26,7 @@ return [
             'mautic.recommender.segment.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\FiltersSubscriber::class,
                 'arguments' => [
-                    'mautic.recommender.filter.segment.factory',
+                    'mautic.recommender.filter.factory',
                     'mautic.recommender.filter.fields.segment'
                 ],
             ],
@@ -137,12 +138,11 @@ return [
         ],
         'other'        => [
             /* Filters */
-            'mautic.recommender.filter.segment.factory'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\SegmentFilterFactory::class,
+            'mautic.recommender.filter.factory'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory::class,
                 'arguments' => [
                     '@service_container',
                     'mautic.lead.model.lead_segment_schema_cache',
-                    'mautic.recommender.segment.decoration',
                 ]
             ],
             'mautic.recommender.filter.fields.segment'  => [
@@ -177,12 +177,32 @@ return [
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
 
-            /* Filters  */
+            /* Recommender filters  */
+            'mautic.recommender.recommender.decoration' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator::class,
+                'arguments' => [
+                    'mautic.lead.model.lead_segment_filter_operator',
+                    'mautic.lead.repository.lead_segment_filter_descriptor',
+                    'mautic.recommender.filter.recommender.dictionary'
+                ],
+            ],
             'mautic.recommender.filter.recommender.dictionary'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Dictionary::class,
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Dictionary::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
                 ]
+            ],
+            'mautic.recommender.query.builder.recommender.item'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.recommender.item_value'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.base.item'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\BaseFilterQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
             'mautic.recommender.query.builder.item.property'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemPropertyFilterQueryBuilder::class,
@@ -198,7 +218,8 @@ return [
                     'doctrine.orm.entity_manager',
                     'mautic.lead.model.random_parameter_name',
                     'event_dispatcher',
-                    'mautic.recommender.filter.segment.factory'
+                    'mautic.recommender.filter.factory',
+                    'mautic.recommender.recommender.decoration'
                 ]
             ],
             'mautic.recommender.filter.fields.recommender'  => [

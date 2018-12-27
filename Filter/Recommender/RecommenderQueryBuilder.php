@@ -14,19 +14,17 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connections\MasterSlaveConnection;
 use Doctrine\ORM\EntityManager;
-use Mautic\LeadBundle\Entity\LeadList;
 use Mautic\LeadBundle\Event\LeadListFilteringEvent;
-use Mautic\LeadBundle\Event\LeadListQueryBuilderGeneratedEvent;
-use Mautic\LeadBundle\LeadEvents;
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
-use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
 use Mautic\LeadBundle\Segment\Exception\PluginHandledFilterException;
 use Mautic\LeadBundle\Segment\Exception\SegmentQueryException;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use Mautic\LeadBundle\Segment\RandomParameterName;
-use MauticPlugin\MauticRecommenderBundle\Filter\Segment\SegmentFilterFactory;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
+use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
+use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class RecommenderQueryBuilder
@@ -41,10 +39,14 @@ class RecommenderQueryBuilder
     private $dispatcher;
 
     /**
-     * @var SegmentFilterFactory
+     * @var FilterFactory
      */
-    private $segmentFilterFactory;
+    private $filterFactory;
 
+    /**
+     * @var Decorator
+     */
+    private $decorator;
 
     /**
      * ContactSegmentQueryBuilder constructor.
@@ -52,24 +54,25 @@ class RecommenderQueryBuilder
      * @param EntityManager            $entityManager
      * @param RandomParameterName      $randomParameterName
      * @param EventDispatcherInterface $dispatcher
-     * @param SegmentFilterFactory     $segmentFilterFactory
+     * @param FilterFactory            $filterFactory
+     * @param Decorator                $decorator
      */
-    public function __construct(EntityManager $entityManager, RandomParameterName $randomParameterName, EventDispatcherInterface $dispatcher, SegmentFilterFactory $segmentFilterFactory)
+    public function __construct(EntityManager $entityManager, RandomParameterName $randomParameterName, EventDispatcherInterface $dispatcher, FilterFactory $filterFactory, Decorator $decorator)
     {
         $this->entityManager       = $entityManager;
         $this->randomParameterName = $randomParameterName;
         $this->dispatcher          = $dispatcher;
-        $this->segmentFilterFactory = $segmentFilterFactory;
+        $this->filterFactory = $filterFactory;
+        $this->decorator = $decorator;
     }
 
     /**
-     * @param array
+     * @param array $recombeeFilters
+     * @param RecommenderToken $recommenderToken
      *
      * @return QueryBuilder
-     *
-     * @throws SegmentQueryException
      */
-    public function assembleContactsSegmentQueryBuilder($recombeeFilters)
+    public function assembleContactQueryBuilder($recombeeFilters, RecommenderToken $recommenderToken)
     {
         /** @var Connection $connection */
         $connection = $this->entityManager->getConnection();
@@ -83,20 +86,15 @@ class RecommenderQueryBuilder
 
         $queryBuilder->select('l.id')->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'l');
         $filters = [];
+        $this->decorator->setRecommenderToken($recommenderToken);
         foreach ($recombeeFilters as $filter) {
-            $filters[] = $this->segmentFilterFactory->getContactSegmentFilter($filter, 'mautic.recommender.filter.recommender.dictionary');
-
-        }
-        /** @var ContactSegmentFilter $filter */
-        foreach ($filters as $filter) {
-            try {
-                $this->dispatchPluginFilteringEvent($filter, $queryBuilder);
-            } catch (PluginHandledFilterException $exception) {
-                continue;
-            }
-
+            $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
+
+        $queryBuilder->groupBy('l.id');
+        $queryBuilder->setMaxResults($recommenderToken->getLimit());
+
         return $queryBuilder;
     }
 
@@ -111,7 +109,8 @@ class RecommenderQueryBuilder
         if ($this->dispatcher->hasListeners(RecommenderEvents::LIST_FILTERS_ON_FILTERING)) {
             //  This has to run for every filter
             $filterCrate = $filter->contactSegmentFilterCrate->getArray();
-
+            $filterCrate['filter']= $filter;
+            $filterCrate['crate']= $filter->contactSegmentFilterCrate;
             $alias = $this->generateRandomParameterName();
             $event = new LeadListFilteringEvent($filterCrate, null, $alias, $filterCrate['operator'], $queryBuilder, $this->entityManager);
             $this->dispatcher->dispatch(RecommenderEvents::LIST_FILTERS_ON_FILTERING, $event);

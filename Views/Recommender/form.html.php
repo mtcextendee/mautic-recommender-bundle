@@ -88,7 +88,9 @@ $templates = [
 </div>
 
 <div class="ide">
-    <?php echo $view['form']->rest($form); ?>
+    <?php if (isset($sqlQuery)): ?>
+    <?php echo $sqlQuery; ?>
+    <?php endif; ?>
 </div>
 
 

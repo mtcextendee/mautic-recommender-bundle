@@ -45,11 +45,14 @@ class ItemFilterQueryBuilder extends BaseFilterQueryBuilder
         }
         $filterParametersHolder = $filter->getParameterHolder($parameters);
         $tableAlias = $this->generateRandomParameterName();
+        $tableAlias2 = $this->generateRandomParameterName();
 
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
             ->select('NULL')->from($filter->getTable(), $tableAlias)
-            ->andWhere($tableAlias.'.item_id = l.id')
+            ->innerJoin($tableAlias, 'recommender_event_log', $tableAlias2, $tableAlias2.'.id = '.$tableAlias.'.event_log_id')
+            ->andWhere($tableAlias2.'.item_id = l.id')
+            ->andWhere($tableAlias2.'.lead_id = 61')
             ->andWhere($tableAlias.'.property_id = '.$filter->getField());
 
         if (!is_null($filter->getWhere())) {

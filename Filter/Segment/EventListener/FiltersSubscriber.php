@@ -17,14 +17,14 @@ use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\LeadEvents;
 use MauticPlugin\MauticRecommenderBundle\Filter\EventDecorator;
-use MauticPlugin\MauticRecommenderBundle\Filter\Segment\SegmentFilterFactory;
+use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 class FiltersSubscriber extends CommonSubscriber
 {
 
     /**
-     * @var SegmentFilterFactory
+     * @var FilterFactory
      */
     private $segmentFilterFactory;
 
@@ -36,10 +36,10 @@ class FiltersSubscriber extends CommonSubscriber
     /**
      * FiltersSubscriber constructor.
      *
-     * @param SegmentFilterFactory $segmentFilterFactory
-     * @param Choices              $choices
+     * @param FilterFactory $segmentFilterFactory
+     * @param Choices       $choices
      */
-    public function __construct(SegmentFilterFactory $segmentFilterFactory, Choices $choices)
+    public function __construct(FilterFactory $segmentFilterFactory, Choices $choices)
     {
 
         $this->segmentFilterFactory = $segmentFilterFactory;

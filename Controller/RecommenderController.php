@@ -13,6 +13,9 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
 use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
+use Mautic\LeadBundle\Model\LeadModel;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
+use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -142,9 +145,53 @@ class RecommenderController extends AbstractStandardFormController
     {
         return $this->deleteStandard($objectId);
     }
+
+    /**
+     * @param      $entity
+     * @param Form $form
+     * @param      $action
+     * @param      $isPost
+     * @param null $objectId
+     * @param bool $isClone
+     */
     protected function beforeFormProcessed($entity, Form $form, $action, $isPost, $objectId = null, $isClone = false)
     {
         $this->setFormTheme($form, 'MauticRecommenderBundle:Recommender:form.html.php', 'MauticRecommenderBundle:FormTheme\Filter');
+    }
+
+    /**
+     * @param $args
+     * @param $action
+     *
+     * @return mixed
+     */
+    protected function getViewArguments(array $args, $action)
+    {
+        /** @var RecommenderTokenReplacer $recommenderTokenReplacer */
+        $recommenderTokenReplacer    = $this->get('mautic.recommender.service.replacer');
+        /** @var LeadModel $leadModel */
+        $leadModel    = $this->get('mautic.lead.model.lead');
+        $viewParameters = [];
+        switch ($action) {
+            case 'edit':
+                $filter = [
+                    'force'  => [['column' => 'l.email', 'expr' => 'eq', 'value' => 'zdeno@kuzmany.biz']],
+                    'limit'=>1,
+                    'orderBy'    => 'l.id',
+                    'orderByDir' => 'desc',
+                    'withTotalCount' => false,
+                ];
+                $leads = $leadModel->getEntities($filter);
+                $lead = reset($leads);
+                $recommenderTokenReplacer->getRecommenderToken()->setUserId($lead->getId());
+                $recommenderTokenReplacer->getRecommenderToken()->setContent('test {recommender=3}');
+                $content = $recommenderTokenReplacer->getReplacedContent();
+                $viewParameters['sqlQuery'] = SqlQuery::$query;
+                break;
+        }
+        $args['viewParameters'] = array_merge($args['viewParameters'], $viewParameters);
+
+        return $args;
     }
 
     /**

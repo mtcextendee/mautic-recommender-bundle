@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class Choices
 {
-    CONST ALLOWED_TABLES = ['recommender_item_property_value', 'recommender_event_log', 'recommender_event_log_property_value'];
+    CONST ALLOWED_TABLES = ['recommender_item', 'recommender_item_property_value', 'recommender_event_log', 'recommender_event_log_property_value'];
 
     /**
      * @var Fields
@@ -80,14 +80,25 @@ class Choices
                 if (isset($properties['type'])) {
                  //   $properties['type'] = RecommenderHelper::typeToTypeTranslator($properties['type']);
                 }
-
                 $choices[$table][$key] = [
-                    'label'      => $this->translator->trans('mautic.plugin.recommender.form.event').' '.$this->translator->trans($field['name']),
+
                     'properties' => $properties,
                     'operators'  => $this->listModel->getOperatorsForFieldType(
                         $properties['type']
                     ),
                 ];
+
+                switch ($table) {
+                    case "recommender_item":
+                        $choices[$table][$key]['label'] = $this->translator->trans('mautic.plugin.recommender.form.item').' '.$this->translator->trans($field['name']);
+                        break;
+                    case "recommender_item_property_value":
+                        $choices[$table][$key]['label'] =  $this->translator->trans($field['name']);
+                        break;
+                    default:
+                        $choices[$table][$key]['label'] = $this->translator->trans('mautic.plugin.recommender.form.event').' '.$this->translator->trans($field['name']);
+                        break;
+                }
             }
         }
         return $choices;

@@ -14,13 +14,14 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
+use Mautic\LeadBundle\Segment\Query\Filter\FilterQueryBuilderInterface;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use Mautic\LeadBundle\Segment\TableSchemaColumnsCache;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\Choices;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class SegmentFilterFactory
+class FilterFactory
 {
     /**
      * @var ContainerInterface
@@ -32,30 +33,19 @@ class SegmentFilterFactory
      */
     private $schemaCache;
 
-    /**
-     * @var Decorator
-     */
-    private $decorator;
-
-    /**
-     * @var Choices
-     */
-    private $segmentChoices;
 
     /**
      * SegmentFilterFactory constructor.
      *
      * @param ContainerInterface      $container
      * @param TableSchemaColumnsCache $schemaCache
-     * @param Decorator               $decorator
      * @param Choices                 $segmentChoices
      */
-    public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache, Decorator $decorator)
+    public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache)
     {
 
         $this->container = $container;
         $this->schemaCache = $schemaCache;
-        $this->decorator = $decorator;
     }
 
     /**
@@ -63,12 +53,11 @@ class SegmentFilterFactory
      *
      * @return ContactSegmentFilter
      */
-    public function getContactSegmentFilter($filter, $dictionary = 'mautic.recommender.filter.fields.dictionary')
+    public function getContactSegmentFilter($filter, $decorator)
     {
         $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
-        $this->decorator->setDictionary($this->container->get($dictionary)->getDictionary());
-        $filterQueryBuilder = $this->container->get($this->decorator->getQueryType($contactSegmentFilterCrate));
-        return  new ContactSegmentFilter($contactSegmentFilterCrate, $this->decorator, $this->schemaCache, $filterQueryBuilder);
+        $filterQueryBuilder = $this->container->get($decorator->getQueryType($contactSegmentFilterCrate));
+        return  new ContactSegmentFilter($contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder);
     }
 
     /**
@@ -77,11 +66,10 @@ class SegmentFilterFactory
      */
     public function applySegmentQuery($filter, QueryBuilder $qb, $dictionary = 'mautic.recommender.filter.fields.dictionary')
     {
-        $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
-        $this->decorator->setDictionary($this->container->get($dictionary)->getDictionary());
-        $filterQueryBuilder = $this->container->get($this->decorator->getQueryType($contactSegmentFilterCrate));
-        $contactSegmentFilter = new ContactSegmentFilter($contactSegmentFilterCrate, $this->decorator, $this->schemaCache, $filterQueryBuilder);
-        $filterQueryBuilder->applyQuery($qb, $contactSegmentFilter);
-
+        if (isset($filter['crate']) && isset($filter['filter']) && $filter['filter'] instanceof ContactSegmentFilter) {
+            /** @var FilterQueryBuilderInterface $filterQueryBuilder */
+            $filterQueryBuilder = $this->container->get($this->decorator->getQueryType($filter['crate']));
+            $filterQueryBuilder->applyQuery($qb, $filter['filter']);
+        }
     }
 }

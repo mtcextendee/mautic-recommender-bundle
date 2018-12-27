@@ -28,9 +28,8 @@ class EventPropertyFilterQueryBuilder extends PropertyFilterQueryBuilder
     /**
      * @return string
      */
-    private function getIdentificator()
+    public function getIdentificator()
     {
         return 'lead_id';
     }
-
 }

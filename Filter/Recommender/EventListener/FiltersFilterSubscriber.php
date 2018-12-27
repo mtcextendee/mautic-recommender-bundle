@@ -13,11 +13,13 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener;
 
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\InputHelper;
+use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
 use MauticPlugin\MauticRecommenderBundle\EventListener\Service\CampaignLeadDetails;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\RecommenderQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
@@ -25,7 +27,7 @@ use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 
 class FiltersFilterSubscriber extends CommonSubscriber
 {
-    CONST TYPE = 'custom';
+    CONST TYPE = 'filters';
 
     /**
      * @var RecommenderClientModel
@@ -37,6 +39,11 @@ class FiltersFilterSubscriber extends CommonSubscriber
      */
     private $recommenderQueryBuilder;
 
+    /**
+     * @var FilterFactory
+     */
+    private $filterFactory;
+
 
     /**
      * PointsFilterSubscriber constructor.
@@ -44,11 +51,12 @@ class FiltersFilterSubscriber extends CommonSubscriber
      * @param RecommenderClientModel  $clientModel
      * @param RecommenderQueryBuilder $recommenderQueryBuilder
      */
-    public function __construct(RecommenderClientModel $clientModel, RecommenderQueryBuilder $recommenderQueryBuilder)
+    public function __construct(RecommenderClientModel $clientModel, RecommenderQueryBuilder $recommenderQueryBuilder, FilterFactory $filterFactory)
     {
 
         $this->clientModel = $clientModel;
         $this->recommenderQueryBuilder = $recommenderQueryBuilder;
+        $this->filterFactory = $filterFactory;
     }
 
     /**
@@ -63,9 +71,7 @@ class FiltersFilterSubscriber extends CommonSubscriber
             RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS               => [
                 ['onFilterResults', 5],
             ],
-            RecommenderEvents::LIST_FILTERS_ON_FILTERING                   => [
-                ['onListFiltersFiltering', 0],
-            ],
+
         ];
     }
 
@@ -86,8 +92,8 @@ class FiltersFilterSubscriber extends CommonSubscriber
         $recommenderToken = $event->getRecommenderToken();
         if ($recommenderToken->getRecommender()->getFilter() == self::TYPE) {
             $recommenderFilters = $recommenderToken->getRecommender()->getFilters();
-            $qb = $this->recommenderQueryBuilder->assembleContactsSegmentQueryBuilder($recommenderFilters);
-            $qb->setMaxResults(5);
+            $qb = $this->recommenderQueryBuilder->assembleContactQueryBuilder($recommenderFilters, $recommenderToken);
+            SqlQuery::debugQuery($qb);
             $results = $qb->execute()->fetchAll();
             foreach ($results as &$result) {
                 $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;
@@ -111,7 +117,7 @@ class FiltersFilterSubscriber extends CommonSubscriber
         $qb     = $event->getQueryBuilder();
         $filter = $event->getDetails();
         if (false !== strpos($filter['object'], 'recommender')) {
-            $this->segmentFilterFactory->applySegmentQuery($filter, $qb, 'mautic.recommender.filter.recommender.dictionary');
+            $this->filterFactory->applySegmentQuery($filter, $qb, 'mautic.recommender.filter.recommender.dictionary');
             $event->setFilteringStatus(true);
         }
     }

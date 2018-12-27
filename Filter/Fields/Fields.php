@@ -62,19 +62,11 @@ class Fields
                     ],
                 ];
         }else if ($table == 'recommender_item' && !isset($this->fields[$table])) {
-                $this->fields['recommender_item']['itemId']        =
+                $this->fields['recommender_item']['item_id']        =
                     [
                         'name'       => 'mautic.plugin.recommender.form.item.id',
                         'properties' => [
-                            'type' => 'multiselect',
-                            'list' => $this->recommenderClientModel->getRepository()->getEventNamesAsChoices(),
-                        ],
-                    ];
-                $this->fields['recommender_event_log']['date_added'] =
-                    [
-                        'name'       => 'mautic.plugin.recommender.form.event.date_added',
-                        'properties' => [
-                            'type' => 'datetime',
+                            'type' => 'text'
                         ],
                     ];
             }
