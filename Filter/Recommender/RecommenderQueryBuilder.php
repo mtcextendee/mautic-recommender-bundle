@@ -95,8 +95,6 @@ class RecommenderQueryBuilder
             $queryBuilder->andWhere($tableAlias.'.lead_id = '.$recommenderToken->getUserId());
         }
 
-        $filters = [];
-        $this->decorator->setRecommenderToken($recommenderToken);
         foreach ($recombeeFilters as $filter) {
             $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $queryBuilder = $filter->applyQuery($queryBuilder);

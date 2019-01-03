@@ -64,7 +64,7 @@ class FilterFactory
      * @param              $filter
      * @param QueryBuilder $qb
      */
-    public function applySegmentQuery($filter, QueryBuilder $qb, $dictionary = 'mautic.recommender.filter.fields.dictionary')
+    public function applySegmentQuery($filter, QueryBuilder $qb)
     {
         if (isset($filter['crate']) && isset($filter['filter']) && $filter['filter'] instanceof ContactSegmentFilter) {
             /** @var FilterQueryBuilderInterface $filterQueryBuilder */

@@ -27,7 +27,8 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\FiltersSubscriber::class,
                 'arguments' => [
                     'mautic.recommender.filter.factory',
-                    'mautic.recommender.filter.fields.segment'
+                    'mautic.recommender.filter.fields.recommender',
+                    'mautic.recommender.segment.decoration'
                 ],
             ],
 
@@ -164,6 +165,7 @@ return [
                 'arguments' => [
                     'mautic.lead.model.lead_segment_filter_operator',
                     'mautic.lead.repository.lead_segment_filter_descriptor',
+                    'mautic.recommender.filter.fields.dictionary'
                 ],
             ],
             'mautic.recommender.filter.fields.dictionary'  => [
@@ -171,6 +173,10 @@ return [
                 'arguments' => [
                     'mautic.recommender.filter.fields',
                 ]
+            ],
+            'mautic.recommender.query.builder.segment.event'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
             'mautic.recommender.query.builder.event.property'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder::class,
@@ -198,6 +204,18 @@ return [
             ],
             'mautic.recommender.query.builder.recommender.item_value'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.recommender.event'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.recommender.event_value'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.segment.event_value'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventValueQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
             'mautic.recommender.query.builder.base.item'  => [

@@ -11,32 +11,31 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
+use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 
-class ItemEventQueryBuilder extends BaseFilterQueryBuilder
+class ItemQueryBuilder extends BaseFilterQueryBuilder
 {
-
-    /**
-     * @return string
-     */
-    public function getIdentificator()
-    {
-        return 'item_id';
-    }
 
     /**
      * {@inheritdoc}
      */
     public static function getServiceId()
     {
-        return 'mautic.recommender.query.builder.recommender.event';
+        return 'mautic.recommender.query.builder.recommender.item';
     }
 
-    /** {@inheritdoc} */
+    /**
+     * {@inheritdoc}
+     */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
         $filterOperator = $filter->getOperator();
+        $filterGlue     = $filter->getGlue();
+
+        // Check if the column exists in the table
+        $filter->getColumn();
 
         $filterParameters = $filter->getParameterValue();
 
@@ -51,38 +50,29 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
 
         $filterParametersHolder = $filter->getParameterHolder($parameters);
 
-        $tableAlias = $queryBuilder->getTableAlias($filter->getTable());
-
-        if (!$tableAlias) {
-            $tableAlias = $this->generateRandomParameterName();
-
-            $relTable = $this->generateRandomParameterName();
-            $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.id');
-        }
-
         switch ($filterOperator) {
             case 'empty':
                 $expression = new CompositeExpression(CompositeExpression::TYPE_OR,
                     [
-                        $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField()),
-                        $queryBuilder->expr()->eq($tableAlias.'.'.$filter->getField(), $queryBuilder->expr()->literal('')),
+                        $queryBuilder->expr()->isNull('l.'.$filter->getField()),
+                        $queryBuilder->expr()->eq('l.'.$filter->getField(), $queryBuilder->expr()->literal('')),
                     ]
                 );
                 break;
             case 'notEmpty':
                 $expression = new CompositeExpression(CompositeExpression::TYPE_AND,
                     [
-                        $queryBuilder->expr()->isNotNull($tableAlias.'.'.$filter->getField()),
-                        $queryBuilder->expr()->neq($tableAlias.'.'.$filter->getField(), $queryBuilder->expr()->literal('')),
+                        $queryBuilder->expr()->isNotNull('l.'.$filter->getField()),
+                        $queryBuilder->expr()->neq('l.'.$filter->getField(), $queryBuilder->expr()->literal('')),
                     ]
                 );
 
                 break;
             case 'neq':
                 $expression = $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField()),
+                    $queryBuilder->expr()->isNull('l.'.$filter->getField()),
                     $queryBuilder->expr()->$filterOperator(
-                        $tableAlias.'.'.$filter->getField(),
+                        'l.'.$filter->getField(),
                         $filterParametersHolder
                     )
                 );
@@ -100,7 +90,7 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
             case 'regexp':
             case 'notRegexp': //Different behaviour from 'notLike' because of BC (do not use condition for NULL). Could be changed in Mautic 3.
                 $expression = $queryBuilder->expr()->$filterOperator(
-                    $tableAlias.'.'.$filter->getField(),
+                    'l.'.$filter->getField(),
                     $filterParametersHolder
                 );
                 break;
@@ -108,8 +98,8 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
             case 'notBetween': //Used only for date with week combination (NOT EQUAL [this week, next week, last week])
             case 'notIn':
                 $expression = $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->$filterOperator($tableAlias.'.'.$filter->getField(), $filterParametersHolder),
-                    $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField())
+                    $queryBuilder->expr()->$filterOperator('l.'.$filter->getField(), $filterParametersHolder),
+                    $queryBuilder->expr()->isNull('l.'.$filter->getField())
                 );
                 break;
             case 'multiselect':
@@ -117,7 +107,7 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
                 $operator    = $filterOperator === 'multiselect' ? 'regexp' : 'notRegexp';
                 $expressions = [];
                 foreach ($filterParametersHolder as $parameter) {
-                    $expressions[] = $queryBuilder->expr()->$operator($tableAlias.'.'.$filter->getField(), $parameter);
+                    $expressions[] = $queryBuilder->expr()->$operator('l.'.$filter->getField(), $parameter);
                 }
 
                 $expression = $queryBuilder->expr()->andX($expressions);
@@ -126,10 +116,13 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
                 throw new \Exception('Dunno how to handle operator "'.$filterOperator.'"');
         }
 
-        $queryBuilder->addLogic($expression, $filter->getGlue());
+        $queryBuilder->addLogic($expression, $filterGlue);
 
         $queryBuilder->setParametersPairs($parameters, $filterParameters);
 
         return $queryBuilder;
     }
+
+
+
 }

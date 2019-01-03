@@ -14,9 +14,13 @@ use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 
-class ItemEventQueryBuilder extends BaseFilterQueryBuilder
+class ItemValueQueryBuilder extends BaseFilterQueryBuilder
 {
 
+    public function getTable()
+    {
+        return 'recommender_item_property_value';
+    }
     /**
      * @return string
      */
@@ -26,11 +30,19 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
     }
 
     /**
+     * @return string
+     */
+    private function filterField()
+    {
+        return 'value';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public static function getServiceId()
     {
-        return 'mautic.recommender.query.builder.recommender.event';
+        return 'mautic.recommender.query.builder.segment.item_value';
     }
 
     /** {@inheritdoc} */
@@ -57,7 +69,7 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
             $tableAlias = $this->generateRandomParameterName();
 
             $relTable = $this->generateRandomParameterName();
-            $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.id');
+            $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.item_id = l.id');
         }
 
         switch ($filterOperator) {

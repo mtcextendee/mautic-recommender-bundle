@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 
 
+use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
@@ -51,6 +52,20 @@ class Choices
         $this->fields = $fields;
         $this->listModel = $listModel;
         $this->translator = $translator;
+    }
+
+    /**
+     * @param LeadListFiltersChoicesEvent $event
+     * @param                             $object
+     */
+    public function addChoicesToEvent(LeadListFiltersChoicesEvent $event, $object)
+    {
+        $choices = $this->getChoices();
+        foreach (self::ALLOWED_TABLES as $table) {
+            foreach ($choices[$table] as $key=>$options) {
+                $event->addChoice($table, $key, $options);
+            }
+        }
     }
 
     public function addChoices($object)

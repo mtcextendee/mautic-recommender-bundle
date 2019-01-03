@@ -17,6 +17,8 @@ use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\LeadEvents;
 use MauticPlugin\MauticRecommenderBundle\Filter\EventDecorator;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
+use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
@@ -26,7 +28,7 @@ class FiltersSubscriber extends CommonSubscriber
     /**
      * @var FilterFactory
      */
-    private $segmentFilterFactory;
+    private $filterFactory;
 
     /**
      * @var Choices
@@ -34,16 +36,23 @@ class FiltersSubscriber extends CommonSubscriber
     private $choices;
 
     /**
+     * @var Decorator
+     */
+    private $decorator;
+
+    /**
      * FiltersSubscriber constructor.
      *
      * @param FilterFactory $segmentFilterFactory
      * @param Choices       $choices
+     * @param Decorator     $decorator
      */
-    public function __construct(FilterFactory $segmentFilterFactory, Choices $choices)
+    public function __construct(FilterFactory $segmentFilterFactory, Choices $choices, Decorator $decorator)
     {
 
-        $this->segmentFilterFactory = $segmentFilterFactory;
-        $this->choices = $choices;
+        $this->filterFactory = $segmentFilterFactory;
+        $this->choices       = $choices;
+        $this->decorator = $decorator;
     }
 
     /**
@@ -70,7 +79,8 @@ class FiltersSubscriber extends CommonSubscriber
         $qb     = $event->getQueryBuilder();
         $filter = $event->getDetails();
         if (false !== strpos($filter['object'], 'recommender')) {
-            $this->segmentFilterFactory->applySegmentQuery($filter, $qb);
+            $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
+            $filter->applyQuery($qb);
             $event->setFilteringStatus(true);
         }
     }
@@ -81,6 +91,6 @@ class FiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersGenerate(LeadListFiltersChoicesEvent $event)
     {
-        $this->choices->addChoices($event, 'recommender_event');
+        $this->choices->addChoicesToEvent($event, 'recommender_event');
     }
 }

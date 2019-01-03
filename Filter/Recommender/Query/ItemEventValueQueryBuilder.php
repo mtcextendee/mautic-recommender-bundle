@@ -62,7 +62,7 @@ class ItemEventValueQueryBuilder extends BaseFilterQueryBuilder
         $subQueryBuilder
             ->select('NULL')->from($filter->getTable(), $tableAlias)
             ->innerJoin($tableAlias, 'recommender_event_log', $tableAlias2, $tableAlias2.'.id = '.$tableAlias.'.event_log_id')
-            ->andWhere($tableAlias2.'.item_id = l.id')
+            ->andWhere($tableAlias2.'.'.$this->getIdentificator().' = l.id')
             ->andWhere($tableAlias.'.property_id = '.$filter->getField());
 
         if (!is_null($filter->getWhere())) {
