@@ -15,12 +15,14 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator;
 use Mautic\LeadBundle\Segment\Query\Filter\ForeignValueFilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\BaseFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\ItemValueQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventValueQueryBuilder;
 
 class Dictionary
 {
-    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item_property_value'];
+    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item','recommender_item_property_value'];
 
     /**
      * @var Fields
@@ -45,18 +47,17 @@ class Dictionary
         foreach (self::ALLOWED_TABLES as $table) {
             $fields = $this->fields->getFields($table);
             foreach ($fields as $key => $field) {
-
                 switch ($table) {
                     case 'recommender_item':
                         $dictionary[$key] = [
-                            'type'          => BaseFilterQueryBuilder::getServiceId(),
+                            'type'          => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\ItemQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
                             'field'         => $key,
                         ];
                         break;
                     case 'recommender_item_property_value':
                         $dictionary[$key] = [
-                            'type'          => ForeignValueFilterQueryBuilder::getServiceId(),
+                            'type'          => ItemValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
                             'field'         => $key,
                         ];

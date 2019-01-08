@@ -214,6 +214,17 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
+            /* segment filter dictionary */
+            'mautic.recommender.query.builder.segment.item'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\ItemQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.segment.item_value'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\ItemValueQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+
+
             'mautic.recommender.query.builder.segment.event_value'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventValueQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],

@@ -59,7 +59,6 @@ class ItemEventQueryBuilder extends BaseFilterQueryBuilder
             $relTable = $this->generateRandomParameterName();
             $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.id');
         }
-
         switch ($filterOperator) {
             case 'empty':
                 $expression = new CompositeExpression(CompositeExpression::TYPE_OR,

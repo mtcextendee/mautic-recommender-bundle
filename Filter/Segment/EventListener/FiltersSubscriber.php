@@ -16,11 +16,9 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\LeadEvents;
-use MauticPlugin\MauticRecommenderBundle\Filter\EventDecorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 class FiltersSubscriber extends CommonSubscriber
 {

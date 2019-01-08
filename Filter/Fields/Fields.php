@@ -50,7 +50,7 @@ class Fields
                 [
                     'name'       => 'mautic.plugin.recommender.form.event.name',
                     'properties' => [
-                        'type' => 'multiselect',
+                        'type' => 'select',
                         'list' => $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices(),
                     ],
                 ];

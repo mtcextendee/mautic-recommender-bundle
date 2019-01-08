@@ -8,7 +8,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
+namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
@@ -16,26 +16,6 @@ use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 
 class ItemValueQueryBuilder extends BaseFilterQueryBuilder
 {
-
-    public function getTable()
-    {
-        return 'recommender_item_property_value';
-    }
-    /**
-     * @return string
-     */
-    public function getIdentificator()
-    {
-        return 'item_id';
-    }
-
-    /**
-     * @return string
-     */
-    private function filterField()
-    {
-        return 'value';
-    }
 
     /**
      * {@inheritdoc}
@@ -45,13 +25,36 @@ class ItemValueQueryBuilder extends BaseFilterQueryBuilder
         return 'mautic.recommender.query.builder.segment.item_value';
     }
 
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return 'recommender_item_property_value';
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentificator()
+    {
+        return 'lead_id';
+    }
+
+    /**
+     * @return string
+     */
+    public function filterField()
+    {
+        return 'value';
+    }
+
+
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
         $filterOperator = $filter->getOperator();
-
         $filterParameters = $filter->getParameterValue();
-
         if (is_array($filterParameters)) {
             $parameters = [];
             foreach ($filterParameters as $filterParameter) {
@@ -60,85 +63,81 @@ class ItemValueQueryBuilder extends BaseFilterQueryBuilder
         } else {
             $parameters = $this->generateRandomParameterName();
         }
-
         $filterParametersHolder = $filter->getParameterHolder($parameters);
+        $tableAlias = $this->generateRandomParameterName();
+        $tableAlias2 = $this->generateRandomParameterName();
 
-        $tableAlias = $queryBuilder->getTableAlias($filter->getTable());
+        $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
+        $subQueryBuilder
+            ->select('NULL')->from($filter->getTable(), $tableAlias)
+            ->innerJoin($tableAlias, 'recommender_event_log', $tableAlias2, $tableAlias2.'.item_id = '.$tableAlias.'.item_id' )
+            ->andWhere($tableAlias2.'.'.$this->getIdentificator().' = l.id')
+            ->andWhere($tableAlias.'.property_id = '.$filter->getField());
 
-        if (!$tableAlias) {
-            $tableAlias = $this->generateRandomParameterName();
-
-            $relTable = $this->generateRandomParameterName();
-            $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.item_id = l.id');
+        if (!is_null($filter->getWhere())) {
+            $subQueryBuilder->andWhere(str_replace(str_replace(MAUTIC_TABLE_PREFIX, '', $filter->getTable()).'.', $tableAlias.'.', $filter->getWhere()));
         }
 
         switch ($filterOperator) {
             case 'empty':
-                $expression = new CompositeExpression(CompositeExpression::TYPE_OR,
-                    [
-                        $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField()),
-                        $queryBuilder->expr()->eq($tableAlias.'.'.$filter->getField(), $queryBuilder->expr()->literal('')),
-                    ]
-                );
+                $subQueryBuilder->andWhere($subQueryBuilder->expr()->isNull($tableAlias.'.'.$this->filterField()));
+                $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
                 break;
             case 'notEmpty':
-                $expression = new CompositeExpression(CompositeExpression::TYPE_AND,
-                    [
-                        $queryBuilder->expr()->isNotNull($tableAlias.'.'.$filter->getField()),
-                        $queryBuilder->expr()->neq($tableAlias.'.'.$filter->getField(), $queryBuilder->expr()->literal('')),
-                    ]
-                );
-
+                $subQueryBuilder->andWhere($subQueryBuilder->expr()->isNotNull($tableAlias.'.'.$this->filterField()));
+                $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
                 break;
-            case 'neq':
-                $expression = $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField()),
-                    $queryBuilder->expr()->$filterOperator(
-                        $tableAlias.'.'.$filter->getField(),
-                        $filterParametersHolder
-                    )
-                );
-                break;
-            case 'startsWith':
-            case 'endsWith':
-            case 'gt':
-            case 'eq':
-            case 'gte':
-            case 'like':
-            case 'lt':
-            case 'lte':
-            case 'in':
-            case 'between':   //Used only for date with week combination (EQUAL [this week, next week, last week])
-            case 'regexp':
-            case 'notRegexp': //Different behaviour from 'notLike' because of BC (do not use condition for NULL). Could be changed in Mautic 3.
-                $expression = $queryBuilder->expr()->$filterOperator(
-                    $tableAlias.'.'.$filter->getField(),
+            case 'notIn':
+                // The use of NOT EXISTS here requires the use of IN instead of NOT IN to prevent a "double negative."
+                // We are not using EXISTS...NOT IN because it results in including everyone who has at least one entry that doesn't
+                // match the criteria. For example, with tags, if the contact has the tag in the filter but also another tag, they'll
+                // be included in the results which is not what we want.
+                $expression = $subQueryBuilder->expr()->in(
+                    $tableAlias.'.'.$this->filterField(),
                     $filterParametersHolder
                 );
+
+                $subQueryBuilder->andWhere($expression);
+                $queryBuilder->addLogic($queryBuilder->expr()->notExists($subQueryBuilder->getSQL()), $filter->getGlue());
+                break;
+            case 'neq':
+                $expression = $subQueryBuilder->expr()->orX(
+                    $subQueryBuilder->expr()->eq($tableAlias.'.'.$this->filterField(), $filterParametersHolder),
+                    $subQueryBuilder->expr()->isNull($tableAlias.'.'.$this->filterField())
+                );
+
+                $subQueryBuilder->andWhere($expression);
+
+                $queryBuilder->addLogic($queryBuilder->expr()->notExists($subQueryBuilder->getSQL()), $filter->getGlue());
                 break;
             case 'notLike':
-            case 'notBetween': //Used only for date with week combination (NOT EQUAL [this week, next week, last week])
-            case 'notIn':
-                $expression = $queryBuilder->expr()->orX(
-                    $queryBuilder->expr()->$filterOperator($tableAlias.'.'.$filter->getField(), $filterParametersHolder),
-                    $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField())
+                $expression = $subQueryBuilder->expr()->orX(
+                    $subQueryBuilder->expr()->isNull($tableAlias.'.'.$this->filterField()),
+                    $subQueryBuilder->expr()->like($tableAlias.'.'.$this->filterField(), $filterParametersHolder)
                 );
-                break;
-            case 'multiselect':
-            case '!multiselect':
-                $operator    = $filterOperator === 'multiselect' ? 'regexp' : 'notRegexp';
-                $expressions = [];
-                foreach ($filterParametersHolder as $parameter) {
-                    $expressions[] = $queryBuilder->expr()->$operator($tableAlias.'.'.$filter->getField(), $parameter);
-                }
 
-                $expression = $queryBuilder->expr()->andX($expressions);
+                $subQueryBuilder->andWhere($expression);
+
+                $queryBuilder->addLogic($queryBuilder->expr()->notExists($subQueryBuilder->getSQL()), $filter->getGlue());
+                break;
+            case 'regexp':
+            case 'notRegexp':
+                $not        = ($filterOperator === 'notRegexp') ? ' NOT' : '';
+                $expression = $tableAlias.'.'.$this->filterField().$not.' REGEXP '.$filterParametersHolder;
+
+                $subQueryBuilder->andWhere($expression);
+
+                $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
                 break;
             default:
-                throw new \Exception('Dunno how to handle operator "'.$filterOperator.'"');
-        }
+                $expression = $subQueryBuilder->expr()->$filterOperator(
+                    $tableAlias.'.'.$this->filterField(),
+                    $filterParametersHolder
+                );
+                $subQueryBuilder->andWhere($expression);
 
-        $queryBuilder->addLogic($expression, $filter->getGlue());
+                $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
+        }
 
         $queryBuilder->setParametersPairs($parameters, $filterParameters);
 
