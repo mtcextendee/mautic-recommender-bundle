@@ -95,6 +95,7 @@ class FiltersFilterSubscriber extends CommonSubscriber
             $qb = $this->recommenderQueryBuilder->assembleContactQueryBuilder($recommenderFilters, $recommenderToken);
             SqlQuery::debugQuery($qb);
             $results = $qb->execute()->fetchAll();
+            print_r($results);
             foreach ($results as &$result) {
                 $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;
                 $properties = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));

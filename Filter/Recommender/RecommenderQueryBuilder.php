@@ -103,6 +103,7 @@ class RecommenderQueryBuilder
 
         $queryBuilder->groupBy('l.id');
         $queryBuilder->setMaxResults($recommenderToken->getLimit());
+        $queryBuilder->setMaxResults(10);
 
         return $queryBuilder;
     }

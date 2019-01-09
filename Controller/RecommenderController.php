@@ -178,12 +178,12 @@ class RecommenderController extends AbstractStandardFormController
                     'force'  => [['column' => 'l.email', 'expr' => 'eq', 'value' => 'zdeno@kuzmany.biz']],
                     'limit'=>1,
                     'orderBy'    => 'l.id',
-                    'orderByDir' => 'desc',
+                    'orderByDir' => 'asc',
                     'withTotalCount' => false,
                 ];
                 $leads = $leadModel->getEntities($filter);
                 $lead = reset($leads);
-                $recommenderTokenReplacer->getRecommenderToken()->setUserId($lead->getId());
+                $recommenderTokenReplacer->getRecommenderToken()->setUserId(58);
                 $recommenderTokenReplacer->getRecommenderToken()->setContent('test {recommender=3}');
                 $content = $recommenderTokenReplacer->getReplacedContent();
                 $viewParameters['sqlQuery'] = SqlQuery::$query;

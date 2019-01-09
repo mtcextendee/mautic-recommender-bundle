@@ -13,10 +13,11 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\QueryBuilderTrait;
 
 class ItemEventValueQueryBuilder extends BaseFilterQueryBuilder
 {
-
+    use QueryBuilderTrait;
     /**
      * @return string
      */
@@ -130,8 +131,8 @@ class ItemEventValueQueryBuilder extends BaseFilterQueryBuilder
                 $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
         }
 
-        $queryBuilder->setParametersPairs($parameters, $filterParameters);
-
+        //$queryBuilder->setParametersPairs($parameters, $filterParameters);
+        $this->setParameters($queryBuilder, $parameters, $filterParameters, 'integer');
         return $queryBuilder;
     }
 }

@@ -13,9 +13,6 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator;
 
 
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
-use MauticPlugin\MauticRecommenderBundle\Filter\Query\BaseFilterQueryBuilder;
-use MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder;
-use MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemFilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder;
@@ -61,8 +58,7 @@ class Dictionary
                         $dictionary[$key] = [
                             'type'          => ItemValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
-                            'field' => 'value',
-                            'foreign_table_field' => 'value',
+                            'foreign_table_field' => $key,
                         ];
                         break;
                     case 'recommender_event_log':
@@ -83,7 +79,6 @@ class Dictionary
                 }
             }
         }
-
         return $dictionary;
     }
 }

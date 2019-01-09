@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator;
 
 
+use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
 use Mautic\LeadBundle\Segment\ContactSegmentFilterOperator;
 use Mautic\LeadBundle\Segment\Decorator\CustomMappedDecorator;
 use Mautic\LeadBundle\Services\ContactSegmentFilterDictionary;
@@ -32,7 +33,5 @@ class Decorator extends CustomMappedDecorator
         parent::__construct($contactSegmentFilterOperator, $contactSegmentFilterDictionary);
         $this->dictionary = $dictionary->getDictionary();
     }
-
-
 
 }

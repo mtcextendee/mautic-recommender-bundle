@@ -15,21 +15,17 @@ use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 
-class EventPropertyFilterQueryBuilder extends PropertyFilterQueryBuilder
+trait QueryBuilderTrait
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function getServiceId()
+    public function setParameters(QueryBuilder $queryBuilder, $parameters, $filterParameters, $type)
     {
-        return 'mautic.recommender.query.builder.event.property';
+        if (!is_array($parameters)) {
+            return $queryBuilder->setParameter($parameters, $filterParameters, $type);
+        }
+        foreach ($parameters as $parameter) {
+            $parameterValue = array_shift($filterParameters);
+            $queryBuilder->setParameter($parameter, $parameterValue, $type);
+        }
     }
 
-    /**
-     * @return string
-     */
-    public function getIdentificator()
-    {
-        return 'lead_id';
-    }
 }
