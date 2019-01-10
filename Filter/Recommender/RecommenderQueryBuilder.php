@@ -14,16 +14,10 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connections\MasterSlaveConnection;
 use Doctrine\ORM\EntityManager;
-use Mautic\LeadBundle\Event\LeadListFilteringEvent;
-use Mautic\LeadBundle\Segment\ContactSegmentFilter;
-use Mautic\LeadBundle\Segment\Exception\PluginHandledFilterException;
-use Mautic\LeadBundle\Segment\Exception\SegmentQueryException;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use Mautic\LeadBundle\Segment\RandomParameterName;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
-use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -94,7 +88,6 @@ class RecommenderQueryBuilder
             }
             $queryBuilder->andWhere($tableAlias.'.lead_id = '.$recommenderToken->getUserId());
         }
-
         foreach ($recombeeFilters as $filter) {
             $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $queryBuilder = $filter->applyQuery($queryBuilder);

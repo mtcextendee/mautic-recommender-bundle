@@ -256,8 +256,6 @@ abstract class AbstractRequest
             return 'boolean';
         } elseif ($this->isDateTime($property)) {
             return'datetime';
-        } elseif ($this->isDate($property)) {
-            return'datetime';
         } else {
             return 'string';
         }

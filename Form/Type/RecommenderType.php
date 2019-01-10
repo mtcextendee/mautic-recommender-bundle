@@ -24,12 +24,14 @@ use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 
 class RecommenderType extends AbstractType
 {
@@ -112,6 +114,28 @@ class RecommenderType extends AbstractType
                         ]
                     )
                 ]
+            ]
+        );
+
+        $builder->add(
+            'numberOfItems',
+            NumberType::class,
+            [
+                'label'       => 'mautic.plugin.recommender.form.number_of_items.default',
+                'label_attr'  => ['class' => 'control-label'],
+                'attr'        => [
+                    'class'   => 'form-control',
+                    'tooltip' => 'mautic.plugin.recommender.form.number_of_items.tooltip',
+                ],
+                'required'    => false,
+                'data'        => $options['data']->getNumberOfItems(),
+                'constraints' => [
+                    new Range(
+                        [
+                            'min' => 1,
+                        ]
+                    ),
+                ],
             ]
         );
 

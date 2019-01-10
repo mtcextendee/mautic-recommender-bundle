@@ -48,6 +48,11 @@ class Recommender
      */
     protected $dateAdded;
 
+    /**
+     * @var int
+     */
+    private $numberOfItems = 9;
+
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
@@ -66,6 +71,12 @@ class Recommender
             ->addNamedField('filter', Type::STRING, 'filter')
             ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
+
+
+        $builder->createField('numberOfItems', Type::INTEGER)
+            ->columnName('number_of_items')
+            ->nullable()
+            ->build();
 
         $builder->createManyToOne(
             'template',
@@ -92,6 +103,7 @@ class Recommender
                     'filters',
                     'template',
                     'dateAdded',
+                    'numberOfItems',
                 ]
             )
             ->build();
@@ -233,5 +245,25 @@ class Recommender
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * @param int $numberOfItems
+     *
+     * @return Recommender
+     */
+    public function setNumberOfItems($numberOfItems)
+    {
+        $this->numberOfItems = $numberOfItems;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfItems()
+    {
+        return $this->numberOfItems;
     }
 }

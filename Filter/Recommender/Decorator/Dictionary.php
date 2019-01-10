@@ -45,7 +45,6 @@ class Dictionary
         foreach (self::ALLOWED_TABLES as $table) {
             $fields = $this->fields->getFields($table);
             foreach ($fields as $key => $field) {
-
                 switch ($table) {
                     case 'recommender_item':
                         $dictionary[$key] = [
@@ -58,7 +57,7 @@ class Dictionary
                         $dictionary[$key] = [
                             'type'          => ItemValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
-                            'foreign_table_field' => $key,
+                            'field' => $this->fields->cleanKey($key),
                         ];
                         break;
                     case 'recommender_event_log':
@@ -72,7 +71,7 @@ class Dictionary
                         $dictionary[$key] = [
                             'type'          => ItemEventValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
-                            'field' => $key,
+                            'field' => $this->fields->cleanKey($key),
                             'foreign_table_field' => 'value',
                         ];
                         break;

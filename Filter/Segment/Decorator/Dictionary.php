@@ -59,7 +59,7 @@ class Dictionary
                         $dictionary[$key] = [
                             'type'          => ItemValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
-                            'field'         => $key,
+                            'field'         =>  $this->fields->cleanKey($key),
                         ];
                         break;
                     case 'recommender_event_log':
@@ -77,7 +77,7 @@ class Dictionary
                             'foreign_table' => $table,
                             'foreign_table_field' => 'event_log_id',
                             'table_field'         => 'event_log_id',
-                            'field'       => $key,
+                            'field'       =>  $this->fields->cleanKey($key),
                         ];
                         break;
                 }

@@ -73,14 +73,27 @@ class Fields
         elseif ($table == 'recommender_event_log_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
             foreach ($eventProperties as $property) {
-                $this->fields['recommender_event_log_property_value'][$property['id']] = $property;
+                $this->fields['recommender_event_log_property_value']['event_'.$property['id']] = $property;
             }
         }elseif ($table == 'recommender_item_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
             foreach ($eventProperties as $property) {
-                $this->fields['recommender_item_property_value'][$property['id']] = $property;
+                $this->fields['recommender_item_property_value']['item_'.$property['id']] = $property;
             }
         }
-        return $this->fields[$table];
+        return isset($this->fields[$table]) ? $this->fields[$table] : [];
+    }
+
+    /**
+     * Remove prefix from property key (item_64, event_44)
+     *
+     * @param $key
+     *
+     * @return mixed
+     */
+    public function cleanKey($key)
+    {
+        return str_replace(['item_','event_'],'', $key);
+
     }
 }
