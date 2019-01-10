@@ -77,7 +77,9 @@ class FiltersSubscriber extends CommonSubscriber
         $qb     = $event->getQueryBuilder();
         $filter = $event->getDetails();
         if (false !== strpos($filter['object'], 'recommender')) {
-            $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
+
+
+                $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $filter->applyQuery($qb);
             $event->setFilteringStatus(true);
         }

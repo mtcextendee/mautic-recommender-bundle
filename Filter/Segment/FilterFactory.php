@@ -56,7 +56,12 @@ class FilterFactory
     public function getContactSegmentFilter($filter, $decorator)
     {
         $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
-        $filterQueryBuilder = $this->container->get($decorator->getQueryType($contactSegmentFilterCrate));
+        if ($contactSegmentFilterCrate->isDateType()) {
+            $decorator = $this->container->get(
+                'mautic.lead.model.lead_segment.decorator.date.optionFactory'
+            )->getDateOption($contactSegmentFilterCrate);
+        }
+            $filterQueryBuilder = $this->container->get($decorator->getQueryType($contactSegmentFilterCrate));
         return  new ContactSegmentFilter($contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder);
     }
 

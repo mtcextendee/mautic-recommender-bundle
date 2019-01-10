@@ -34,7 +34,7 @@ class ItemPropertyValue
     protected $item;
 
     /**
-     * @var string
+     * @var mixed
      */
     protected $value;
 

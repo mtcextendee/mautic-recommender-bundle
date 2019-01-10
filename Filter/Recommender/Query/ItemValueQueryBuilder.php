@@ -12,8 +12,9 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
 
-class ItemValueQueryBuilder extends ItemEventValueQueryBuilder
+class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
 {
 
     public function getTable()
@@ -131,9 +132,8 @@ class ItemValueQueryBuilder extends ItemEventValueQueryBuilder
 
                 $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
         }
-        $queryBuilder->setParametersPairs($parameters, $filterParameters);
-        //die(print_r($filter->contactSegmentFilterCrate->getArray()));
-
+      //  $queryBuilder->setParametersPairs($parameters, $filterParameters);
+        $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
         return $queryBuilder;
     }
 

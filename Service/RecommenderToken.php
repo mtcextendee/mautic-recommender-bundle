@@ -116,7 +116,7 @@ class RecommenderToken
      */
     public function getLimit()
     {
-        return $this->getRecommender()->getTemplate()->getNumberOfItems();
+        return $this->getRecommender()->getNumberOfItems();
     }
 
     /**

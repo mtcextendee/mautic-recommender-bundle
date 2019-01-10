@@ -12,10 +12,10 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
-use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
 
-class ItemQueryBuilder extends BaseFilterQueryBuilder
+class ItemQueryBuilder extends RecommenderFilterQueryBuilder
 {
 
     /**
@@ -118,7 +118,8 @@ class ItemQueryBuilder extends BaseFilterQueryBuilder
 
         $queryBuilder->addLogic($expression, $filterGlue);
 
-        $queryBuilder->setParametersPairs($parameters, $filterParameters);
+        //$queryBuilder->setParametersPairs($parameters, $filterParameters);
+        $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
 
         return $queryBuilder;
     }

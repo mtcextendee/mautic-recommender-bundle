@@ -34,7 +34,7 @@ class EventLogValue
     protected $eventLog;
 
     /**
-     * @var string
+     * @var mixed
      */
     protected $value;
 

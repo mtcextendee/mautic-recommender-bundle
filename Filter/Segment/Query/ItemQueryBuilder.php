@@ -11,11 +11,10 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
-use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
-use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
 
-class ItemQueryBuilder extends BaseFilterQueryBuilder
+class ItemQueryBuilder extends RecommenderFilterQueryBuilder
 {
 
     /**

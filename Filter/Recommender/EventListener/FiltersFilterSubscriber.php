@@ -91,8 +91,7 @@ class FiltersFilterSubscriber extends CommonSubscriber
         /** @var RecommenderToken $recommenderToken */
         $recommenderToken = $event->getRecommenderToken();
         if ($recommenderToken->getRecommender()->getFilter() == self::TYPE) {
-            $recommenderFilters = $recommenderToken->getRecommender()->getFilters();
-            $qb = $this->recommenderQueryBuilder->assembleContactQueryBuilder($recommenderFilters, $recommenderToken);
+            $qb = $this->recommenderQueryBuilder->assembleContactQueryBuilder($recommenderToken);
             SqlQuery::debugQuery($qb);
             $results = $qb->execute()->fetchAll();
             foreach ($results as &$result) {

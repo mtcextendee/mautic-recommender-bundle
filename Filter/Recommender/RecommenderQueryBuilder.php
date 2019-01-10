@@ -18,6 +18,7 @@ use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use Mautic\LeadBundle\Segment\RandomParameterName;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -61,12 +62,11 @@ class RecommenderQueryBuilder
     }
 
     /**
-     * @param array $recombeeFilters
      * @param RecommenderToken $recommenderToken
      *
      * @return QueryBuilder
      */
-    public function assembleContactQueryBuilder($recombeeFilters, RecommenderToken $recommenderToken)
+    public function assembleContactQueryBuilder(RecommenderToken $recommenderToken)
     {
         /** @var Connection $connection */
         $connection = $this->entityManager->getConnection();
@@ -79,7 +79,7 @@ class RecommenderQueryBuilder
         $queryBuilder = new QueryBuilder($connection);
 
         $queryBuilder->select('l.id')->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'l');
-
+        $recombeeFilters = $recommenderToken->getRecommender()->getFilters();
         if(false !== strpos(implode(',', array_column($recombeeFilters, 'object')), 'recommender_event_log')){
             $tableAlias = $queryBuilder->getTableAlias('recommender_event_log');
             if (!$tableAlias) {
@@ -93,11 +93,9 @@ class RecommenderQueryBuilder
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
 
-
         $queryBuilder->groupBy('l.id');
         $queryBuilder->setMaxResults($recommenderToken->getLimit());
-        $queryBuilder->setMaxResults(10);
-
+        SqlQuery::debugQuery($queryBuilder);
         return $queryBuilder;
     }
 

@@ -107,7 +107,7 @@ class RecommenderIntegration extends AbstractIntegration
                 ]
             );
 
-            $builder->add(
+          /*  $builder->add(
                 'event_add_to_cart',
                 ListTemplateType::class,
                 [
@@ -132,57 +132,8 @@ class RecommenderIntegration extends AbstractIntegration
                         'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
                     ],
                 ]
-            );
-
-            $builder->add(
-                'abandoned_cart_campaigns',
-                CampaignListType::class,
-                [
-                    'label'      => 'mautic.recommender.abandoned.cart.campaigns',
-                    'label_attr' => ['class' => 'control-label'],
-                    'attr'       => [
-                        'class'        => 'form-control',
-                        'tooltip'      => 'mautic.recommender.abandoned.cart.campaigns.tooltip',
-                        'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
-                    ],
-                    'multiple'   => true,
-                    'expanded'   => false,
-                    'empty_value' => ''
-                ]
-            );
-
-/*
-            $builder->add(
-                'abandoned_cart_segment',
-                'leadlist_choices',
-                [
-                    'label'      => 'mautic.recommender.segment.abandoned.cart',
-                    'label_attr' => ['class' => 'control-label'],
-                    'attr'       => [
-                        'class'        => 'form-control',
-                        'tooltip'      => 'mautic.recommender.segment.abandoned.cart.tooltip',
-                        'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
-                    ],
-                    'multiple'   => false,
-                    'expanded'   => false,
-                ]
-            );
-
-            $builder->add(
-                'abandoned_cart_order_segment',
-                'leadlist_choices',
-                [
-                    'label'      => 'mautic.recommender.segment.abandoned.cart.order',
-                    'label_attr' => ['class' => 'control-label'],
-                    'attr'       => [
-                        'class'        => 'form-control',
-                        'tooltip'      => 'mautic.recommender.segment.abandoned.cart.order.tooltip',
-                        'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
-                    ],
-                    'multiple'   => false,
-                    'expanded'   => false,
-                ]
             );*/
+
         }
     }
 }
