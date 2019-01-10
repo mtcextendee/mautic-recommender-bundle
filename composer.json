@@ -3,5 +3,6 @@
   "type": "mautic-plugin",
   "require": {
     "mautic/composer-plugin": "^1.0",
+    "halaxa/json-machine": "^0.3.0"
   }
 }
