@@ -21,6 +21,7 @@ use MauticPlugin\MauticRecommenderBundle\Event\SentEvent;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
+use OpenCloud\Common\Exceptions\JsonError;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -99,16 +100,16 @@ class ApiCommands
         SegmentMapping $segmentMapping,
         RecommenderTokenFinder $recommenderTokenFinder,
         EventDispatcherInterface $dispatcher,
-    EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager
     ) {
 
         $this->recommenderApi         = $recommenderApi;
-        $this->logger              = $logger;
-        $this->translator          = $translator;
-        $this->segmentMapping      = $segmentMapping;
+        $this->logger                 = $logger;
+        $this->translator             = $translator;
+        $this->segmentMapping         = $segmentMapping;
         $this->recommenderTokenFinder = $recommenderTokenFinder;
-        $this->dispatcher = $dispatcher;
-        $this->entityManager = $entityManager;
+        $this->dispatcher             = $dispatcher;
+        $this->entityManager          = $entityManager;
     }
 
     /**
@@ -117,10 +118,9 @@ class ApiCommands
      */
     public function callCommand($apiRequest, array $options = [])
     {
-        try{
+        try {
             $return = $this->recommenderApi->getClient()->send($apiRequest, $options);
-        }catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $return = false;
         }
 
@@ -151,23 +151,23 @@ class ApiCommands
      * @param     $items
      * @param int $batchSize
      */
-    public function ImportItems($items, $batchSize = 100, Output $output )
+    public function ImportItems($items, $batchSize = 50, Output $output)
     {
-            $clearBatch = 20;
-            do {
-                $i = 1;
-                $progress = ProgressBarHelper::init($output, $batchSize);
-                $progress->start();
+        $clearBatch = 30;
+        do {
+            $i        = 1;
+            $progress = ProgressBarHelper::init($output, $batchSize);
+            $progress->start();
+            try {
                 foreach ($items as $key => $item) {
                     $i += $this->recommenderApi->getClient()->send(
                         'ImportItems',
                         $item,
-                        ['timeout'=>'-1 day']
+                        ['timeout' => '-1 day']
                     );
                     $progress->setProgress($i);
                     if ($i % $clearBatch === 0) {
                         $this->entityManager->clear(Item::class);
-                        $this->entityManager->clear(ItemPropertyValue::class);
                         $this->entityManager->clear(Property::class);
                     }
                     if ($i % $batchSize === 0) {
@@ -175,9 +175,11 @@ class ApiCommands
                         $progress->finish();
                         break;
                     }
-
                 }
-            } while ($batchSize > 0);
+            } catch (\Exception $error) {
+                $batchSize = 0;
+            }
+        } while ($batchSize > 0);
     }
 
     /**
@@ -212,8 +214,8 @@ class ApiCommands
                         "settings" => [
                             "parameters" => [
                                 "interaction-types"        => [
-                                    "detail-view" => [
-                                        "enabled" => false
+                                    "detail-view"   => [
+                                        "enabled" => false,
                                     ],
                                     "cart-addition" => [
                                         "enabled" => true,

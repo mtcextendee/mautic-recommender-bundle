@@ -21,7 +21,7 @@ class AddItemValues extends AbstractRequest
         $options = $this->getOptions();
         $item = $options['item'];
         unset($options['item']);
-
+$i = 0;
         foreach ($options as $key => $option) {
 
             /** @var AddProperty $addProperty */

@@ -54,6 +54,8 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 InputOption::VALUE_OPTIONAL,
                 'JSON file to import for types for '.implode(', ', $this->getActions())
             );
+        $this->addOption('--batch-limit', '-l', InputOption::VALUE_OPTIONAL, 'Set batch size of contacts to process per round. Defaults to 50.', 50);
+
 
         parent::configure();
     }
@@ -182,7 +184,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         switch ($type) {
             case "items":
-                $apiCommands->ImportItems($items, 50, $output);
+                $apiCommands->ImportItems($items, $input->getOption('batch-limit'), $output);
                 break;
         }
 

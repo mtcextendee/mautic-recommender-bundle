@@ -45,6 +45,9 @@ abstract class AbstractRequest
     /** @var array  */
     private $deleteEntities = [];
 
+    /** @var PropertyAccessor  */
+    private $accessor;
+
 
     /**
      * ItemRequest constructor.
@@ -57,6 +60,8 @@ abstract class AbstractRequest
         $this->options = $this->client->getOptions();
         $this->optionsResolver =  $this->client->getOptionsResolver();
         $this->model   = $this->client->getClientModel();
+        $this->accessor = new PropertyAccessor();
+
 
     }
 
@@ -144,14 +149,15 @@ abstract class AbstractRequest
      */
     public function setValues($entity)
     {
-        $accessor = new PropertyAccessor();
+
         foreach ($this->getOptions() as $key=>$value){
             try {
-                $accessor->setValue($entity, $key, $value);
+                $this->accessor->setValue($entity, $key, $value);
             } catch (\Exception $exception) {
 
             }
         }
+
         return $entity;
     }
 
@@ -236,11 +242,13 @@ abstract class AbstractRequest
      *
      * @return string
      */
-    protected function getPropertyType($property)
+    public function getPropertyType($property)
     {
         if (is_array($property)) {
             return 'set';
-        } elseif (is_int($property)) {
+        } elseif (in_array($property, [false, true, "false", "true"], true)) {
+            return 'boolean';
+        } elseif (is_numeric($property)) {
             return 'int';
         } elseif (is_double($property)) {
             return 'float';
@@ -248,10 +256,13 @@ abstract class AbstractRequest
             return 'boolean';
         } elseif ($this->isDateTime($property)) {
             return'datetime';
+        } elseif ($this->isDate($property)) {
+            return'datetime';
         } else {
             return 'string';
         }
     }
+
 
     /**
      * @param $date
@@ -272,6 +283,27 @@ abstract class AbstractRequest
             return false;
         }
     }
+
+    /**
+     * Check if the value is a valid date
+     *
+     * @param mixed $value
+     *
+     * @return boolean
+     */
+    private function isDate($value)
+    {
+        if (!$value) {
+            return false;
+        }
+        try {
+            new \DateTime($value);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     /**
      * Check if has settings by client
      *

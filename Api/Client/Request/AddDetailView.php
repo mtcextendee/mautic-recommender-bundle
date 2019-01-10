@@ -20,7 +20,6 @@ class AddDetailView extends AbstractRequest
 {
     public function run()
     {
-
         $addEvent = $this->getClient()->send('AddEvent', ['name'=> $this->getClient()->getEndpoint()]);
         $event = $addEvent->addIfNotExist();
         $addEvent->save();
