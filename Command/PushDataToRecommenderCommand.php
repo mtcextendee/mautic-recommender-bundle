@@ -146,8 +146,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 );
             }
 
-            $json = file_get_contents($file);
-            if (empty($json)) {
+            if (empty(!file_exists($file))) {
                 return $output->writeln(
                     sprintf(
                         '<error>ERROR:</error> <info>'.$translator->trans(
@@ -157,7 +156,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                     )
                 );
             }
-            $items = \GuzzleHttp\json_decode($json, true);
+            $items = \JsonMachine\JsonMachine::fromFile($file);
 
             if (empty($items) || ![$items]) {
                 return $output->writeln(
@@ -180,76 +179,10 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
         /** @var IntegrationEntityModel $integrationEntityModel */
         $integrationEntityModel = $this->getContainer()->get('mautic.plugin.model.integration_entity');
+        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
         switch ($type) {
             case "items":
-                $apiCommands->ImportItems($items);
-                break;
-            case "contacts":
-
-                $criteria['integrationEntity'] = 'users';
-                $criteria['internalEntity']    = 'lead';
-                $criteria['integration']       = $integrationObject->getName();
-                /** @var IntegrationEntity $integrationEntity */
-                $integrationEntity = $integrationObject->getIntegrationEntityRepository()->findOneBy($criteria);
-                $filter            = [];
-                if (!$integrationEntity) {
-                    $integrationEntity = $this->createIntegrationEntity(
-                        new \DateTime(),
-                        $integrationObject->getName(),
-                        'users',
-                        'lead'
-                    );
-                    $integrationEntityModel->saveEntity($integrationEntity);
-                } else {
-                    $filter['force'][] = [
-                        'column' => 'l.date_modified',
-                        'expr'   => 'gt',
-                        'value'  => $integrationEntity->getLastSyncDate()->format('Y-m-d H:i:s'),
-                    ];
-                    $integrationEntityModel->getEntityByIdAndSetSyncDate($integrationEntity->getId(), new \DateTime());
-                    $integrationEntityModel->saveEntity($integrationEntity);
-                }
-
-
-                $start = 0;
-                $limit = 100;
-                $items = ['init'];
-                while (count($items) > 0) {
-                    try {
-                        /** @var LeadModel $leadModel */
-                        $leadModel = $this->getContainer()->get('mautic.lead.model.lead');
-                        $leads     = $leadModel->getEntities(
-                            [
-                                'filter'     => $filter,
-                                'start'      => $start,
-                                'limit'      => $limit,
-                                'orderBy'    => 'l.id',
-                                'orderByDir' => 'asc',
-                            ]
-                        );
-                        /** @var Lead $lead */
-                        $items = [];
-                        if (!empty($leads)) {
-                            foreach ($leads as $lead) {
-                                $items[$lead->getId()] = $lead->getProfileFields();
-                            }
-                            $apiCommands->ImportUser($items);
-                            /*if ($serviceApiCommands->hasCommandOutput()) {
-                                $this->displayCmdTextFromResult(
-                                    $serviceApiCommands->getCommandOutput(),
-                                    'user property values',
-                                    $output
-                                );
-                            }*/
-                        }
-                    } catch (\Exception $e) {
-
-                    }
-                    $start += count($items);
-                }
-                $output->write($translator->trans('mautic.plugin.recommender.integration.total.processed').': '.$start);
-
-                return;
+                $apiCommands->ImportItems($items, 50, $output);
                 break;
         }
 

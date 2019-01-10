@@ -26,6 +26,7 @@ class Client
     private $clientModel;
 
     private $options;
+    private $settings = [];
     private $optionsResolver;
 
 
@@ -54,10 +55,11 @@ class Client
      *
      * @throws ApiEndpointNotFoundException
      */
-    public function send($endpoint, array $options)
+    public function send($endpoint, array $options, $settings = [])
     {
         $this->endpoint = $endpoint;
         $this->options = $options;
+        $this->settings = $settings;
         $this->optionsResolver = new Options($this);
         $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$endpoint;
         if (!class_exists($class)) {
@@ -111,6 +113,14 @@ class Client
     public function getEndpoint()
     {
         return $this->endpoint;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSettings()
+    {
+        return $this->settings;
     }
 }
 

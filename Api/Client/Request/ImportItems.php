@@ -11,25 +11,32 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
-use MauticPlugin\MauticRecommender\Exception\ItemIdNotFoundException;
-use MauticPlugin\MauticRecommenderBundle\Entity\Event;
-use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
+use Mautic\CoreBundle\Helper\DateTimeHelper;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
-use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 
 class ImportItems extends AbstractRequest
 {
     public function run()
     {
+        $timeout = $this->getSetting('timeout');
+        /** @var AddItem $addItem */
         $addItem = $this->getClient()->send('AddItem', ['item_id'=> $this->getOptions()['itemId']]);
+        /** @var Item $item */
         $item = $addItem->addIfNotExist();
+        if (!empty($timeout) && $item->getId()) {
+            if ((new DateTimeHelper($timeout))->getDateTime() < $item->getDateModified()) {
+                return 0;
+            }
+        }
+        $item->setDateModified((new DateTimeHelper())->getDateTime());
+        $addItem->addEntity($item);
         $addItem->save();
 
         $addEventLogPropertyValues = $this->getClient()->send('AddItemValues', $this->getOptionsResolver()->getOptionsWithEntities([], ['item'=> $item]));
         $addEventLogPropertyValues->add();
         $addEventLogPropertyValues->save();
         $addEventLogPropertyValues->delete();
-
+        return 1;
     }
 
 }

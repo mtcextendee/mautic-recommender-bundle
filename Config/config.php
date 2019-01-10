@@ -296,7 +296,8 @@ return [
                     'translator',
                     'mautic.recommender.service.api.segment.mapping',
                     'mautic.recommender.service.token.finder',
-                    'event_dispatcher'
+                    'event_dispatcher',
+                    'doctrine.orm.entity_manager'
                 ],
             ],
             'mautic.recommender.service.api.segment.mapping' => [

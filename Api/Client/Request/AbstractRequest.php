@@ -39,7 +39,7 @@ abstract class AbstractRequest
     private $client;
 
     /** @var array  */
-    private $entities = [];
+    protected $entities = [];
 
 
     /** @var array  */
@@ -271,6 +271,28 @@ abstract class AbstractRequest
         {
             return false;
         }
+    }
+    /**
+     * Check if has settings by client
+     *
+     * @param $setting
+     *
+     * @return bool
+     */
+    public function hasSetting($setting)
+    {
+        if (isset($this->getClient()->getSettings()[$setting])) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getSetting($setting)
+    {
+        if ($this->hasSetting($setting)) {
+            return $this->getClient()->getSettings()[$setting];
+        }
+
     }
 }
 

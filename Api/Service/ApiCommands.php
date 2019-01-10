@@ -11,12 +11,18 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Service;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Mautic\CoreBundle\Helper\ProgressBarHelper;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
+use MauticPlugin\MauticRecommenderBundle\Entity\Item;
+use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
+use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 use MauticPlugin\MauticRecommenderBundle\Event\SentEvent;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Output\Output;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -72,6 +78,11 @@ class ApiCommands
     private $dispatcher;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * ApiCommands constructor.
      *
      * @param RecommenderApi           $recommenderApi
@@ -87,7 +98,8 @@ class ApiCommands
         TranslatorInterface $translator,
         SegmentMapping $segmentMapping,
         RecommenderTokenFinder $recommenderTokenFinder,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+    EntityManagerInterface $entityManager
     ) {
 
         $this->recommenderApi         = $recommenderApi;
@@ -96,6 +108,7 @@ class ApiCommands
         $this->segmentMapping      = $segmentMapping;
         $this->recommenderTokenFinder = $recommenderTokenFinder;
         $this->dispatcher = $dispatcher;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -133,21 +146,38 @@ class ApiCommands
     public function ImportUser($lead)
     {
     }
-    public function ImportItems($items)
-    {
-        foreach ($items as $item) {
-            $this->recommenderApi->getClient()->send(
-                'ImportItems',
-                $item
-            );
-        }
-      //  $this->recommenderApi->getClient()->send('AddItem', $items);
-    //    $this->recommenderApi->getClient()->send('AddItemPropertyValue', $items);
-       /* $this->recommenderApi->getClient()->send(
-            'AddDetailView',
-            ['itemId' => '9-191', 'userId' => 234, 'Profit' => '10']
-        );*/
 
+    /**
+     * @param     $items
+     * @param int $batchSize
+     */
+    public function ImportItems($items, $batchSize = 100, Output $output )
+    {
+            $clearBatch = 20;
+            do {
+                $i = 1;
+                $progress = ProgressBarHelper::init($output, $batchSize);
+                $progress->start();
+                foreach ($items as $key => $item) {
+                    $i += $this->recommenderApi->getClient()->send(
+                        'ImportItems',
+                        $item,
+                        ['timeout'=>'-1 day']
+                    );
+                    $progress->setProgress($i);
+                    if ($i % $clearBatch === 0) {
+                        $this->entityManager->clear(Item::class);
+                        $this->entityManager->clear(ItemPropertyValue::class);
+                        $this->entityManager->clear(Property::class);
+                    }
+                    if ($i % $batchSize === 0) {
+                        $batchSize = 0;
+                        $progress->finish();
+                        break;
+                    }
+
+                }
+            } while ($batchSize > 0);
     }
 
     /**

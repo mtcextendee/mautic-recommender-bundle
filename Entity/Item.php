@@ -34,10 +34,16 @@ class Item
      */
     protected $dateAdded;
 
+    /*
+   * @var \DateTime
+   */
+    protected $dateModified;
+
 
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
+        $this->setDateModified(new \DateTime());
     }
 
     /**
@@ -51,7 +57,8 @@ class Item
             ->addIndex(['item_id'], 'item_id_index')
             ->addId()
             ->addNamedField('itemId', 'string', 'item_id')
-            ->addNamedField('dateAdded', 'datetime', 'date_added');
+            ->addNamedField('dateAdded', 'datetime', 'date_added')
+            ->addNamedField('dateModified', 'datetime', 'date_modified');
 
 
     }
@@ -69,6 +76,7 @@ class Item
                     'id',
                     'item_id',
                     'dateAdded',
+                    'dateModified',
                 ]
             )
             ->build();
@@ -89,7 +97,7 @@ class Item
      *
      * @return Item
      */
-    public function setItemId(string $itemId)
+    public function setItemId($itemId)
     {
         $this->itemId = $itemId;
 
@@ -122,5 +130,25 @@ class Item
     public function getDateAdded()
     {
         return $this->dateAdded;
+    }
+
+    /**
+     * @param mixed $dateModified
+     *
+     * @return Item
+     */
+    public function setDateModified($dateModified)
+    {
+        $this->dateModified = $dateModified;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateModified()
+    {
+        return $this->dateModified;
     }
 }
