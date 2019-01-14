@@ -34,4 +34,19 @@ class Decorator extends CustomMappedDecorator
         $this->dictionary = $dictionary->getDictionary();
     }
 
+    /**
+     * @param ContactSegmentFilterCrate $contactSegmentFilterCrate
+     *
+     * @return array|bool|float|null|string
+     */
+    public function getParameterValue(ContactSegmentFilterCrate $contactSegmentFilterCrate)
+    {
+
+        if ($contactSegmentFilterCrate->isDateType()) {
+            return $contactSegmentFilterCrate->getFilter();
+        }
+
+      return parent::getParameterValue($contactSegmentFilterCrate);
+    }
+
 }

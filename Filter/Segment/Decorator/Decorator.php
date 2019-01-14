@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator;
 
 
+use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
 use Mautic\LeadBundle\Segment\ContactSegmentFilterOperator;
 use Mautic\LeadBundle\Segment\Decorator\CustomMappedDecorator;
 use Mautic\LeadBundle\Services\ContactSegmentFilterDictionary;
@@ -35,18 +36,17 @@ class Decorator extends CustomMappedDecorator
     }
 
     /**
-     * @return string
+     * @param ContactSegmentFilterCrate $contactSegmentFilterCrate
+     *
+     * @return array|bool|float|null|string
      */
-    public function getRelationJoinTable()
+    public function getParameterValue(ContactSegmentFilterCrate $contactSegmentFilterCrate)
     {
-        return MAUTIC_TABLE_PREFIX.'recommender_event_log';
-    }
 
-    /**
-     * @return string
-     */
-    public function getRelationJoinTableField()
-    {
-        return 'event_log_id';
+        if ($contactSegmentFilterCrate->isDateType()) {
+            return $contactSegmentFilterCrate->getFilter();
+        }
+
+        return parent::getParameterValue($contactSegmentFilterCrate);
     }
 }
