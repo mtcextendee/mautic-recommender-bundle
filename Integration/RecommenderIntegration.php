@@ -98,42 +98,6 @@ class RecommenderIntegration extends AbstractIntegration
                     ],
                 ]
             );
-
-            $builder->add(
-                'abandoned_cart',
-                YesNoButtonGroupType::class,
-                [
-                    'label' => 'mautic.plugin.recommender.abandoned_cart_reminder',
-                ]
-            );
-
-          /*  $builder->add(
-                'event_add_to_cart',
-                ListTemplateType::class,
-                [
-                    'multiple'    => false,
-                    'label'       => 'mautic.recommender.abandoned.cart.add_to_cart',
-                    'attr'        => [
-                        'class'        => 'form-control',
-                        'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
-                        'tooltip' => 'mautic.recommender.abandoned.cart.add_to_cart.tooltip'
-                    ],
-                ]
-            );
-
-            $builder->add(
-                'event_purchase',
-                ListTemplateType::class,
-                [
-                    'multiple'    => false,
-                    'label'       => 'mautic.recommender.abandoned.cart.purchase',
-                    'attr'        => [
-                        'class'        => 'form-control',
-                        'data-show-on' => '{"integration_details_featureSettings_abandoned_cart_1":["checked"]}',
-                    ],
-                ]
-            );*/
-
         }
     }
 }

@@ -14,6 +14,7 @@ use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\QueryBuilderTrait;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 class ItemEventQueryBuilder extends RecommenderFilterQueryBuilder
 {
@@ -59,6 +60,11 @@ class ItemEventQueryBuilder extends RecommenderFilterQueryBuilder
             $relTable = $this->generateRandomParameterName();
             $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.id');
         }
+        $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
+        $subQueryBuilder
+            ->select('NULL')->from($filter->getTable(), $tableAlias)
+            ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.id');
+
         switch ($filterOperator) {
             case 'empty':
                 $expression = new CompositeExpression(CompositeExpression::TYPE_OR,
@@ -111,6 +117,18 @@ class ItemEventQueryBuilder extends RecommenderFilterQueryBuilder
                     $queryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField())
                 );
                 break;
+            case 'notGt':
+            case 'notLt':
+            $expr = strtolower(str_replace('not', '', $filterOperator));
+            $expression = $subQueryBuilder->expr()->orX(
+                $subQueryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField()),
+                $subQueryBuilder->expr()->$expr($tableAlias.'.'.$filter->getField(), $filterParametersHolder)
+            );
+
+            $subQueryBuilder->andWhere($expression);
+
+            $queryBuilder->addLogic($queryBuilder->expr()->notExists($subQueryBuilder->getSQL()), $filter->getGlue());
+                break;
             case 'multiselect':
             case '!multiselect':
                 $operator    = $filterOperator === 'multiselect' ? 'regexp' : 'notRegexp';
@@ -125,7 +143,9 @@ class ItemEventQueryBuilder extends RecommenderFilterQueryBuilder
                 throw new \Exception('Dunno how to handle operator "'.$filterOperator.'"');
         }
 
-        $queryBuilder->addLogic($expression, $filter->getGlue());
+        if (!in_array($filterOperator, ['notGt', 'notLt'])) {
+            $queryBuilder->addLogic($expression, $filter->getGlue());
+        }
         //$queryBuilder->setParametersPairs();
 //        $queryBuilder->setParametersPairs($parameters, $filterParameters);
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);

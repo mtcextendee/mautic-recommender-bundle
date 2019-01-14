@@ -20,7 +20,7 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\ItemValueQueryBuil
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventValueQueryBuilder;
 
-class Dictionary
+class SegmentDictionary
 {
     CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item','recommender_item_property_value'];
 

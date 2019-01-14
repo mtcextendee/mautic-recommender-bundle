@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ListTemplateType extends AbstractType
+class  ListEventsType extends AbstractType
 {
     /**
      * @var RecommenderEventModel
@@ -33,7 +33,6 @@ class ListTemplateType extends AbstractType
      */
     public function __construct(RecommenderEventModel $recommenderEventModel)
     {
-
         $this->recommenderEventModel = $recommenderEventModel;
     }
 

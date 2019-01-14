@@ -57,10 +57,13 @@ class FilterFactory
     {
         $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
         if ($contactSegmentFilterCrate->isDateType()) {
-            $decorator = $this->container->get(
+            $decorator2 = $this->container->get(
                 'mautic.lead.model.lead_segment.decorator.date.optionFactory'
             )->getDateOption($contactSegmentFilterCrate);
+            $filter['filter'] = $decorator2->getParameterValue($contactSegmentFilterCrate);
+            $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
         }
+
             $filterQueryBuilder = $this->container->get($decorator->getQueryType($contactSegmentFilterCrate));
         return  new ContactSegmentFilter($contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder);
     }

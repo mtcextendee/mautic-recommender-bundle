@@ -47,7 +47,8 @@ class EventLogValue
         $builder = new ClassMetadataBuilder($metadata);
         $builder->setTable('recommender_event_log_property_value')
             ->setCustomRepositoryClass(EventLogValueRepository::class)
-            ->addNamedField('value', Type::TEXT, 'value', false)
+            ->addNamedField('value', Type::STRING, 'value', false)
+            ->addIndex(['value'], 'value')
             ->addId();
 
         $builder->createManyToOne(

@@ -11,10 +11,14 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Fields;
 
+use Mautic\LeadBundle\Entity\OperatorListTrait;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class Fields
 {
+     use OperatorListTrait;
+
     /** @var array */
     private $fields = [];
 
@@ -23,10 +27,21 @@ class Fields
      */
     private $recommenderClientModel;
 
-    public function __construct(RecommenderClientModel $recommenderClientModel)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * Fields constructor.
+     *
+     * @param RecommenderClientModel $recommenderClientModel
+     * @param TranslatorInterface    $translator
+     */
+    public function __construct(RecommenderClientModel $recommenderClientModel, TranslatorInterface $translator)
     {
         $this->recommenderClientModel = $recommenderClientModel;
-
+        $this->translator = $translator;
     }
 
     /**
@@ -46,12 +61,14 @@ class Fields
     {
         // Load fields from recommender_event_log db table
         if ($table == 'recommender_event_log' && !isset($this->fields[$table])) {
+
+            $events = $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices();
             $this->fields['recommender_event_log']['event_id']   =
                 [
                     'name'       => 'mautic.plugin.recommender.form.event.name',
                     'properties' => [
                         'type' => 'select',
-                        'list' => $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices(),
+                        'list' => $events,
                     ],
                 ];
             $this->fields['recommender_event_log']['date_added'] =
@@ -60,7 +77,34 @@ class Fields
                     'properties' => [
                         'type' => 'datetime',
                     ],
+                    'operators'=> $this->getOperatorsForFieldType(
+                        [
+                            'include' => [
+                                'in',
+                                '!in',
+                            ],
+                        ]
+                    )
                 ];
+
+            foreach ($events as $eventId=>$eventName) {
+                $this->fields['recommender_event_log']['date_added_'.$eventId] =
+                    [
+                        'name'       => strtoupper($eventName).' '.$this->translator->trans('mautic.plugin.recommender.form.event.date_added'),
+                        'properties' => [
+                            'type' => 'datetime',
+                        ],
+                        'operators'=> $this->getOperatorsForFieldType(
+                            [
+                                'include' => [
+                                    'in',
+                                    '!in',
+                                ],
+                            ]
+                        )
+                    ];
+            }
+
         }else if ($table == 'recommender_item' && !isset($this->fields[$table])) {
                 $this->fields['recommender_item']['item_id']        =
                     [

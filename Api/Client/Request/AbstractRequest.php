@@ -245,19 +245,19 @@ abstract class AbstractRequest
     public function getPropertyType($property)
     {
         if (is_array($property)) {
-            return 'set';
+            return 'select';
         } elseif (in_array($property, [false, true, "false", "true"], true)) {
-            return 'boolean';
+            return 'bool';
         } elseif (is_numeric($property)) {
             return 'int';
         } elseif (is_double($property)) {
             return 'float';
         } elseif (is_bool($property)) {
-            return 'boolean';
+            return 'bool';
         } elseif ($this->isDateTime($property)) {
-            return'datetime';
+            return 'datetime';
         } else {
-            return 'string';
+            return 'text';
         }
     }
 

@@ -13,12 +13,13 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator;
 
 
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventDateQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQueryBuilder;
 
-class Dictionary
+class RecommenderDictionary
 {
     CONST ALLOWED_TABLES = ['recommender_item','recommender_item_property_value', 'recommender_event_log', 'recommender_event_log_property_value'];
 
@@ -61,11 +62,24 @@ class Dictionary
                         ];
                         break;
                     case 'recommender_event_log':
-                        $dictionary[$key] = [
-                            'type'          => ItemEventQueryBuilder::getServiceId(),
-                            'foreign_table' => $table,
-                            'foreign_table_field' => $key,
-                        ];
+                        $value = $key;
+                        if (false !== strpos($key, 'date_added_')) {
+                            $value = str_replace('date_added_', '', $key);
+                            $dictionary[$key] = [
+                                'type'          => ItemEventDateQueryBuilder::getServiceId(),
+                                'foreign_table' => $table,
+                                'foreign_table_field' => $value,
+                                'field' => $value == $key ? $key : $value,
+                            ];
+                        }else{
+                            $dictionary[$key] = [
+                                'type'          => ItemEventQueryBuilder::getServiceId(),
+                                'foreign_table' => $table,
+                                'foreign_table_field' => $value,
+                                'field' => $value == $key ? $key : 'date_added',
+                            ];
+                        }
+
                         break;
                     case 'recommender_event_log_property_value':
                         $dictionary[$key] = [

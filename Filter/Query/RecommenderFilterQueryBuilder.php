@@ -41,6 +41,9 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
     private function transformType($type, &$parameter)
     {
         switch ($type) {
+            case 'select':
+                return 'string';
+            break;
             case 'int':
                 $parameter = (int) $parameter;
                 return 'integer';

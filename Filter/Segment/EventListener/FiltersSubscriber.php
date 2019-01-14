@@ -17,7 +17,6 @@ use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\LeadEvents;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
-use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 
 class FiltersSubscriber extends CommonSubscriber
@@ -34,23 +33,16 @@ class FiltersSubscriber extends CommonSubscriber
     private $choices;
 
     /**
-     * @var Decorator
-     */
-    private $decorator;
-
-    /**
      * FiltersSubscriber constructor.
      *
      * @param FilterFactory $segmentFilterFactory
      * @param Choices       $choices
-     * @param Decorator     $decorator
      */
-    public function __construct(FilterFactory $segmentFilterFactory, Choices $choices, Decorator $decorator)
+    public function __construct(FilterFactory $segmentFilterFactory, Choices $choices)
     {
 
         $this->filterFactory = $segmentFilterFactory;
         $this->choices       = $choices;
-        $this->decorator = $decorator;
     }
 
     /**
@@ -77,9 +69,7 @@ class FiltersSubscriber extends CommonSubscriber
         $qb     = $event->getQueryBuilder();
         $filter = $event->getDetails();
         if (false !== strpos($filter['object'], 'recommender')) {
-
-
-                $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
+            $filter = $this->filterFactory->getContactSegmentFilter($filter);
             $filter->applyQuery($qb);
             $event->setFilteringStatus(true);
         }

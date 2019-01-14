@@ -184,7 +184,7 @@ class RecommenderController extends AbstractStandardFormController
                 $leads = $leadModel->getEntities($filter);
                 $lead = reset($leads);
                 $recommenderTokenReplacer->getRecommenderToken()->setUserId(58);
-                $recommenderTokenReplacer->getRecommenderToken()->setContent('test {recommender=5}');
+                $recommenderTokenReplacer->getRecommenderToken()->setContent('test {recommender='.$args['objectId'].'}');
                 $recommenderTokenReplacer->getReplacedContent();
                 $viewParameters['sqlQuery'] =
                     SqlQuery::$query.'<br />'.

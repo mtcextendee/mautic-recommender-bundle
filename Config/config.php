@@ -9,6 +9,7 @@ return [
         'events'       => [
 
             /* Recommender filters  */
+
             'mautic.recommender.filter.abandoned_cart'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\AbandonedCartFilterSubscriber::class,
                 'arguments' => ['mautic.recommender.service.campaign.lead.details']
@@ -118,7 +119,7 @@ return [
                 ],
             ],
             'mautic.form.type.recommender.events_list' => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Form\Type\ListTemplateType::class,
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Form\Type\ListEventsType::class,
                 'arguments' => ['mautic.recommender.model.event'],
             ],
             'mautic.form.type.recommender.templates_list' => [
@@ -157,7 +158,8 @@ return [
             'mautic.recommender.filter.fields'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields::class,
                 'arguments' => [
-                    'mautic.recommender.model.client'
+                    'mautic.recommender.model.client',
+                    'translator'
                 ]
             ],
             'mautic.recommender.segment.decoration' => [
@@ -169,7 +171,7 @@ return [
                 ],
             ],
             'mautic.recommender.filter.fields.dictionary'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Dictionary::class,
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\SegmentDictionary::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
                 ]
@@ -193,7 +195,7 @@ return [
                 ],
             ],
             'mautic.recommender.filter.recommender.dictionary'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Dictionary::class,
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderDictionary::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
                 ]
@@ -212,6 +214,10 @@ return [
             ],
             'mautic.recommender.query.builder.recommender.event_value'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.recommender.event.date_added'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventDateQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
             /* segment filter dictionary */

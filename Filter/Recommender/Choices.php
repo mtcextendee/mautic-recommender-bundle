@@ -62,8 +62,10 @@ class Choices
     {
         $choices = $this->getChoices();
         foreach (self::ALLOWED_TABLES as $table) {
-            foreach ($choices[$table] as $key=>$options) {
-                $event->addChoice($table, $key, $options);
+            if (isset($choices[$table])) {
+                foreach ($choices[$table] as $key=>$options) {
+                    $event->addChoice($table, $key, $options);
+                }
             }
         }
     }

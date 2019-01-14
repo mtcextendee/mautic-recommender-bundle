@@ -49,7 +49,8 @@ class ItemPropertyValue
         $builder = new ClassMetadataBuilder($metadata);
         $builder->setTable('recommender_item_property_value')
             ->setCustomRepositoryClass(ItemPropertyValueRepository::class)
-            ->addNamedField('value', Type::TEXT, 'value', false)
+            ->addNamedField('value', Type::STRING, 'value', false)
+            ->addIndex(['value'], 'value')
             ->addId();
 
         $builder->createManyToOne(
