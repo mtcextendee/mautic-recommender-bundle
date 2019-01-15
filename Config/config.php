@@ -180,6 +180,10 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
+            'mautic.recommender.query.builder.segment.event_date'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventDateQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
             'mautic.recommender.query.builder.event.property'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\EventPropertyFilterQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],

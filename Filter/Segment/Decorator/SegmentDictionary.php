@@ -17,6 +17,7 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\BaseFilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\ItemValueQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventDateQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventValueQueryBuilder;
 
@@ -63,13 +64,31 @@ class SegmentDictionary
                         ];
                         break;
                     case 'recommender_event_log':
-                        $dictionary[$key] = [
+                    /*    $dictionary[$key] = [
                             'type'          => SegmentEventQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
                             'foreign_table_field' => 'event_log_id',
                             'table_field'         => 'event_log_id',
                             'field'       => $key,
-                        ];
+                        ];*/
+
+                        $value = $key;
+                        if (false !== strpos($key, 'date_added_')) {
+                            $value = str_replace('date_added_', '', $key);
+                            $dictionary[$key] = [
+                                'type'          => SegmentEventDateQueryBuilder::getServiceId(),
+                                'foreign_table' => $table,
+                                'foreign_table_field' => $value,
+                                'field' => $value == $key ? $key : $value,
+                            ];
+                        }else{
+                            $dictionary[$key] = [
+                                'type'          => SegmentEventQueryBuilder::getServiceId(),
+                                'foreign_table' => $table,
+                                'foreign_table_field' => $value,
+                                'field' => $value == $key ? $key : 'date_added',
+                            ];
+                        }
                         break;
                     case 'recommender_event_log_property_value':
                         $dictionary[$key] = [

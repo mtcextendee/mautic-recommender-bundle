@@ -183,7 +183,7 @@ class RecommenderController extends AbstractStandardFormController
                 ];
                 $leads = $leadModel->getEntities($filter);
                 $lead = reset($leads);
-                $recommenderTokenReplacer->getRecommenderToken()->setUserId(58);
+                $recommenderTokenReplacer->getRecommenderToken()->setUserId(13447);
                 $recommenderTokenReplacer->getRecommenderToken()->setContent('test {recommender='.$args['objectId'].'}');
                 $recommenderTokenReplacer->getReplacedContent();
                 $viewParameters['sqlQuery'] =
@@ -234,7 +234,6 @@ class RecommenderController extends AbstractStandardFormController
                 'validators'
             );
         }
-
         $response = ['success' => !(bool) $error,];
         if (!$error) {
             $apiCommands->callCommand($eventLabel, $eventDetail);

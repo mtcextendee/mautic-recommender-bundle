@@ -30,6 +30,9 @@ class SqlQuery
         $params             = $query->getParameters();
 
         foreach ($params as $name => $param) {
+            if (is_array($param)) {
+                $param = implode(',', $param);
+            }
             $q = str_replace(":$name", "'$param'", $q);
         }
 
