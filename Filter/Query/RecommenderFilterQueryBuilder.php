@@ -44,6 +44,10 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
             case 'select':
                 return 'string';
             break;
+            case 'bool':
+                $parameter = (bool) $parameter;
+                return 'boolean';
+            break;
             case 'int':
                 $parameter = (int) $parameter;
                 return 'integer';
