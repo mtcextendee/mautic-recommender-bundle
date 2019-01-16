@@ -25,7 +25,7 @@ $class = 'recommender-template-'.$recommender->getId();
     }
 
     .<?php echo $class ?> .recommender-col {
-        grid-column: span <?php echo $recommender->getProperties()['columns']; ?>;
+        grid-column: span <?php echo    isset($recommender->getProperties()['columns']) ? $recommender->getProperties()['columns'] : 4; ?>;
     <?php if (!empty($recommender->getProperties()['colBackground'])):    echo 'background-color:#'.$recommender->getProperties()['colBackground'];     endif; ?>;
     <?php if (!empty($recommender->getProperties()['colPadding'])):    echo 'padding:'.$recommender->getProperties()['colPadding'];     endif; ?>;
     <?php if (!empty($recommender->getProperties()['colStyle'])):    echo $recommender->getProperties()['colStyle'];     endif; ?>;

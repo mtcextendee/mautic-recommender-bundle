@@ -16,11 +16,16 @@ if(!isset($settings)) {
     $settings = [];
 }
 ?>
-<?php if ($preview) {
+<?php
+if(isset($recommender->getProperties()['footer'])){
+if ($preview) {
     echo html_entity_decode($recommender->getProperties()['footer']);
     ?>
 <?php } else {
     echo $recommender->getProperties()['footer']; ?>
-<?php } ?>
+<?php
+    }
+}
+?>
     </div>
 </div>

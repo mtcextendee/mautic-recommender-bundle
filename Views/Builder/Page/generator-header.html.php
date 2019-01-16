@@ -30,10 +30,15 @@ echo $view->render(
 
 <div class="recommender-global-row <?php echo $class ?>">
 
-    <?php if ($preview) {
+    <?php
+    if (isset($recommender->getProperties()['header'])) {
+
+    if ($preview) {
         echo html_entity_decode($recommender->getProperties()['header']);
         ?>
     <?php } else {
         echo $recommender->getProperties()['header']; ?>
-    <?php } ?>
+    <?php }
+    }
+    ?>
     <div class="recommender-row">
