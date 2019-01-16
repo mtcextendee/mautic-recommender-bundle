@@ -83,10 +83,10 @@ class TokenReplacementSubscriber extends CommonSubscriber
     public function onFocusTokenReplacement(TokenReplacementEvent $event)
     {
         $clickthrough = $event->getClickthrough();
-        $leadId       = $clickthrough['lead'];
         if (empty($clickthrough['focus_id'])) {
             return;
         }
+        $leadId       = $clickthrough['lead'];
         $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($leadId);
         $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
         $event->setContent($this->recommenderTokenReplacer->getReplacedContent());

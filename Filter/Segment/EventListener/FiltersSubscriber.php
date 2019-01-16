@@ -50,7 +50,7 @@ class FiltersSubscriber extends CommonSubscriber
 
         $this->filterFactory = $segmentFilterFactory;
         $this->choices       = $choices;
-        $this->decorator = $decorator;
+        $this->decorator     = $decorator;
     }
 
     /**
@@ -89,6 +89,8 @@ class FiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersGenerate(LeadListFiltersChoicesEvent $event)
     {
-        $this->choices->addChoicesToEvent($event, 'recommender_event');
+        if (in_array($this->request->attributes->get('_route'), ['mautic_segment_action', 'mautic_recommender_action'])) {
+            $this->choices->addChoicesToEvent($event, 'recommender_event');
+        }
     }
 }
