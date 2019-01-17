@@ -28,67 +28,78 @@ $templates = [
 ];
 
 ?>
-<div class="row">
-    <div class="col-md-3">
-        <?php echo $view['form']->row($form['name']); ?>
-    </div>
-    <div class="col-md-3">
-        <?php echo $view['form']->row($form['template']); ?>
-    </div>
-    <div class="col-md-3">
-        <?php echo $view['form']->row($form['numberOfItems']); ?>
-    </div>
-    <div class="col-md-3">
-        <?php echo $view['form']->row($form['filter']); ?>
-    </div>
-    <div class="row">
-        <div data-show-on="{&quot;recommender_filter&quot;:&quot;filters&quot;}"
-             id="<?php echo $form->vars['id'] ?>" class="col-xs-12 dwc-filter available-filters"
-             data-prototype="<?php echo $view->escape(
-                 $view['form']->widget($form['filters']->vars['prototype'])
-             ); ?>" data-index="<?php echo $index + 1; ?>">
+<div class="row ">
+    <div class="col-md-9  height-auto">
+        <div class="row">
             <div class="col-md-3">
-                <select class="chosen form-control" id="available_filters">
-                    <option value=""></option>
-                    <?php
-                    foreach ($fields as $object => $field):
-                        $header = $object;
-                        $icon = ($object == 'company') ? 'building' : 'user';
-                        ?>
-                        <optgroup label="<?php echo $view['translator']->trans('mautic.lead.'.$header); ?>">
-                            <?php foreach ($field as $value => $params):
-                                $list = (!empty($params['properties']['list'])) ? $params['properties']['list'] : [];
-                                $choices = \Mautic\LeadBundle\Helper\FormFieldHelper::parseList(
-                                    $list,
-                                    true,
-                                    ('boolean' === $params['properties']['type'])
-                                );
-                                $list = json_encode($choices);
-                                $callback = (!empty($params['properties']['callback'])) ? $params['properties']['callback'] : '';
-                                $operators = (!empty($params['operators'])) ? $view->escape(
-                                    json_encode($params['operators'])
-                                ) : '{}';
-                                ?>
-                                <option value="<?php echo $view->escape($value); ?>"
-                                        id="available_<?php echo $object.'_'.$value; ?>"
-                                        data-field-object="<?php echo $object; ?>"
-                                        data-field-type="<?php echo $params['properties']['type']; ?>"
-                                        data-field-list="<?php echo $view->escape($list); ?>"
-                                        data-field-callback="<?php echo $callback; ?>"
-                                        data-field-operators="<?php echo $operators; ?>"
-                                        class="segment-filter <?php echo $icon; ?>">
-                                    <?php echo $view['translator']->trans($params['label']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </optgroup>
-                    <?php endforeach; ?>
-                </select>
+                <?php echo $view['form']->row($form['name']); ?>
             </div>
-            <div class="col-md-9 selected-filters"
-                 id="recommender_filters">
-                <?php echo $view['form']->widget($form['filters']); ?>
+            <div class="col-md-3">
+                <?php echo $view['form']->row($form['template']); ?>
+            </div>
+            <div class="col-md-3">
+                <?php echo $view['form']->row($form['numberOfItems']); ?>
+            </div>
+            <div class="col-md-3">
+                <?php echo $view['form']->row($form['filter']); ?>
+            </div>
+            <div class="row">
+                <div data-show-on="{&quot;recommender_filter&quot;:&quot;filters&quot;}"
+                     id="<?php echo $form->vars['id'] ?>" class="col-xs-12 dwc-filter available-filters"
+                     data-prototype="<?php echo $view->escape(
+                         $view['form']->widget($form['filters']->vars['prototype'])
+                     ); ?>" data-index="<?php echo $index + 1; ?>">
+                    <div class="col-md-3">
+                        <select class="chosen form-control" id="available_filters">
+                            <option value=""></option>
+                            <?php
+                            foreach ($fields as $object => $field):
+                                $header = $object;
+                                $icon = ($object == 'company') ? 'building' : 'user';
+                                ?>
+                                <optgroup label="<?php echo $view['translator']->trans('mautic.lead.'.$header); ?>">
+                                    <?php foreach ($field as $value => $params):
+                                        $list = (!empty($params['properties']['list'])) ? $params['properties']['list'] : [];
+                                        $choices = \Mautic\LeadBundle\Helper\FormFieldHelper::parseList(
+                                            $list,
+                                            true,
+                                            ('boolean' === $params['properties']['type'])
+                                        );
+                                        $list = json_encode($choices);
+                                        $callback = (!empty($params['properties']['callback'])) ? $params['properties']['callback'] : '';
+                                        $operators = (!empty($params['operators'])) ? $view->escape(
+                                            json_encode($params['operators'])
+                                        ) : '{}';
+                                        ?>
+                                        <option value="<?php echo $view->escape($value); ?>"
+                                                id="available_<?php echo $object.'_'.$value; ?>"
+                                                data-field-object="<?php echo $object; ?>"
+                                                data-field-type="<?php echo $params['properties']['type']; ?>"
+                                                data-field-list="<?php echo $view->escape($list); ?>"
+                                                data-field-callback="<?php echo $callback; ?>"
+                                                data-field-operators="<?php echo $operators; ?>"
+                                                class="segment-filter <?php echo $icon; ?>">
+                                            <?php echo $view['translator']->trans($params['label']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </optgroup>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-9 selected-filters"
+                         id="recommender_filters">
+                        <?php echo $view['form']->widget($form['filters']); ?>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-3  height-auto bdr-l">
+        <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.order_by'); ?></strong></h4>
+        <br>
+        <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
+        <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
+        <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
     </div>
 </div>
 
@@ -106,7 +117,8 @@ $templates = [
             )
             .'" data-no-results-text="'.$view['translator']->trans('mautic.lead.tags.enter_to_create')
             .'" data-allow-add="true" onchange="Mautic.createLeadTag(this)"' : ''; ?>
-        <select class="form-control not-chosen <?php echo $template; ?>" name="recommender[filters][__name__][filter]"
+        <select class="form-control not-chosen <?php echo $template; ?>"
+                name="recommender[filters][__name__][filter]"
                 id="recommender_filters___name___filter"<?php echo $attr; ?>>
             <?php
             if (isset($form->vars[$dataKey])):

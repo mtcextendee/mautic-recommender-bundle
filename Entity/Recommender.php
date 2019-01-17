@@ -48,6 +48,10 @@ class Recommender
      */
     protected $dateAdded;
 
+    /** @var  array */
+    protected $tableOrder;
+
+
     /**
      * @var int
      */
@@ -72,9 +76,13 @@ class Recommender
             ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
-
         $builder->createField('numberOfItems', Type::INTEGER)
             ->columnName('number_of_items')
+            ->nullable()
+            ->build();
+
+        $builder->createField('tableOrder', Type::TARRAY)
+            ->columnName('table_order')
             ->nullable()
             ->build();
 
@@ -266,4 +274,26 @@ class Recommender
     {
         return $this->numberOfItems;
     }
+
+    /**
+     * @param array $tableOrder
+     *
+     * @return Recommender
+     */
+    public function setTableOrder($tableOrder)
+    {
+        $this->tableOrder = $tableOrder;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTableOrder()
+    {
+        return $this->tableOrder;
+    }
+
+
 }

@@ -9,11 +9,6 @@ return [
         'events'       => [
 
             /* Recommender filters  */
-
-            'mautic.recommender.filter.abandoned_cart'  => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\AbandonedCartFilterSubscriber::class,
-                'arguments' => ['mautic.recommender.service.campaign.lead.details']
-            ],
             'mautic.recommender.filter.filters'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\FiltersFilterSubscriber::class,
                 'arguments' => [
@@ -78,6 +73,12 @@ return [
             ],
         ],
         'forms'        => [
+            'mautic.form.type.recommender.table_order'         => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTableOrderType::class,
+                'arguments' => [
+                    'translator',
+                ],
+            ],
             'mautic.form.type.recommender.filters'         => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Form\Type\FilterType::class,
                 'alias'     => 'recommender_filters',
