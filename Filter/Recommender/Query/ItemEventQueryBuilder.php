@@ -11,6 +11,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
+use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\QueryBuilderTrait;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
@@ -23,7 +24,7 @@ class ItemEventQueryBuilder extends RecommenderFilterQueryBuilder
      */
     public function getIdentificator()
     {
-        return 'item_id';
+        return 'id';
     }
 
     /**
@@ -56,8 +57,6 @@ class ItemEventQueryBuilder extends RecommenderFilterQueryBuilder
 
         if (!$tableAlias) {
             $tableAlias = $this->generateRandomParameterName();
-
-            $relTable = $this->generateRandomParameterName();
             $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.id');
         }
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();

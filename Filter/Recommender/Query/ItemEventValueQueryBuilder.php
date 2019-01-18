@@ -21,7 +21,7 @@ class ItemEventValueQueryBuilder extends RecommenderFilterQueryBuilder
      */
     public function getIdentificator()
     {
-        return 'item_id';
+        return 'id';
     }
 
     /**

@@ -77,14 +77,14 @@ class Fields
                     'properties' => [
                         'type' => 'datetime',
                     ],
-                    'operators'=> $this->getOperatorsForFieldType(
-                        [
-                            'include' => [
-                                'in',
-                                '!in',
-                            ],
-                        ]
-                    )
+                ];
+
+            $this->fields['recommender_event_log']['weight'] =
+                [
+                    'name'       => 'mautic.plugin.recommender.form.event.weight',
+                    'properties' => [
+                        'type' => 'number',
+                    ],
                 ];
 
             foreach ($events as $eventId=>$eventName) {
@@ -94,14 +94,6 @@ class Fields
                         'properties' => [
                             'type' => 'datetime',
                         ],
-                        'operators'=> $this->getOperatorsForFieldType(
-                            [
-                                'include' => [
-                                    'in',
-                                    '!in',
-                                ],
-                            ]
-                        )
                     ];
             }
 

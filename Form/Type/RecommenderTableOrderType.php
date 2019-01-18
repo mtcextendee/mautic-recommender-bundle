@@ -12,11 +12,11 @@
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Range;
 
 class RecommenderTableOrderType extends AbstractType
 {
@@ -42,7 +42,6 @@ class RecommenderTableOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         // function
         $builder->add('function', 'choice', [
             'choices' => [
@@ -62,13 +61,10 @@ class RecommenderTableOrderType extends AbstractType
                 'class' => 'form-control not-chosen',
             ],
         ]);
-
+        //$options['fields']['weight']
         // Build a list of columns
         $builder->add('column', 'choice', [
-            'choices' => [
-                'e.points'      => $this->translator->trans('mautic.plugin.recommender.form.type.points'),
-                'el.date_added' => $this->translator->trans('mautic.plugin.recommender.form.type.event_date_added'),
-            ],
+            'choices' => $options['fields'],
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.report.label.filtercolumn',
@@ -96,7 +92,27 @@ class RecommenderTableOrderType extends AbstractType
                 'class' => 'form-control not-chosen',
             ],
         ]);
-
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     *
+     * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired(
+            [
+                'fields',
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars['fields'] = $options['fields'];
+    }
 }

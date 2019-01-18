@@ -65,7 +65,7 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
             ->select('NULL')->from($filter->getTable(), $tableAlias)
-            ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.id')
+            ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.item_id')
             ->andWhere($tableAlias.'.property_id = '.$filter->getField());
 
         if (!is_null($filter->getWhere())) {

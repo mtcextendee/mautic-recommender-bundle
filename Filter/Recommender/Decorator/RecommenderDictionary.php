@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator;
 
 
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventDateQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder;
@@ -64,12 +65,19 @@ class RecommenderDictionary
                     case 'recommender_event_log':
                         $value = $key;
                         if (false !== strpos($key, 'date_added_')) {
-                            $value = str_replace('date_added_', '', $key);
+                            $value            = str_replace('date_added_', '', $key);
                             $dictionary[$key] = [
-                                'type'          => ItemEventDateQueryBuilder::getServiceId(),
-                                'foreign_table' => $table,
+                                'type'                => ItemEventDateQueryBuilder::getServiceId(),
+                                'foreign_table'       => $table,
                                 'foreign_table_field' => $value,
-                                'field' => $value == $key ? $key : $value,
+                                'field'               => $value == $key ? $key : $value,
+                            ];
+                        }else if ($key == 'weight') {
+                            $dictionary[$key] = [
+                                'type'          => FilterQueryBuilder::getServiceId(),
+                                'foreign_table' => 'recommender_event',
+                                'foreign_table_field' => $value,
+                                'field' => $key
                             ];
                         }else{
                             $dictionary[$key] = [

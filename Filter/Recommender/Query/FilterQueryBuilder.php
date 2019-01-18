@@ -11,13 +11,13 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
-use Mautic\LeadBundle\Segment\Query\Expression\CompositeExpression;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Query\QueryBuilderTrait;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
-class ItemQueryBuilder extends RecommenderFilterQueryBuilder
+class FilterQueryBuilder extends RecommenderFilterQueryBuilder
 {
-
     /**
      * @return string
      */
@@ -31,7 +31,7 @@ class ItemQueryBuilder extends RecommenderFilterQueryBuilder
      */
     public static function getServiceId()
     {
-        return 'mautic.recommender.query.builder.recommender.item';
+        return 'mautic.recommender.query.builder.recommender.filter';
     }
 
     /** {@inheritdoc} */
@@ -56,12 +56,12 @@ class ItemQueryBuilder extends RecommenderFilterQueryBuilder
 
         if (!$tableAlias) {
             $tableAlias = $this->generateRandomParameterName();
-            $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.item_id');
+            $queryBuilder->leftJoin('l', $filter->getTable(), $tableAlias, $tableAlias.'.'.$this->getIdentificator().' = l.event_id');
         }
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
             ->select('NULL')->from($filter->getTable(), $tableAlias)
-            ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.id');
+            ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.event_id');
 
         switch ($filterOperator) {
             case 'empty':
@@ -149,6 +149,4 @@ class ItemQueryBuilder extends RecommenderFilterQueryBuilder
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
         return $queryBuilder;
     }
-
-
 }

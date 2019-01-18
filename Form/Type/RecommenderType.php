@@ -235,9 +235,14 @@ class RecommenderType extends AbstractType
         }
 
         // function
-        $builder->add('tableOrder', RecommenderTableOrderType::class, [
-            'label'       => 'mautic.plugin.recommender.form.order_by',
-        ]);
+        $builder->add(
+            'tableOrder',
+            RecommenderTableOrderType::class,
+            [
+                'label'  => 'mautic.plugin.recommender.form.order_by',
+                'fields' => $this->choices->getSelectOptions(),
+            ]
+        );
 
 
         $builder->add(

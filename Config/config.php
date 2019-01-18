@@ -205,6 +205,10 @@ return [
                     'mautic.recommender.filter.fields',
                 ]
             ],
+            'mautic.recommender.query.builder.recommender.filter'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
             'mautic.recommender.query.builder.recommender.item'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],

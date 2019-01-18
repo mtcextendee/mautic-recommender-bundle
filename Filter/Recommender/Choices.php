@@ -20,7 +20,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class Choices
 {
-    CONST ALLOWED_TABLES = ['recommender_item', 'recommender_item_property_value', 'recommender_event_log', 'recommender_event_log_property_value'];
+    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item', 'recommender_item_property_value', ];
 
     /**
      * @var Fields
@@ -70,7 +70,12 @@ class Choices
         }
     }
 
-    public function addChoices($object)
+    /**
+     * @param $object
+     *
+     * @return array
+     */
+    public function addChoices()
     {
         $choices = $this->getChoices();
         foreach (self::ALLOWED_TABLES as $table) {
@@ -84,6 +89,26 @@ class Choices
 
     }
 
+    /**
+     * @return array
+     */
+    public function getSelectOptions()
+    {
+        $choices = $this->getChoices();
+        $opt = [];
+        foreach (self::ALLOWED_TABLES as $table) {
+            if (isset($choices[$table])) {
+                foreach ($choices[$table] as $key=>$options) {
+                    $opt[$this->translator->trans('mautic.lead.'.$table)][$key] = $options['label'];
+                }
+            }
+        }
+        return $opt;
+    }
+
+    /**
+     * @return array
+     */
     private function getChoices()
     {
         $choices = [];

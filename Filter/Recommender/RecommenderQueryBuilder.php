@@ -14,8 +14,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connections\MasterSlaveConnection;
 use Doctrine\ORM\EntityManager;
-use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use Mautic\LeadBundle\Segment\RandomParameterName;
+use MauticPlugin\MauticRecommenderBundle\Filter\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
@@ -52,13 +52,18 @@ class RecommenderQueryBuilder
      * @param FilterFactory            $filterFactory
      * @param Decorator                $decorator
      */
-    public function __construct(EntityManager $entityManager, RandomParameterName $randomParameterName, EventDispatcherInterface $dispatcher, FilterFactory $filterFactory, Decorator $decorator)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        RandomParameterName $randomParameterName,
+        EventDispatcherInterface $dispatcher,
+        FilterFactory $filterFactory,
+        Decorator $decorator
+    ) {
         $this->entityManager       = $entityManager;
         $this->randomParameterName = $randomParameterName;
         $this->dispatcher          = $dispatcher;
-        $this->filterFactory = $filterFactory;
-        $this->decorator = $decorator;
+        $this->filterFactory       = $filterFactory;
+        $this->decorator           = $decorator;
     }
 
     /**
@@ -75,27 +80,25 @@ class RecommenderQueryBuilder
             $connection->connect('slave');
         }
 
-        /** @var QueryBuilder $queryBuilder */
+
         $queryBuilder = new QueryBuilder($connection);
 
-        $queryBuilder->select('l.id')->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'l');
+        $queryBuilder->select('l.item_id as id')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'l');
         $recombeeFilters = $recommenderToken->getRecommender()->getFilters();
-        if(false !== strpos(implode(',', array_column($recombeeFilters, 'object')), 'recommender_event_log')){
-            $tableAlias = $queryBuilder->getTableAlias('recommender_event_log');
-            if (!$tableAlias) {
-                $tableAlias = $this->generateRandomParameterName();
-                $queryBuilder->leftJoin('l', 'recommender_event_log', $tableAlias, $tableAlias.'.item_id = l.id');
-            }
-            $queryBuilder->andWhere($tableAlias.'.lead_id = '.$recommenderToken->getUserId());
-        }
         foreach ($recombeeFilters as $filter) {
-            $filter = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
+            $filter       = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
+           /* $aliases = $queryBuilder->getAllTableAliases();
+            if (isset($aliases['recommender_event_log'])) {
+                foreach ($aliases['recommender_event_log'] as $aliase) {
+                    $queryBuilder->andWhere($queryBuilder->expr()->eq($aliase.'.lead_id', (int) $recommenderToken->getUserId()));
+                }
+            }*/
 
-        $queryBuilder->groupBy('l.id');
+        $queryBuilder->groupBy('l.item_id');
         $queryBuilder->setMaxResults($recommenderToken->getLimit());
-        SqlQuery::debugQuery($queryBuilder);
+
         return $queryBuilder;
     }
 

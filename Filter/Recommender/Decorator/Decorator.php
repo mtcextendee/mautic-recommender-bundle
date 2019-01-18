@@ -49,4 +49,6 @@ class Decorator extends CustomMappedDecorator
       return parent::getParameterValue($contactSegmentFilterCrate);
     }
 
+
+
 }
