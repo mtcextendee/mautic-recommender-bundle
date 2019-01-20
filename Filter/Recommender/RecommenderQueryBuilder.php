@@ -15,12 +15,12 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connections\MasterSlaveConnection;
 use Doctrine\ORM\EntityManager;
 use Mautic\LeadBundle\Segment\RandomParameterName;
+use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Filter\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderOrderBy;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class RecommenderQueryBuilder
 {
@@ -29,9 +29,6 @@ class RecommenderQueryBuilder
 
     /** @var RandomParameterName */
     private $randomParameterName;
-
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
 
     /**
      * @var FilterFactory
@@ -44,26 +41,31 @@ class RecommenderQueryBuilder
     private $decorator;
 
     /**
+     * @var RecommenderOrderBy
+     */
+    private $recommenderOrderBy;
+
+    /**
      * ContactSegmentQueryBuilder constructor.
      *
-     * @param EntityManager            $entityManager
-     * @param RandomParameterName      $randomParameterName
-     * @param EventDispatcherInterface $dispatcher
-     * @param FilterFactory            $filterFactory
-     * @param Decorator                $decorator
+     * @param EntityManager       $entityManager
+     * @param RandomParameterName $randomParameterName
+     * @param FilterFactory       $filterFactory
+     * @param Decorator           $decorator
+     * @param RecommenderOrderBy  $recommenderOrderBy
      */
     public function __construct(
         EntityManager $entityManager,
         RandomParameterName $randomParameterName,
-        EventDispatcherInterface $dispatcher,
         FilterFactory $filterFactory,
-        Decorator $decorator
+        Decorator $decorator,
+        RecommenderOrderBy $recommenderOrderBy
     ) {
         $this->entityManager       = $entityManager;
         $this->randomParameterName = $randomParameterName;
-        $this->dispatcher          = $dispatcher;
         $this->filterFactory       = $filterFactory;
         $this->decorator           = $decorator;
+        $this->recommenderOrderBy = $recommenderOrderBy;
     }
 
     /**
@@ -84,22 +86,42 @@ class RecommenderQueryBuilder
         $queryBuilder = new QueryBuilder($connection);
 
         $queryBuilder->select('l.item_id as id')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'l');
+        if ($recommenderToken->getUserId()) {
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', ':leadId'))
+                ->setParameter('leadId', $recommenderToken->getUserId());
+
+        }
+
         $recombeeFilters = $recommenderToken->getRecommender()->getFilters();
         foreach ($recombeeFilters as $filter) {
             $filter       = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
-           /* $aliases = $queryBuilder->getAllTableAliases();
-            if (isset($aliases['recommender_event_log'])) {
-                foreach ($aliases['recommender_event_log'] as $aliase) {
-                    $queryBuilder->andWhere($queryBuilder->expr()->eq($aliase.'.lead_id', (int) $recommenderToken->getUserId()));
-                }
-            }*/
 
+        $this->setOrderBy($queryBuilder, $recommenderToken->getRecommender());
         $queryBuilder->groupBy('l.item_id');
         $queryBuilder->setMaxResults($recommenderToken->getLimit());
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param Recommender  $recommender
+     */
+    private function setOrderBy(QueryBuilder $queryBuilder, Recommender $recommender)
+    {
+        $tableorder = $recommender->getTableOrder();
+
+        if (empty($tableorder['column'])) {
+            return;
+        }
+        $orderBy = $this->recommenderOrderBy->getDictionary($queryBuilder, $tableorder['column']);
+
+        if (!empty($tableorder['function'])) {
+            $orderBy = $tableorder['function'].'('.$orderBy.')';
+        }
+        $queryBuilder->orderBy($orderBy, $tableorder['direction']);
     }
 
 

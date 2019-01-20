@@ -99,7 +99,7 @@ class Choices
         foreach (self::ALLOWED_TABLES as $table) {
             if (isset($choices[$table])) {
                 foreach ($choices[$table] as $key=>$options) {
-                    $opt[$this->translator->trans('mautic.lead.'.$table)][$key] = $options['label'];
+                    $opt['mautic.lead.'.$table][$key] = $options['label'];
                 }
             }
         }

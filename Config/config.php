@@ -205,6 +205,12 @@ return [
                     'mautic.recommender.filter.fields',
                 ]
             ],
+            'mautic.recommender.filter.recommender.orderby'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderOrderBy::class,
+                'arguments' => [
+                    'mautic.recommender.filter.fields',
+                ]
+            ],
             'mautic.recommender.query.builder.recommender.filter'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
@@ -261,9 +267,9 @@ return [
                 'arguments' => [
                     'doctrine.orm.entity_manager',
                     'mautic.lead.model.random_parameter_name',
-                    'event_dispatcher',
                     'mautic.recommender.filter.factory',
-                    'mautic.recommender.recommender.decoration'
+                    'mautic.recommender.recommender.decoration',
+                    'mautic.recommender.filter.recommender.orderby'
                 ]
             ],
             'mautic.recommender.filter.fields.recommender'  => [

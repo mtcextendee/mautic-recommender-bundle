@@ -42,29 +42,14 @@ class RecommenderTableOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // function
-        $builder->add('function', 'choice', [
-            'choices' => [
-                'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
-                'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
-                'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
-                'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
-                'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
-            ],
-            'expanded'    => false,
-            'multiple'    => false,
-            'label'       => 'mautic.report.function',
-            'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => 'mautic.core.none',
-            'required'    => false,
-            'attr'        => [
-                'class' => 'form-control not-chosen',
-            ],
-        ]);
+
         //$options['fields']['weight']
         // Build a list of columns
+
+        $fields = $options['fields'];
+        unset($fields['mautic.lead.recommender_item'], $fields['mautic.lead.recommender_item_property_value']);
         $builder->add('column', 'choice', [
-            'choices' => $options['fields'],
+            'choices' => $fields,
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.report.label.filtercolumn',
@@ -87,6 +72,26 @@ class RecommenderTableOrderType extends AbstractType
             'label'       => 'mautic.core.order',
             'label_attr'  => ['class' => 'control-label'],
             'empty_value' => false,
+            'required'    => false,
+            'attr'        => [
+                'class' => 'form-control not-chosen',
+            ],
+        ]);
+
+        // function
+        $builder->add('function', 'choice', [
+            'choices' => [
+                'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
+                'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
+                'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
+                'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
+                'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
+            ],
+            'expanded'    => false,
+            'multiple'    => false,
+            'label'       => 'mautic.report.function',
+            'label_attr'  => ['class' => 'control-label'],
+            'empty_value' => 'mautic.core.none',
             'required'    => false,
             'attr'        => [
                 'class' => 'form-control not-chosen',
