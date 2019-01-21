@@ -1,3 +1,6 @@
+![image](https://user-images.githubusercontent.com/462477/51494736-0fefb100-1dba-11e9-8d44-27a24292e3dd.png)
+
+
 # Mautic Recommender Bundle for e-commerce
 
 The first product recommendations system to Mautic.  Increase your customer satisfaction and spending with product recommendations. Applicable to your home page, product detail, cart page, emailing campaigns and much more. Quick and Easy
