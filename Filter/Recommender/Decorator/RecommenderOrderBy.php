@@ -55,10 +55,12 @@ class RecommenderOrderBy
                 $tableFromDecorator = isset($field['decorator']['recommender']['foreign_table']) ? $field['decorator']['recommender']['foreign_table'] : $table;
                 $keyFromDecorator = isset($field['decorator']['recommender']['key']) ? $field['decorator']['recommender']['key'] : $key;
 
+                // Order By from decorator
                 if (isset($field['decorator']['recommender']['orderBy'])) {
                     return $field['decorator']['recommender']['orderBy'];
                 }
 
+                //Order by default by column
                 $tableAlias = $queryBuilder->getTableAlias($tableFromDecorator);
 
                 return $tableAlias.'.'.$keyFromDecorator;
