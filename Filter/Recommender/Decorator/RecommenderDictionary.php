@@ -22,7 +22,12 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQuery
 
 class RecommenderDictionary
 {
-    CONST ALLOWED_TABLES = ['recommender_item','recommender_item_property_value', 'recommender_event_log', 'recommender_event_log_property_value'];
+    CONST ALLOWED_TABLES = [
+        'recommender_item',
+        'recommender_item_property_value',
+        'recommender_event_log',
+        'recommender_event_log_property_value',
+    ];
 
     /**
      * @var Fields
@@ -33,7 +38,7 @@ class RecommenderDictionary
     /**
      * SegmentChoices constructor.
      *
-     * @param Fields              $fields
+     * @param Fields $fields
      */
     public function __construct(Fields $fields)
     {
@@ -47,11 +52,18 @@ class RecommenderDictionary
         foreach (self::ALLOWED_TABLES as $table) {
             $fields = $this->fields->getFields($table);
             foreach ($fields as $key => $field) {
-                switch ($table) {
-                    case 'recommender_item':
+                if (isset($field['decorator']['recommender']['type'])) {
+                    $dictionary[$key] = [
+                        'type'          => $field['decorator']['recommender']['type'],
+                        'foreign_table' => isset($field['decorator']['recommender']['foreign_table']) ? $field['decorator']['recommender']['foreign_table'] : $table,
+                        'field'         => isset($field['decorator']['key']) ? $field['decorator']['key'] : $key,
+                    ];
+                }
+             /*   switch ($table) {
+                 case 'recommender_item':
                         $dictionary[$key] = [
-                            'type'          => ItemQueryBuilder::getServiceId(),
-                            'foreign_table' => $table,
+                            'type'                => ItemQueryBuilder::getServiceId(),
+                            'foreign_table'       => $table,
                             'foreign_table_field' => $key,
                         ];
                         break;
@@ -59,45 +71,27 @@ class RecommenderDictionary
                         $dictionary[$key] = [
                             'type'          => ItemValueQueryBuilder::getServiceId(),
                             'foreign_table' => $table,
-                            'field' => $this->fields->cleanKey($key),
+                            'field'         => $this->fields->cleanKey($key),
                         ];
                         break;
                     case 'recommender_event_log':
-                        $value = $key;
-                        if (false !== strpos($key, 'date_added_')) {
-                            $value            = str_replace('date_added_', '', $key);
+                        if (isset($field['decorator']['recommender']['type'])) {
                             $dictionary[$key] = [
-                                'type'                => ItemEventDateQueryBuilder::getServiceId(),
-                                'foreign_table'       => $table,
-                                'foreign_table_field' => $value,
-                                'field'               => $value == $key ? $key : $value,
-                            ];
-                        }else if ($key == 'weight') {
-                            $dictionary[$key] = [
-                                'type'          => FilterQueryBuilder::getServiceId(),
-                                'foreign_table' => 'recommender_event',
-                                'foreign_table_field' => $value,
-                                'field' => $key
-                            ];
-                        }else{
-                            $dictionary[$key] = [
-                                'type'          => ItemEventQueryBuilder::getServiceId(),
-                                'foreign_table' => $table,
-                                'foreign_table_field' => $value,
-                                'field' => $value == $key ? $key : 'date_added',
+                                'type'          => $field['decorator']['recommender']['type'],
+                                'foreign_table' => isset($field['decorator']['recommender']['foreign_table']) ? $field['decorator']['recommender']['foreign_table'] : $table,
+                                'field'         => isset($field['decorator']['key']) ? $field['decorator']['key'] : $key,
                             ];
                         }
-
                         break;
                     case 'recommender_event_log_property_value':
                         $dictionary[$key] = [
-                            'type'          => ItemEventValueQueryBuilder::getServiceId(),
-                            'foreign_table' => $table,
-                            'field' => $this->fields->cleanKey($key),
+                            'type'                => ItemEventValueQueryBuilder::getServiceId(),
+                            'foreign_table'       => $table,
+                            'field'               => $this->fields->cleanKey($key),
                             'foreign_table_field' => 'value',
                         ];
                         break;
-                }
+                }*/
             }
         }
         return $dictionary;

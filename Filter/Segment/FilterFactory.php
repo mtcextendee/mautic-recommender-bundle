@@ -44,7 +44,7 @@ class FilterFactory
     public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache)
     {
 
-        $this->container = $container;
+        $this->container   = $container;
         $this->schemaCache = $schemaCache;
     }
 
@@ -57,15 +57,18 @@ class FilterFactory
     {
         $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
         if ($contactSegmentFilterCrate->isDateType()) {
-            $decorator2 = $this->container->get(
+            $decorator2                = $this->container->get(
                 'mautic.lead.model.lead_segment.decorator.date.optionFactory'
             )->getDateOption($contactSegmentFilterCrate);
-            $filter['filter'] = $decorator2->getParameterValue($contactSegmentFilterCrate);
+            $filter['filter']          = $decorator2->getParameterValue($contactSegmentFilterCrate);
             $contactSegmentFilterCrate = new ContactSegmentFilterCrate($filter);
         }
 
-            $filterQueryBuilder = $this->container->get($decorator->getQueryType($contactSegmentFilterCrate));
-        return  new ContactSegmentFilter($contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder);
+        $filterQueryBuilder = $this->container->get($decorator->getQueryType($contactSegmentFilterCrate));
+
+        return new ContactSegmentFilter(
+            $contactSegmentFilterCrate, $decorator, $this->schemaCache, $filterQueryBuilder
+        );
     }
 
     /**

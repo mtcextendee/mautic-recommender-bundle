@@ -62,7 +62,6 @@ class FilterQueryBuilder extends RecommenderFilterQueryBuilder
         $subQueryBuilder
             ->select('NULL')->from($filter->getTable(), $tableAlias)
             ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.event_id');
-
         switch ($filterOperator) {
             case 'empty':
                 $expression = new CompositeExpression(CompositeExpression::TYPE_OR,

@@ -12,6 +12,12 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Fields;
 
 use Mautic\LeadBundle\Entity\OperatorListTrait;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventDateQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -70,6 +76,10 @@ class Fields
                         'type' => 'select',
                         'list' => $events,
                     ],
+                    'decorator' =>
+                        [
+                            'recommender' => ['type'=>ItemEventQueryBuilder::getServiceId()]
+                        ],
                 ];
             $this->fields['recommender_event_log']['date_added'] =
                 [
@@ -77,6 +87,10 @@ class Fields
                     'properties' => [
                         'type' => 'datetime',
                     ],
+                    'decorator' =>
+                        [
+                            'recommender' => ['type'=>ItemEventQueryBuilder::getServiceId()]
+                        ]
                 ];
 
             $this->fields['recommender_event_log']['weight'] =
@@ -85,6 +99,13 @@ class Fields
                     'properties' => [
                         'type' => 'number',
                     ],
+                    'decorator' =>
+                        [
+                            'recommender' => [
+                                'type'          => FilterQueryBuilder::getServiceId(),
+                                'foreign_table' => 'recommender_event',
+                            ],
+                        ]
                 ];
 
             foreach ($events as $eventId=>$eventName) {
@@ -94,6 +115,15 @@ class Fields
                         'properties' => [
                             'type' => 'datetime',
                         ],
+                        'decorator' =>
+                            [
+                                'key'         => $eventId,
+                                'recommender' => [
+                                    'type'=>ItemEventDateQueryBuilder::getServiceId(),
+
+     'orderBy'=>  'IF(l.event_id = '.$eventId.', l.date_added, null)'
+                                ]
+                            ],
                     ];
             }
 
@@ -104,16 +134,37 @@ class Fields
                         'properties' => [
                             'type' => 'text'
                         ],
+                        'decorator' =>
+                            [
+                                'recommender' => ['type'=>ItemQueryBuilder::getServiceId()]
+                            ],
                     ];
             }
         elseif ($table == 'recommender_event_log_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
             foreach ($eventProperties as $property) {
+                $property['decorator'] =
+                    [
+                        'key' => $property['id'],
+                        'recommender' => [
+                            'type'=>ItemEventValueQueryBuilder::getServiceId(),
+                            'orderBy'=>  '(SELECT v.value
+FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.property_id = '.$property['id'].')'
+                        ]
+
+                    ];
                 $this->fields['recommender_event_log_property_value']['event_'.$property['id']] = $property;
             }
         }elseif ($table == 'recommender_item_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
             foreach ($eventProperties as $property) {
+                $property['decorator'] =
+                    [
+                        'key'=>$property['id'],
+                        'recommender' => [
+                            'type'=>ItemValueQueryBuilder::getServiceId()
+                        ]
+                    ];
                 $this->fields['recommender_item_property_value']['item_'.$property['id']] = $property;
             }
         }

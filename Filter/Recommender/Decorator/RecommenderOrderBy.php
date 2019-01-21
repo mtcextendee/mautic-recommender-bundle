@@ -23,7 +23,7 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQuery
 
 class RecommenderOrderBy
 {
-    CONST ALLOWED_TABLES = [ 'recommender_event_log', 'recommender_event_log_property_value'];
+    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value'];
 
     /**
      * @var Fields
@@ -34,7 +34,7 @@ class RecommenderOrderBy
     /**
      * SegmentChoices constructor.
      *
-     * @param Fields              $fields
+     * @param Fields $fields
      */
     public function __construct(Fields $fields)
     {
@@ -44,6 +44,7 @@ class RecommenderOrderBy
 
     public function getDictionary(QueryBuilder $queryBuilder, $column)
     {
+
         $dictionary = [];
         foreach (self::ALLOWED_TABLES as $table) {
             $fields = $this->fields->getFields($table);
@@ -51,23 +52,19 @@ class RecommenderOrderBy
                 if ($column != $key) {
                     continue;
                 }
-                $col = $this->fields->cleanKey($key);
-                switch ($table) {
-                    case 'recommender_event_log':
-                        if ($col == 'weight') {
-                            $tableAlias = $queryBuilder->getTableAlias('recommender_event');
-                            return  $tableAlias.'.'.$col;
-                        }
-                        return 'l.'.$col;
-                        break;
-                    case 'recommender_event_log_property_value':
-                        return  '(SELECT v.value
-FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.property_id = '.$col.')';
-                        break;
+                $tableFromDecorator = isset($field['decorator']['recommender']['foreign_table']) ? $field['decorator']['recommender']['foreign_table'] : $table;
+                $keyFromDecorator = isset($field['decorator']['recommender']['key']) ? $field['decorator']['recommender']['key'] : $key;
+
+                if (isset($field['decorator']['recommender']['orderBy'])) {
+                    return $field['decorator']['recommender']['orderBy'];
                 }
+
+                $tableAlias = $queryBuilder->getTableAlias($tableFromDecorator);
+
+                return $tableAlias.'.'.$keyFromDecorator;
             }
+
         }
-        return $dictionary;
     }
 }
 
