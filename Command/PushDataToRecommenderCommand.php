@@ -3,9 +3,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Command;
 
 use Mautic\CoreBundle\Translation\Translator;
-use Mautic\PluginBundle\Entity\IntegrationEntity;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
-use Mautic\PluginBundle\Model\IntegrationEntityModel;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiUserItemsInteractions;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
@@ -57,33 +55,20 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '--batch-limit',
             '-l',
             InputOption::VALUE_OPTIONAL,
-            'Set batch size of contacts to process per round. Defaults to 50.',
+            'Set batch size of contacts to process per round. Defaults to 100.',
             50
+        );
+
+        $this->addOption(
+            '--timeout',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Set delay to ignore item to update. Default -1 day.',
+            '-1 day'
         );
 
 
         parent::configure();
-    }
-
-    /**
-     * @param $date
-     * @param $integrationEntityId
-     * @param $internalEntityId
-     * @param $integrationEntityName
-     * @param $internalEntityName
-     *
-     * @return IntegrationEntity
-     */
-    private function createIntegrationEntity($date, $integrationName, $integrationEntityName, $internalEntityName)
-    {
-        $integrationEntity = new IntegrationEntity();
-        $integrationEntity->setDateAdded($date);
-        $integrationEntity->setLastSyncDate($date);
-        $integrationEntity->setIntegration($integrationName);
-        $integrationEntity->setIntegrationEntity($integrationEntityName);
-        $integrationEntity->setInternalEntity($internalEntityName);
-
-        return $integrationEntity;
     }
 
     /**
@@ -183,12 +168,12 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
 
         switch ($type) {
             case "items":
-                $apiCommands->ImportItems($items, $input->getOption('batch-limit'), $output);
+                $apiCommands->ImportItems($items, $input->getOption('batch-limit'), $input->getOption('timeout'), $output);
                 break;
             case "events":
                 /** @var Processor $eventProcessor */
                 $eventProcessor = $this->getContainer()->get('mautic.recommender.events.processor');
-                $counter = 0;
+                $counter        = 0;
                 foreach ($items as $item) {
                     try {
                         $eventProcessor->process($item);

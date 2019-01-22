@@ -151,7 +151,7 @@ class ApiCommands
      * @param     $items
      * @param int $batchSize
      */
-    public function ImportItems($items, $batchSize = 50, Output $output)
+    public function ImportItems($items, $batchSize = 50, $timeout = '-1 day', Output $output)
     {
         $clearBatch = 10;
         do {
@@ -164,7 +164,7 @@ class ApiCommands
                     $i += $this->recommenderApi->getClient()->send(
                         'ImportItems',
                         $item,
-                        ['timeout' => '-1 day']
+                        ['timeout' => $timeout]
                     );
                     if ($i == 0) {
                         $item;

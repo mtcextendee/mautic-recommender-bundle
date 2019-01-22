@@ -1,9 +1,10 @@
 ![image](https://user-images.githubusercontent.com/462477/51494736-0fefb100-1dba-11e9-8d44-27a24292e3dd.png)
 
 
-# Mautic Recommender Bundle for e-commerce
+# Mautic Recommender Bundle 
+### Mautic for e-commerce
 
-The first product recommendations system to Mautic.  Increase your customer satisfaction and spending with product recommendations. Applicable to your home page, product detail, cart page, emailing campaigns and much more. Quick and Easy
+The first product recommendations system to Mautic.  Increase your customer satisfaction and spending with product recommendations. Applicable to your home page, product detail, cart page, emailing campaigns, dynamic ocntent and much more. Quick and Easy
 
 Sign in for news: [mtcextendee.com](https://mtcextendee.com/)
 
@@ -49,19 +50,46 @@ Recommender combine data about items and contacts and related data between them.
 Run
 
 1. composer require kuzmany/mautic-recommender-bundle
-2. php app/console mautic:plugins:reload
-3. Go to plugins and enable Recommender
+2. php app/console mautic:plugins:reload 
+3. `php app/console doctrine:schema:update --force`
 
-### Track your contacts 
+Then go to to plugins and enable Recommender. You should see new menu item Recommender
 
-Still using standard contact tracking by Mautic ([see contact monitoring docs](https://www.mautic.org/docs/en/contacts/contact_monitoring.html))
+![image](https://user-images.githubusercontent.com/462477/51552847-ce224180-1e71-11e9-920b-f68d7da155eb.png)
+
+## Usage
+
+### Events
+You can track interactions between your contacts and items. Create your custom events like add to cart, purchase, detailview, add to wishlist, rating.... Weight option use for grading the priority of each event.   
+
+![image](https://user-images.githubusercontent.com/462477/51553290-bf885a00-1e72-11e9-909b-eef4f8a751f5.png)
+
+### Templates
+
+Build custom theme form display items in email or website.
+
+![image](https://user-images.githubusercontent.com/462477/51553414-1726c580-1e73-11e9-90a8-b853827d496c.png)
+
+### Recommenders
+
+Recommenders configure what product will display to cour contacts. Then you will use recommender tokens in emails or dynamic content (for example `{recommender=1}`)
+
+![image](https://user-images.githubusercontent.com/462477/51553766-eeeb9680-1e73-11e9-91e1-a3e77c71dbc5.png)
+
+## Tracking
+
+### Ccontacts 
+
+Use standard contact tracking by Mautic ([see contact monitoring docs](https://www.mautic.org/docs/en/contacts/contact_monitoring.html))
 
 ### Import items
 
 Items are parsed from your external JSON file. This command should run initial, but also you can update your items one time each 15 minutes.
 
-`php app/console mautic:recommender:import --type=items`  
-`--file="http://domain.tld/pathto/items.json"`
+```shell
+php app/console mautic:recommender:import --type=items`  
+`--file="http://domain.tld/pathto/items.json"
+```
 
 Options:
 
