@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
 use Mautic\LeadBundle\Model\LeadModel;
+use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\Form\Form;
@@ -201,50 +202,26 @@ class RecommenderController extends AbstractStandardFormController
      */
     public function sendAction()
     {
-        if (!$this->get('mautic.security')->isAnonymous()) {
+        $recommender         = $this->request->get('eventDetail');
+        $eventDetail         = json_decode(base64_decode($recommender), true);
+
+        /** @var Processor $eventProcessor */
+        $eventProcessor = $this->get('mautic.recommender.events.processor');
+
+        try {
+            $eventProcessor->process($eventDetail);
+            return new JsonResponse(
+                [
+                    'success' => 1,
+                ]
+            );
+        } catch (\Exception $e) {
             return new JsonResponse(
                 [
                     'success' => 0,
+                    'error' => $e->getMessage()
                 ]
             );
         }
-
-        /** @var ApiCommands $apiCommands */
-        $apiCommands = $this->get('mautic.recommender.service.api.commands');
-        $eventLabel  = $this->get('mautic.helper.core_parameters')->getParameter('eventLabel');
-        /** @var RecommenderEventModel $eventModel */
-        $eventModel = $this->getModel('recommender.event');
-
-        $integrationSettings = $this->get('mautic.helper.integration')->getIntegrationObject(
-            'Recommender'
-        )->getIntegrationSettings()->getFeatureSettings();
-        $options             = $this->request->request->all();
-        $recommender         = $this->request->get('eventDetail');
-        $eventDetail         = json_decode(base64_decode($recommender), true);
-        $error               = false;
-
-        if (!isset($eventDetail['eventName'])) {
-            $error = $this->get('translator')->trans('mautic.plugin.recommender.eventName.not_found', [], 'validators');
-        } elseif (!$eventModel->getRepository()->findOneBy(['name' => $eventDetail['eventName']])) {
-            $error = $this->get('translator')->trans(
-                'mautic.plugin.recommender.eventName.not_allowed',
-                [
-                    '%eventName%' => $eventDetail['eventName'],
-                ],
-                'validators'
-            );
-        }
-        $response = ['success' => !(bool) $error,];
-        if (!$error) {
-            $apiCommands->callCommand($eventLabel, $eventDetail);
-        } else {
-            $response['message'] = $error;
-        }
-
-        return new JsonResponse(
-            [
-                $response,
-            ]
-        );
     }
 }

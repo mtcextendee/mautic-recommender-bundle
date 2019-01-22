@@ -153,18 +153,22 @@ class ApiCommands
      */
     public function ImportItems($items, $batchSize = 50, Output $output)
     {
-        $clearBatch = 30;
+        $clearBatch = 10;
         do {
             $i        = 1;
             $progress = ProgressBarHelper::init($output, $batchSize);
             $progress->start();
             try {
+                $counter = 0;
                 foreach ($items as $key => $item) {
                     $i += $this->recommenderApi->getClient()->send(
                         'ImportItems',
                         $item,
                         ['timeout' => '-1 day']
                     );
+                    if ($i == 0) {
+                        $item;
+                    }
                     $progress->setProgress($i);
                     if ($i % $clearBatch === 0) {
                         $this->entityManager->clear(Item::class);
@@ -177,67 +181,9 @@ class ApiCommands
                     }
                 }
             } catch (\Exception $error) {
-                $batchSize = 0;
+                echo $error->getMessage();
             }
         } while ($batchSize > 0);
-    }
-
-    /**
-     * @param                                                          $content
-     * @param int                                                      $minAge
-     * @param int                                                      $maxAge
-     */
-    public function hasAbandonedCart($content, $minAge, $maxAge)
-    {
-        $tokens = $this->recommenderTokenFinder->findTokens($content);
-        if (!empty($tokens)) {
-            foreach ($tokens as $key => $token) {
-                $this->getAbandonedCart($token, $minAge, $maxAge);
-                $items = $this->getcommandoutput();
-                if (!empty($items)) {
-                    return true;
-                }
-            }
-        }
-    }
-
-    public function getAbandonedCart(RecommenderToken $recommenderToken, $cartMinAge, $cartMaxAge)
-    {
-        $options = [
-            "expertSettings" => [
-                "algorithmSettings" => [
-                    "evaluator" => [
-                        "name" => "reql",
-                    ],
-                    "model"     => [
-                        "name"     => "reminder",
-                        "settings" => [
-                            "parameters" => [
-                                "interaction-types"        => [
-                                    "detail-view"   => [
-                                        "enabled" => false,
-                                    ],
-                                    "cart-addition" => [
-                                        "enabled" => true,
-                                        "weight"  => 1.0,
-                                        "min-age" => $cartMinAge,
-                                        "max-age" => $cartMaxAge,
-                                    ],
-                                ],
-                                "filter-purchased-max-age" => $cartMaxAge,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $recommenderToken->setAddOptions($options);
-        $this->callCommand('RecommendItemsToUser', $recommenderToken->getOptions(true));
-        if (!empty($this->getCommandOutput()['recomms'])) {
-            return $this->getCommandOutput()['recomms'];
-        }
-
-        return [];
     }
 
     /**

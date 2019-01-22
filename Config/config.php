@@ -140,6 +140,18 @@ return [
             ],
         ],
         'other'        => [
+            'mautic.recommender.events.processor'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Events\Processor::class,
+                'arguments' => [
+                    'mautic.helper.core_parameters',
+                    'mautic.security',
+                    'mautic.recommender.service.api.commands',
+                    'mautic.recommender.model.event',
+                    'translator',
+                    'mautic.lead.model.lead'
+                ]
+            ],
+
             /* Filters */
             'mautic.recommender.filter.factory'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory::class,

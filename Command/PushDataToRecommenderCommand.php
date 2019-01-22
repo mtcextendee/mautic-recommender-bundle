@@ -3,13 +3,12 @@
 namespace MauticPlugin\MauticRecommenderBundle\Command;
 
 use Mautic\CoreBundle\Translation\Translator;
-use Mautic\LeadBundle\Entity\Lead;
-use Mautic\LeadBundle\Model\LeadModel;
 use Mautic\PluginBundle\Entity\IntegrationEntity;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\PluginBundle\Model\IntegrationEntityModel;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiUserItemsInteractions;
+use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,7 +26,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     /**
      * @var array
      */
-    private $types = ['contacts', 'items'];
+    private $types = ['events', 'items'];
 
     /**
      * @var array
@@ -54,7 +53,13 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 InputOption::VALUE_OPTIONAL,
                 'JSON file to import for types for '.implode(', ', $this->getActions())
             );
-        $this->addOption('--batch-limit', '-l', InputOption::VALUE_OPTIONAL, 'Set batch size of contacts to process per round. Defaults to 50.', 50);
+        $this->addOption(
+            '--batch-limit',
+            '-l',
+            InputOption::VALUE_OPTIONAL,
+            'Set batch size of contacts to process per round. Defaults to 50.',
+            50
+        );
 
 
         parent::configure();
@@ -172,53 +177,28 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             }
         }
 
-        // import Leads
-        $criteria['integration']       = 'RecommenderTemplate';
-        $criteria['integrationEntity'] = 'users';
-        $criteria['internalEntity']    = 'contacts';
-        //$integrationEntity = $em->getRepository(IntegrationEntity::class)->findOneBy($criteria);
+
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
-        /** @var IntegrationEntityModel $integrationEntityModel */
-        $integrationEntityModel = $this->getContainer()->get('mautic.plugin.model.integration_entity');
-        $entityManager = $this->getContainer()->get('doctrine.orm.entity_manager');
+
         switch ($type) {
             case "items":
                 $apiCommands->ImportItems($items, $input->getOption('batch-limit'), $output);
                 break;
-        }
-
-        $requestsPropertyValues = [];
-        switch ($type) {
-            case "views":
-                $apiCommands->callCommand('AddDetailView', $items);
+            case "events":
+                /** @var Processor $eventProcessor */
+                $eventProcessor = $this->getContainer()->get('mautic.recommender.events.processor');
+                $counter = 0;
+                foreach ($items as $item) {
+                    try {
+                        $eventProcessor->process($item);
+                        $counter++;
+                    } catch (\Exception $e) {
+                        $output->writeln($e->getMessage());
+                    }
+                }
+                $output->writeln('Imported '.$counter.' events');
                 break;
-
-            case "purchases":
-                $apiCommands->callCommand('AddPurchase', $items);
-                break;
-
-            case "carts":
-                $apiCommands->callCommand('AddCartAddition', $items);
-                break;
-
-            case "bookmarks":
-                $apiCommands->callCommand('AddBookmark', $items);
-                break;
-            case "ratings":
-                $apiCommands->callCommand('AddRating', $items);
-                break;
-            case "portions":
-                $apiCommands->callCommłand('SetViewPortion', $items);
-                break;
-        }
-
-        if ($apiCommands->hasCommandOutput()) {
-            $this->displayCmdTextFromResult(
-                $apiCommands->getCommandOutput(),
-                'user property values',
-                $output
-            );
         }
     }
 

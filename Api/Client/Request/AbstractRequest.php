@@ -149,12 +149,10 @@ abstract class AbstractRequest
      */
     public function setValues($entity)
     {
-
         foreach ($this->getOptions() as $key=>$value){
             try {
                 $this->accessor->setValue($entity, $key, $value);
             } catch (\Exception $exception) {
-
             }
         }
 
@@ -180,7 +178,7 @@ abstract class AbstractRequest
     /**
      * @return Client
      */
-    public function getClient(): Client
+    public function getClient()
     {
         return $this->client;
     }
@@ -230,7 +228,7 @@ abstract class AbstractRequest
     /**
      * @return Options
      */
-    public function getOptionsResolver(): Options
+    public function getOptionsResolver()
     {
         return $this->optionsResolver;
     }

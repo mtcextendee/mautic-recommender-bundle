@@ -15,6 +15,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
+use Mautic\CoreBundle\Helper\DateTimeHelper;
 use Mautic\LeadBundle\Entity\Lead;
 
 class EventLog
@@ -72,7 +73,7 @@ class EventLog
         $builder->createManyToOne(
             'item',
             'MauticPlugin\MauticRecommenderBundle\Entity\Item'
-            )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
+        )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
 
         $builder->createManyToOne(
             'lead',
@@ -131,12 +132,15 @@ class EventLog
     }
 
     /**
-     * @param \DateTime $dateAdded
+     * @param \DateTime|string $dateAdded
      *
      * @return EventLog
      */
-    public function setDateAdded(\DateTime $dateAdded)
+    public function setDateAdded($dateAdded)
     {
+        if (!$dateAdded instanceof \DateTime) {
+            $dateAdded = (new DateTimeHelper($dateAdded))->getDateTime();
+        }
         $this->dateAdded = $dateAdded;
 
         return $this;

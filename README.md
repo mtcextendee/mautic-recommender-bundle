@@ -91,7 +91,7 @@ You can also to each events set your own parameters (price, profit, quantity...)
   {
     "itemId": 13807,
     "eventName": "purchase",
-    "contactEmail": "customer@email.sk",
+    "contactEmail": "customer@domain.tld",
     "price": 41,
     "profit": 19,
     "dateAdded": "2018-12-24 11:12"
@@ -99,10 +99,10 @@ You can also to each events set your own parameters (price, profit, quantity...)
   {
     "itemId": 13807,
     "eventName": "addToCart",
-    "contactEmail": "customer@email.sk",
-    "price": 41,
-    "profit": 19,
-    "dateAdded": "2018-12-24 11:12"
+    "contactEmail": "customer2@domain.tld",
+    "price": 19,
+    "profit": 6,
+    "dateAdded": "2019-01-11 09:12:31"
   }
 ]
 ```

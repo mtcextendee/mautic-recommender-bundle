@@ -103,13 +103,7 @@ class RecommendereTest extends AbstractMauticTestCase
         );
         $this->assertTrue(!empty($this->apiCommand->getCommandOutput()['recomms']));
 
-        //check for abandoned cart
-        $this->apiCommand->getAbandonedCart($this->recommenderToken, 0, 3600 * 12);
-        $this->assertTrue(!empty($this->apiCommand->getCommandOutput()['recomms']));
 
-        //check for abandoned cart empty
-        $this->apiCommand->getAbandonedCart($this->recommenderToken, 0, 0);
-        $this->assertTrue(empty($this->apiCommand->getCommandOutput()['recomms']));
         return;
         $this->apiCommand->callCommand(
             'AddPurchase',
@@ -123,10 +117,6 @@ class RecommendereTest extends AbstractMauticTestCase
             $this->getItemsToEvent(['id', 'amount', 'price', 'profit'])
         );
         $this->assertForMultipleApiCall();
-
-        $this->apiCommand->getAbandonedCart($this->recommenderToken, 1, 3600 * 12);
-
-        $this->assertTrue(empty($this->apiCommand->getCommandOutput()['recomms']));
 
     }
 
