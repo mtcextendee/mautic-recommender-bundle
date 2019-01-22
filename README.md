@@ -74,15 +74,18 @@ Require Mautic standard tracking code to website (right after `<body>`)
 
 You need to add Mautic tracking code  [to your website](https://www.mautic.org/docs/en/contacts/contact_monitoring.html#javascript-js-tracking)
 
-
-`mt('send', 'RecommenderEvent', { eventName: 'DetailView', itemId:'9-191' });`
+```js
+mt('send', 'RecommenderEvent', { eventName: 'DetailView', itemId:'9-191' });
+```
 
 - eventName - required
 - itemId - required
 
 You can also to each events set your own parameters (price, profit, quantity...). Example:
  
-`mt('send', 'RecommenderEvent', { eventName: 'Cart', itemId:'9-191', price: '39', quantity: '2', profit: '9' });`
+```js
+mt('send', 'RecommenderEvent', { eventName: 'Cart', itemId:'9-191', price: '39', quantity: '2', profit: '9' });
+```
 
 ## Import events by JSON
 
