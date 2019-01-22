@@ -29,15 +29,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ApiCommands
 {
-    private $interactionRequiredParams = [
-        'AddCartAddition' => ['itemId', 'amount', 'price'],
-        'AddPurchase'     => ['itemId', 'amount', 'price', 'profit'],
-        'AddDetailView'   => ['itemId'],
-        'AddBookmark'     => ['itemId'],
-        'AddRating'       => ['itemId', 'rating'],
-        'SetViewPortion'  => ['itemId', 'portion'],
-    ];
-
     /**
      * @var array
      */
@@ -64,11 +55,6 @@ class ApiCommands
     private $translator;
 
     /**
-     * @var SegmentMapping
-     */
-    protected $segmentMapping;
-
-    /**
      * @var RecommenderTokenFinder
      */
     private $recommenderTokenFinder;
@@ -89,7 +75,6 @@ class ApiCommands
      * @param RecommenderApi           $recommenderApi
      * @param LoggerInterface          $logger
      * @param TranslatorInterface      $translator
-     * @param SegmentMapping           $segmentMapping
      * @param RecommenderTokenFinder   $recommenderTokenFinder
      * @param EventDispatcherInterface $dispatcher
      */
@@ -97,7 +82,6 @@ class ApiCommands
         RecommenderApi $recommenderApi,
         LoggerInterface $logger,
         TranslatorInterface $translator,
-        SegmentMapping $segmentMapping,
         RecommenderTokenFinder $recommenderTokenFinder,
         EventDispatcherInterface $dispatcher,
         EntityManagerInterface $entityManager
@@ -106,7 +90,6 @@ class ApiCommands
         $this->recommenderApi         = $recommenderApi;
         $this->logger                 = $logger;
         $this->translator             = $translator;
-        $this->segmentMapping         = $segmentMapping;
         $this->recommenderTokenFinder = $recommenderTokenFinder;
         $this->dispatcher             = $dispatcher;
         $this->entityManager          = $entityManager;
@@ -185,99 +168,5 @@ class ApiCommands
             }
         } while ($batchSize > 0);
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCommandOutput()
-    {
-        return $this->commandOutput[$this->getCacheId()];
-    }
-
-    /**
-     * @param mixed $commandOutput
-     */
-    public function hasCommandOutput()
-    {
-        if (!empty($this->commandOutput[$this->getCacheId()])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param mixed $commandOutput
-     */
-    public function setCommandOutput(
-        $commandOutput
-    ) {
-        $this->commandOutput[$this->getCacheId()] = $commandOutput;
-    }
-
-    public function getCommandResult()
-    {
-        $errors  = [];
-        $results = $this->getCommandOutput();
-        if (is_array($results)) {
-            foreach ($results as $result) {
-                if (!empty($result['json']['error'])) {
-                    $errors[] = $result['json']['error'];
-                }
-            }
-        }
-        if (!empty($errors)) {
-            throw new \Exception($errors);
-        }
-
-        return true;
-    }
-
-    /**
-     * @return
-     */
-    public function getCacheId()
-    {
-        return $this->cacheId;
-    }
-
-    /**
-     * @param  $cacheId
-     */
-    public function setCacheId($cacheId)
-    {
-        $this->cacheId = serialize($cacheId);
-    }
-
-    /**
-     * Display commands results
-     *
-     * @param array  $results
-     * @param string $title
-     */
-    private function displayCmdTextFromResult(
-        array $results,
-        $title = '',
-        OutputInterface $output
-    ) {
-        $errors = [];
-        foreach ($results as $result) {
-            if (!empty($result['json']['error'])) {
-                $errors[] = $result['json']['error'];
-            }
-        }
-        // just add empty space
-        if ($title != '') {
-            $title .= ' ';
-        }
-        $errors = [];
-        $output->writeln(sprintf('<info>Procesed '.$title.count($results).'</info>'));
-        $output->writeln('Success '.$title.(count($results) - count($errors)));
-        /*if (!empty($errors)) {
-            $output->writeln('Errors '.$title.count($errors));
-            $output->writeln($errors, true);
-        }*/
-    }
-
 }
 

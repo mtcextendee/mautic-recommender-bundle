@@ -35,7 +35,7 @@ class RecommenderApiController extends CommonApiController
      */
     public function initialize(FilterControllerEvent $event)
     {
-        $this->leadModel      = $this->getModel('lead.lead');
+        $this->leadModel         = $this->getModel('lead.lead');
         $this->recommenderHelper = $this->container->get('mautic.recommender.helper');
         parent::initialize($event);
     }
@@ -48,14 +48,13 @@ class RecommenderApiController extends CommonApiController
      */
     public function processAction($component)
     {
+        die();
         $data = $this->request->request->all();
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->get('mautic.recommender.service.api.commands');
         $apiCommands->callCommand($component, $this->request->request->all());
-        if ($apiCommands->getCommandResult()) {
-            $view     = $this->view(['succes' => true]);
-            return $this->handleView($view);
-        }
+        $view = $this->view(['succes' => true]);
+//        return $this->handleView($view);
 
         return $this->returnError(
             $this->translator->trans(

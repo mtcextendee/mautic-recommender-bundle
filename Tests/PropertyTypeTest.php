@@ -10,17 +10,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Tests;
 
-use Mautic\CoreBundle\Test\AbstractMauticTestCase;
-use Mautic\LeadBundle\Entity\Lead;
-use Mautic\LeadBundle\Model\LeadModel;
-use Mautic\SmsBundle\Sms\TransportChain;
-use MauticPlugin\MauticRecommenderBundle\Api\Client\Client;
-use MauticPlugin\MauticRecommenderBundle\Api\Client\Request\AbstractRequest;
 use MauticPlugin\MauticRecommenderBundle\Api\Client\Request\AddDetailView;
-use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
-use MauticPlugin\MauticRecommenderBundle\Api\Service\ProcessData;
-use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class PropertyTypeTest extends \PHPUnit_Framework_TestCase
 {

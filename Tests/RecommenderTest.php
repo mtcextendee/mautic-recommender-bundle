@@ -13,11 +13,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Tests\Recommendere;
 use Mautic\CoreBundle\Test\AbstractMauticTestCase;
 use Mautic\LeadBundle\Entity\Lead;
 use Mautic\LeadBundle\Model\LeadModel;
-use Mautic\SmsBundle\Sms\TransportChain;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
-use MauticPlugin\MauticRecommenderBundle\Api\Service\ProcessData;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class RecommendereTest extends AbstractMauticTestCase
 {

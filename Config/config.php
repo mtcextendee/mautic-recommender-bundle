@@ -327,17 +327,9 @@ return [
                     'mautic.recommender.api.recommender',
                     'monolog.logger.mautic',
                     'translator',
-                    'mautic.recommender.service.api.segment.mapping',
                     'mautic.recommender.service.token.finder',
                     'event_dispatcher',
                     'doctrine.orm.entity_manager'
-                ],
-            ],
-            'mautic.recommender.service.api.segment.mapping' => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\Api\Service\SegmentMapping::class,
-                'arguments' => [
-                    'mautic.lead.model.list',
-                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.service.token'               => [
