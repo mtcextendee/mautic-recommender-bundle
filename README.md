@@ -84,6 +84,31 @@ You can also to each events set your own parameters (price, profit, quantity...)
  
 `mt('send', 'RecommenderEvent', { eventName: 'Cart', itemId:'9-191', price: '39', quantity: '2', profit: '9' });`
 
+## Import events by JSON
+
+```json
+[
+  {
+    "itemId": 13807,
+    "eventName": "purchase",
+    "contactEmail": "customer@email.sk",
+    "price": 41,
+    "profit": 19,
+    "dateAdded": "2018-12-24 11:12"
+  },
+  {
+    "itemId": 13807,
+    "eventName": "addToCart",
+    "contactEmail": "customer@email.sk",
+    "price": 41,
+    "profit": 19,
+    "dateAdded": "2018-12-24 11:12"
+  }
+]
+```
+
+
+
 
 ## Delivery recommended items to users
 
