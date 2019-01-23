@@ -139,4 +139,9 @@ class RecommenderEventController extends AbstractStandardFormController
     {
         return $this->deleteStandard($objectId);
     }
+
+    protected function getDefaultOrderColumn()
+    {
+        return 'weight';
+    }
 }
