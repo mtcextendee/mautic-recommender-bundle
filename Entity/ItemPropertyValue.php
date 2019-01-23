@@ -46,11 +46,12 @@ class ItemPropertyValue
      */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
+        /** @var ClassMetadataBuilder $builder */
         $builder = new ClassMetadataBuilder($metadata);
         $builder->setTable('recommender_item_property_value')
             ->setCustomRepositoryClass(ItemPropertyValueRepository::class)
-            ->addNamedField('value', Type::STRING, 'value', false)
-            ->addIndex(['value'], 'value')
+            ->addnamedfield('value', Type::TEXT, 'value')
+            //->addIndex(['value'], 'value')
             ->addId();
 
         $builder->createManyToOne(
@@ -137,7 +138,7 @@ class ItemPropertyValue
      *
      * @return ItemPropertyValue
      */
-    public function setValue(string $value)
+    public function setValue($value)
     {
         if($this->value != $value) {
             $this->changes['value'] = isset($this->value) ? $this->value : '';
