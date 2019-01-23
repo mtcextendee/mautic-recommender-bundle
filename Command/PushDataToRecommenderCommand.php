@@ -56,7 +56,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '-l',
             InputOption::VALUE_OPTIONAL,
             'Set batch size of contacts to process per round. Defaults to 100.',
-            50
+            100
         );
 
         $this->addOption(
