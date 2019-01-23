@@ -165,6 +165,7 @@ class ApiCommands
                 }
             } catch (\Exception $error) {
                 echo $error->getMessage();
+                $batchSize = 0;
             }
         } while ($batchSize > 0);
     }
