@@ -186,7 +186,7 @@ abstract class AbstractRequest
     /**
      * @return array
      */
-    public function getEntities(): array
+    public function getEntities()
     {
         return $this->entities;
     }
@@ -202,7 +202,7 @@ abstract class AbstractRequest
     /**
      * @return array
      */
-    public function getDeleteEntities(): array
+    public function getDeleteEntities()
     {
         return $this->deleteEntities;
     }
@@ -221,7 +221,6 @@ abstract class AbstractRequest
      */
     public function getOptions()
     {
-
         return $this->options;
     }
 

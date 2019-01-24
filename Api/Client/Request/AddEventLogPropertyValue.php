@@ -15,7 +15,6 @@ use MauticPlugin\MauticRecommenderBundle\Entity\EventLogValue;
 
 class AddEventLogPropertyValue extends AbstractRequest
 {
-
     /**
      * Just return new entity
      *

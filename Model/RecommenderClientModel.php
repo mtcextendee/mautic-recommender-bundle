@@ -89,7 +89,7 @@ class RecommenderClientModel extends AbstractCommonModel
      */
     public function getContactRepository()
     {
-        return $this->em->get('MauticLeadBundle:Lead');
+        return $this->em->getRepository('MauticLeadBundle:Lead');
     }
 
     /**

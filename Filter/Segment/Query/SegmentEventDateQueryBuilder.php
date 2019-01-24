@@ -33,4 +33,12 @@ class SegmentEventDateQueryBuilder extends ItemEventDateQueryBuilder
     {
         return 'mautic.recommender.query.builder.segment.event_date';
     }
+
+    /**
+     * @return string
+     */
+    public function getParentIdentificator()
+    {
+        return 'id';
+    }
 }

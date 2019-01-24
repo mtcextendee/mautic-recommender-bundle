@@ -26,10 +26,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
      */
     private $types = ['events', 'items'];
 
-    /**
-     * @var array
-     */
-    //private $actions = ['views', 'carts', 'purchases', 'bookmarks', 'ratings'];
     private $actions = [];
 
     /**
@@ -38,7 +34,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this->setName('mautic:recommender:import')
-            ->setDescription('Import data to RecommenderTemplate')
+            ->setDescription('Import data to Recommender')
             ->addOption(
                 '--type',
                 '-t',
@@ -185,34 +181,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 $output->writeln('Imported '.$counter.' events');
                 break;
         }
-    }
-
-
-    /**
-     * Display commands results
-     *
-     * @param array  $results
-     * @param string $title
-     */
-    private function displayCmdTextFromResult(array $results, $title = '', OutputInterface $output)
-    {
-        $errors = [];
-        foreach ($results as $result) {
-            if (!empty($result['json']['error'])) {
-                $errors[] = $result['json']['error'];
-            }
-        }
-        // just add empty space
-        if ($title != '') {
-            $title .= ' ';
-        }
-        $errors = [];
-        $output->writeln(sprintf('<info>Procesed '.$title.count($results).'</info>'));
-        $output->writeln('Success '.$title.(count($results) - count($errors)));
-        /*if (!empty($errors)) {
-            $output->writeln('Errors '.$title.count($errors));
-            $output->writeln($errors, true);
-        }*/
     }
 
     /**

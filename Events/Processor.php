@@ -76,7 +76,7 @@ class Processor
         $this->apiCommands          = $apiCommands;
         $this->eventModel           = $eventModel;
         $this->translator           = $translator;
-        $this->leadModel = $leadModel;
+        $this->leadModel            = $leadModel;
     }
 
     /**
@@ -113,13 +113,14 @@ class Processor
             $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
             $contact = current($contact);
             if (!$contact instanceof Lead) {
-                throw new \Exception('Contact not found');
+                throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
             }
             unset($eventDetail['contactEmail']);
             $this->leadModel->setSystemCurrentLead($contact);
         }
 
         $this->apiCommands->callCommand($eventLabel, $eventDetail);
+
         return true;
     }
 

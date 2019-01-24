@@ -58,7 +58,9 @@ class Options
 
             switch ($entity) {
                 case 'contactId':
-                    $addOptions['lead'] = $this->clientModel->getCurrentContact();
+                    if (!isset($entities['userId'])) {
+                        $addOptions['lead'] = $this->clientModel->getCurrentContact();
+                    }
                     continue;
             }
 
@@ -66,6 +68,7 @@ class Options
             if (!isset($options[$entity])) {
                 continue;
             }
+
             switch ($entity) {
                 case 'itemId':
                     $addOptions['item'] = $this->clientModel->getRepository()->findOneBy(['itemId' => $options[$entity]]);
@@ -74,6 +77,9 @@ class Options
                 case 'userId':
                     $addOptions['lead'] = $this->clientModel->getContactRepository()->getEntity($options[$entity]);
                     unset($options['userId']);
+                    break;
+                case 'dateAdded':
+                    $addOptions['dateAdded'] = $options[$entity];
                     break;
 
             }
@@ -100,6 +106,7 @@ class Options
 
         return $options;
     }
+
 
     public function addOption($key, $value)
     {
