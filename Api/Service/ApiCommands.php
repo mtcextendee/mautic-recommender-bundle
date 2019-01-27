@@ -149,9 +149,6 @@ class ApiCommands
                         $item,
                         ['timeout' => $timeout]
                     );
-                    if ($i == 0) {
-                        $item;
-                    }
                     $progress->setProgress($i);
                     if ($i % $clearBatch === 0) {
                         $this->entityManager->clear(Item::class);
@@ -168,8 +165,13 @@ class ApiCommands
                 $progress->finish();
                 $output->writeln('');
                 $output->writeln($error->getMessage());
+                return;
             }
         } while ($batchSize > 0);
+
+        $output->writeln('');
+        $output->writeln('Imported '.$i.' items');
+
     }
 }
 
