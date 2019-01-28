@@ -344,6 +344,7 @@ return [
                 'arguments' => [
                     'mautic.recommender.model.recommender',
                     'mautic.lead.model.lead',
+                    'mautic.helper.integration'
                 ],
             ],
             'mautic.recommender.service.token.finder'        => [

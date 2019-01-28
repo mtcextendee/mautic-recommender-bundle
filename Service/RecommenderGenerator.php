@@ -171,24 +171,26 @@ class RecommenderGenerator
         if (empty($this->items)) {
             return;
         }
-
         if ($recommenderTemplate->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-header.html.php',
                 [
                     'recommender' => $recommenderTemplate,
+                    'settings'=>$recommenderToken->getSettings()
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-footer.html.php',
                 [
                     'recommender' => $recommenderTemplate,
+                    'settings'=>$recommenderToken->getSettings()
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/Page:generator-body.html.php',
                 [
                     'recommender' => $recommenderTemplate,
+                    'settings'=>$recommenderToken->getSettings()
                 ]
             );
             $headerTemplate = $this->twig->createTemplate($headerTemplateCore);

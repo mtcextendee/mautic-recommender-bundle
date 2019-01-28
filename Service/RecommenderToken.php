@@ -13,8 +13,10 @@ namespace MauticPlugin\MauticRecommenderBundle\Service;
 
 use Mautic\CampaignBundle\Model\CampaignModel;
 use Mautic\LeadBundle\Model\LeadModel;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 
@@ -42,17 +44,24 @@ class RecommenderToken
      */
     private $recommenderModel;
 
+    /**
+     * @var IntegrationHelper
+     */
+    private $integrationHelper;
+
 
     /**
      * RecommenderToken constructor.
      *
-     * @param RecommenderModel $recommenderModel
-     * @param LeadModel        $leadModel
+     * @param RecommenderModel  $recommenderModel
+     * @param LeadModel         $leadModel
+     * @param IntegrationHelper $integrationHelper
      */
-    public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel)
+    public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel, IntegrationHelper $integrationHelper)
     {
         $this->leadModel     = $leadModel;
         $this->recommenderModel = $recommenderModel;
+        $this->integrationHelper = $integrationHelper;
     }
 
     /**
@@ -137,6 +146,16 @@ class RecommenderToken
     public function setRecommender($recommender)
     {
         $this->recommender = $recommender;
+    }
+
+    /**
+     * Get settings from plugins
+     *
+     * @return array
+     */
+    public function getSettings()
+    {
+        return $this->integrationHelper->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
     }
 }
 
