@@ -141,7 +141,7 @@ class Event
      *
      * @return Event
      */
-    public function setWeight(int $weight)
+    public function setWeight($weight)
     {
         $this->weight = $weight;
 

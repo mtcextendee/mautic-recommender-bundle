@@ -103,12 +103,6 @@ $templates = [
     </div>
 </div>
 
-<div class="ide">
-    <?php if (isset($sqlQuery)): ?>
-        <?php echo $sqlQuery; ?>
-    <?php endif; ?>
-</div>
-
 
 <div class="hide" id="templates">
     <?php foreach ($templates as $dataKey => $template): ?>
@@ -144,4 +138,11 @@ $templates = [
 
 
 <?php $view['slots']->stop(); ?>
+
+<?php $view['slots']->start('postFormContent'); ?>
+<?php if (isset($tester)): ?>
+    <?php echo $tester; ?>
+<?php endif; ?>
+<?php $view['slots']->stop(); ?>
+
 

@@ -14,12 +14,16 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
 use Mautic\LeadBundle\Model\LeadModel;
+use MauticPlugin\MauticRecommenderBundle\Entity\EventLogRepository;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
+use MauticPlugin\MauticRecommenderBundle\Service\ContactSearch;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class RecommenderController extends AbstractStandardFormController
 {
@@ -170,26 +174,13 @@ class RecommenderController extends AbstractStandardFormController
     {
         /** @var RecommenderTokenReplacer $recommenderTokenReplacer */
         $recommenderTokenReplacer    = $this->get('mautic.recommender.service.replacer');
-        /** @var LeadModel $leadModel */
-        $leadModel    = $this->get('mautic.lead.model.lead');
         $viewParameters = [];
         switch ($action) {
             case 'edit':
-                $filter = [
-                    'force'  => [['column' => 'l.email', 'expr' => 'eq', 'value' => 'zdeno@kuzmany.biz']],
-                    'limit'=>1,
-                    'orderBy'    => 'l.id',
-                    'orderByDir' => 'asc',
-                    'withTotalCount' => false,
-                ];
-                $leads = $leadModel->getEntities($filter);
-                $lead = reset($leads);
-                $recommenderTokenReplacer->getRecommenderToken()->setUserId(3);
-                $recommenderTokenReplacer->getRecommenderToken()->setContent('test {recommender='.$args['objectId'].'}');
-                $testedContent =  $recommenderTokenReplacer->getReplacedContent();
-                $viewParameters['sqlQuery'] =$testedContent.
-                    SqlQuery::$query.'<br />'.
-                    print_r(array_column($recommenderTokenReplacer->getRecommenderGenerator()->getItems(), 'id'), true);
+                /** @var ContactSearch $contactSearch */
+                if (MAUTIC_ENV === 'dev') {
+                    $viewParameters['tester'] = $this->get('mautic.recommender.contact.search')->renderForm($args['objectId'], $this);
+                }
                 break;
         }
         $args['viewParameters'] = array_merge($args['viewParameters'], $viewParameters);
@@ -223,5 +214,10 @@ class RecommenderController extends AbstractStandardFormController
                 ]
             );
         }
+    }
+
+    public function exampleAction($objectId)
+    {
+        return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
     }
 }

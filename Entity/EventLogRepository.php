@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 /**
  * Class EventLogRepository
@@ -20,5 +21,29 @@ use Mautic\CoreBundle\Entity\CommonRepository;
  */
 class EventLogRepository extends CommonRepository
 {
+
+    /**
+     * @return string
+     */
+    public function getTableAlias()
+    {
+        return 'el';
+    }
+
+    /**
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findMostActiveContacts($limit = 25)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('el.lead_id')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el')
+            ->groupBy('el.lead_id')
+            ->orderBy('COUNT(el.id)',' desc')
+            ->setMaxResults($limit);
+        return $qb->execute()->fetchAll();
+    }
 
 }

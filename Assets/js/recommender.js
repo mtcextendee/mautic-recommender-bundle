@@ -34,3 +34,9 @@ Mautic.recommenderUpdatePreview = function () {
 }
 
 
+Mautic.reloadExample = function (el) {
+    Mautic.loadContent(mQuery(el).parents('form').attr('action')+'?tmpl=template', '', 'POST', '.contact-options', false, false, mQuery(el).parents('form').formToArray());
+}
+
+
+

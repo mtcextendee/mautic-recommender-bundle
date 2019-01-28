@@ -135,11 +135,18 @@ return [
                     'translator',
                     'mautic.lead.model.list',
                     'mautic.recommender.model.client',
-                    'mautic.recommender.filter.fields.recommender'
+                    'mautic.recommender.filter.fields.recommender',
                 ],
             ],
         ],
         'other'        => [
+            'mautic.recommender.contact.search'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Service\ContactSearch::class,
+                'arguments' => [
+                    '@service_container'
+                ]
+            ],
+
             'mautic.recommender.events.processor'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Events\Processor::class,
                 'arguments' => [

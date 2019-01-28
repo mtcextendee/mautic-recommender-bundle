@@ -11,9 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 class EventLogValueRepository extends CommonRepository
 {
@@ -36,5 +34,22 @@ class EventLogValueRepository extends CommonRepository
         $qb->join('v', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'v.property_id = p.id');
         return $qb->execute()->fetchAll();
     }
+
+    /**
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findMostActiveContacts($limit = 25)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('el.lead_id')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el')
+            ->groupBy('el.lead_id')
+            ->orderBy('COUNT(el.id)',' desc')
+            ->setMaxResults($limit);
+        return $qb->execute()->fetchAll();
+    }
+
 
 }
