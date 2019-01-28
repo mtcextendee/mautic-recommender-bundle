@@ -184,7 +184,7 @@ class ContactSearch
      *
      * @return string
      */
-    public function getAction()
+    private function getAction()
     {
         return $this->container->get('router')->generate(
             'mautic_recommender_action',
@@ -248,7 +248,7 @@ class ContactSearch
     /**
      * @return \Doctrine\ORM\EntityRepository|\Mautic\LeadBundle\Entity\LeadRepository
      */
-    public function getRepository()
+    private function getRepository()
     {
         return $this->clientModel->getContactRepository();
     }
