@@ -31,15 +31,23 @@ $templates = [
 <div class="row ">
     <div class="col-md-9  height-auto">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-8">
                 <?php echo $view['form']->row($form['name']); ?>
             </div>
-            <div class="col-md-3">
-                <?php echo $view['form']->row($form['template']); ?>
-            </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <?php echo $view['form']->row($form['numberOfItems']); ?>
             </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4"><?php echo $view['form']->row($form['template']); ?></div>
+                    <br>
+                        <?php echo $view['form']->row($form['newRecommenderButton']); ?>
+                        <?php echo $view['form']->row($form['editRecommenderButton']); ?>
+                </div>
+            </div>
+
+
+
             <div class="col-md-3">
                 <?php echo $view['form']->row($form['filter']); ?>
             </div>

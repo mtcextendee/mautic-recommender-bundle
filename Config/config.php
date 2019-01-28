@@ -136,6 +136,7 @@ return [
                     'mautic.lead.model.list',
                     'mautic.recommender.model.client',
                     'mautic.recommender.filter.fields.recommender',
+                    'router'
                 ],
             ],
         ],

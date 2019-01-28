@@ -30,6 +30,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -71,6 +73,11 @@ class RecommenderType extends AbstractType
     private $choices;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * RecommenderType constructor.
      *
      * @param EventDispatcherInterface $dispatcher
@@ -79,6 +86,7 @@ class RecommenderType extends AbstractType
      * @param ListModel                $listModel
      * @param RecommenderClientModel   $recommenderClientModel
      * @param Choices                  $choices
+     * @param RouterInterface          $router
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
@@ -86,7 +94,8 @@ class RecommenderType extends AbstractType
         TranslatorInterface $translator,
         ListModel $listModel,
         RecommenderClientModel $recommenderClientModel,
-        Choices $choices
+        Choices $choices,
+        RouterInterface $router
     ) {
 
         $this->dispatcher             = $dispatcher;
@@ -95,6 +104,7 @@ class RecommenderType extends AbstractType
         $this->listModel              = $listModel;
         $this->recommenderClientModel = $recommenderClientModel;
         $this->choices                = $choices;
+        $this->router = $router;
     }
 
     /**
@@ -160,6 +170,7 @@ class RecommenderType extends AbstractType
                     'label'       => 'mautic.plugin.recommender.template',
                     'attr'        => [
                         'class' => 'form-control',
+                        'onchange' => 'Mautic.disabledTemplateAction(window, this)',
                     ],
                     'required'    => true,
                     'constraints' => [
@@ -171,8 +182,58 @@ class RecommenderType extends AbstractType
                     ],
                 ]
             )->addModelTransformer($transformer)
-
         );
+
+        if (!empty($options['update_select'])) {
+            $windowUrl = $this->router->generate(
+                'mautic_recommender_template_action',
+                [
+                    'objectAction' => 'new',
+                    'contentOnly'  => 1,
+                    'updateSelect' => $options['update_select'],
+                ]
+            );
+
+            $builder->add(
+                'newRecommenderButton',
+                'button',
+                [
+                    'attr'  => [
+                        'class'   => 'btn btn-primary btn-nospin',
+                        'onclick' => 'Mautic.loadNewWindow({
+                        "windowUrl": "'.$windowUrl.'"
+                    })',
+                        'icon'    => 'fa fa-plus',
+                    ],
+                    'label' => 'mautic.plugin.recommender.new.template',
+                ]
+            );
+
+            // create button edit email
+            $windowUrlEdit = $this->router->generate(
+                'mautic_recommender_template_action',
+                [
+                    'objectAction' => 'edit',
+                    'objectId'     => 'recommenderId',
+                    'contentOnly'  => 1,
+                    'updateSelect' => $options['update_select'],
+                ]
+            );
+
+            $builder->add(
+                'editRecommenderButton',
+                'button',
+                [
+                    'attr'  => [
+                        'class'    => 'btn btn-primary btn-nospin',
+                        'onclick'  => 'Mautic.loadNewWindow(Mautic.standardRecommenderUrl({"windowUrl": "'.$windowUrlEdit.'","origin":"#'.$options['update_select'].'"}))',
+                        'disabled' => empty($options['data']->getTemplate()),
+                        'icon'     => 'fa fa-edit',
+                    ],
+                    'label' => 'mautic.plugin.recommender.edit.template',
+                ]
+            );
+        }
 
         $choices = [];
         if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE)) {
@@ -245,15 +306,42 @@ class RecommenderType extends AbstractType
         );
 
 
-        $builder->add(
-            'buttons',
-            'form_buttons'
-        );
+
+        if (!empty($options['update_select'])) {
+            $builder->add(
+                'buttons',
+                'form_buttons',
+                [
+                    'apply_text' => false,
+                ]
+            );
+            $builder->add(
+                'updateSelect',
+                'hidden',
+                [
+                    'data'   => $options['update_select'],
+                    'mapped' => false,
+                ]
+            );
+        } else {
+            $builder->add(
+                'buttons',
+                'form_buttons'
+            );
+        }
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['fields'] = $this->fieldChoices;
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefined(['update_select']);
     }
 
     /**

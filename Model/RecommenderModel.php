@@ -86,7 +86,7 @@ class RecommenderModel extends FormModel implements AjaxLookupModelInterface
         if (!empty($action)) {
             $options['action'] = $action;
         }
-
+        $options['update_select'] = 'recommender_template';
         return $formFactory->create('MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderType', $entity, $options);
     }
 

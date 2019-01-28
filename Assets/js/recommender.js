@@ -39,4 +39,37 @@ Mautic.reloadExample = function (el) {
 }
 
 
+/**
+ * Enables/Disables email preview and edit. Can be triggered from campaign or form actions
+ * @param opener
+ * @param origin
+ */
+Mautic.disabledTemplateAction = function(opener, origin) {
+    if (typeof opener == 'undefined') {
+        opener = window;
+    }
+    var recommender = opener.mQuery(origin);
+    if (recommender.length == 0) return;
+    var recommenderId = recommender.val();
+    var disabled = recommenderId === '' || recommenderId === null;
+
+    opener.mQuery('[id$=_editRecommenderButton]').prop('disabled', disabled);
+};
+
+
+
+Mautic.standardRecommenderUrl = function(options) {
+    if (options && options.windowUrl && options.origin) {
+        var url = options.windowUrl;
+        var editEmailKey = '/recommenderTemplate/edit/recommenderId';
+        if (url.indexOf(editEmailKey) > -1) {
+            options.windowUrl = url.replace('recommenderId', mQuery(options.origin).val());
+        }
+    }
+
+    return options;
+};
+
+
+
 

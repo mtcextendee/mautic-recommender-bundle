@@ -108,6 +108,16 @@ class RecommenderTemplateController extends AbstractStandardFormController
         return $this->newStandard();
     }
 
+    protected function getUpdateSelectParams(
+        $updateSelect,
+        $entity,
+        $nameMethod = 'getName',
+        $groupMethod = 'getLanguage'
+    ) {
+        return parent::getUpdateSelectParams($updateSelect, $entity, $nameMethod, '');
+    }
+
+
     /**
      * @param $objectId
      *
@@ -116,7 +126,7 @@ class RecommenderTemplateController extends AbstractStandardFormController
     public function viewAction($objectId)
     {
         //set the page we came from
-        $page = $this->get('session')->get('mautic.recommender.template.page', 1);
+        $page      = $this->get('session')->get('mautic.recommender.template.page', 1);
         $returnUrl = $this->generateUrl('mautic_recommender_template_index', ['page' => $page]);
 
         return $this->postActionRedirect(
@@ -143,6 +153,23 @@ class RecommenderTemplateController extends AbstractStandardFormController
     }
 
     /**
+     * @param array $args
+     * @param       $action
+     *
+     * @return array
+     */
+    protected function getPostActionRedirectArguments(array $args, $action)
+    {
+        switch ($action) {
+            case 'edit':
+                $args['passthroughVars']['closeModal'] = true;
+                break;
+        }
+
+        return $args;
+    }
+
+    /**
      * @param $args
      * @param $action
      *
@@ -157,8 +184,11 @@ class RecommenderTemplateController extends AbstractStandardFormController
             case 'new':
             case 'edit':
                 $viewParameters['properties'] = $apiCommands->callCommand('ListProperties');
-                $viewParameters['settings']   = $this->get('mautic.helper.integration')->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
+                $viewParameters['settings']   = $this->get('mautic.helper.integration')->getIntegrationObject(
+                    'Recommender'
+                )->getIntegrationSettings()->getFeatureSettings();
                 break;
+
         }
         $args['viewParameters'] = array_merge($args['viewParameters'], $viewParameters);
 
@@ -179,13 +209,15 @@ class RecommenderTemplateController extends AbstractStandardFormController
         }
 
         /** @var ApiCommands $apiCommands */
-        $apiCommands = $this->get('mautic.recommender.service.api.commands');
-        $eventLabel = $this->get('mautic.helper.core_parameters')->getParameter ('eventLabel');
-        $integrationSettings = $this->get('mautic.helper.integration')->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
-        $options           = $this->request->request->all();
-        $recommender = $this->request->get('eventDetail');
-        $eventDetail = json_decode(base64_decode($recommender), true);
-        $error = false;
+        $apiCommands         = $this->get('mautic.recommender.service.api.commands');
+        $eventLabel          = $this->get('mautic.helper.core_parameters')->getParameter('eventLabel');
+        $integrationSettings = $this->get('mautic.helper.integration')->getIntegrationObject(
+            'Recommender'
+        )->getIntegrationSettings()->getFeatureSettings();
+        $options             = $this->request->request->all();
+        $recommender         = $this->request->get('eventDetail');
+        $eventDetail         = json_decode(base64_decode($recommender), true);
+        $error               = false;
 
         if (!isset($eventDetail['eventName'])) {
             $error = $this->get('translator')->trans('mautic.plugin.recommender.eventName.not_found', [], 'validators');
@@ -206,16 +238,16 @@ class RecommenderTemplateController extends AbstractStandardFormController
             }
         }
 
-        $response = ['success' => ! (bool) $error,];
+        $response = ['success' => !(bool) $error,];
         if (!$error) {
             $apiCommands->callCommand($eventLabel, $eventDetail);
-        }else{
+        } else {
             $response['message'] = $error;
         }
 
         return new JsonResponse(
             [
-                $response
+                $response,
             ]
         );
     }

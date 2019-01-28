@@ -96,6 +96,8 @@ class TemplateModel extends FormModel implements AjaxLookupModelInterface
         if (!empty($action)) {
             $options['action'] = $action;
         }
+        $options['update_select'] = 'recommender_template';
+
         return $formFactory->create('recommender_templates', $entity, $options);
     }
 

@@ -15,10 +15,10 @@ use Mautic\CoreBundle\Security\Permissions\CorePermissions;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
 class RecommenderTemplatesType extends AbstractType
@@ -135,13 +135,30 @@ class RecommenderTemplatesType extends AbstractType
         );
 
 
-
         $builder->add('isPublished', 'yesno_button_group');
 
-        $builder->add(
-            'buttons',
-            'form_buttons'
-        );
+        if (!empty($options['update_select'])) {
+            $builder->add(
+                'buttons',
+                'form_buttons',
+                [
+                    'apply_text' => false,
+                ]
+            );
+            $builder->add(
+                'updateSelect',
+                'hidden',
+                [
+                    'data'   => $options['update_select'],
+                    'mapped' => false,
+                ]
+            );
+        } else {
+            $builder->add(
+                'buttons',
+                'form_buttons'
+            );
+        }
 
         if (!empty($options['action'])) {
             $builder->setAction($options['action']);
@@ -149,10 +166,11 @@ class RecommenderTemplatesType extends AbstractType
     }
 
     /**
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
+        $resolver->setDefined(['update_select']);
     }
 
     /**
