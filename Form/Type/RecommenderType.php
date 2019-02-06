@@ -104,7 +104,7 @@ class RecommenderType extends AbstractType
         $this->listModel              = $listModel;
         $this->recommenderClientModel = $recommenderClientModel;
         $this->choices                = $choices;
-        $this->router = $router;
+        $this->router                 = $router;
     }
 
     /**
@@ -169,7 +169,7 @@ class RecommenderType extends AbstractType
                     'multiple'    => false,
                     'label'       => 'mautic.plugin.recommender.template',
                     'attr'        => [
-                        'class' => 'form-control',
+                        'class'    => 'form-control',
                         'onchange' => 'Mautic.disabledTemplateAction(window, this)',
                     ],
                     'required'    => true,
@@ -306,29 +306,10 @@ class RecommenderType extends AbstractType
         );
 
 
-
-        if (!empty($options['update_select'])) {
-            $builder->add(
-                'buttons',
-                'form_buttons',
-                [
-                    'apply_text' => false,
-                ]
-            );
-            $builder->add(
-                'updateSelect',
-                'hidden',
-                [
-                    'data'   => $options['update_select'],
-                    'mapped' => false,
-                ]
-            );
-        } else {
-            $builder->add(
-                'buttons',
-                'form_buttons'
-            );
-        }
+        $builder->add(
+            'buttons',
+            'form_buttons'
+        );
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options)
