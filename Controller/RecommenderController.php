@@ -13,17 +13,11 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
 use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
-use Mautic\LeadBundle\Model\LeadModel;
-use MauticPlugin\MauticRecommenderBundle\Entity\EventLogRepository;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\Service\ContactSearch;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class RecommenderController extends AbstractStandardFormController
 {
@@ -207,6 +201,7 @@ class RecommenderController extends AbstractStandardFormController
                 ]
             );
         } catch (\Exception $e) {
+            $this->get('monolog.logger.mautic')->log('error', $e->getMessage());
             return new JsonResponse(
                 [
                     'success' => 0,

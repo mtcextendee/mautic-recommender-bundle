@@ -15,13 +15,10 @@ use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 
 class ListProperties extends AbstractRequest
 {
-
     public function run()
     {
         return $this->getRepo()->findAllArray();
     }
-
-
 
     /**
      * Just return new entity

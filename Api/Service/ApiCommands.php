@@ -30,16 +30,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ApiCommands
 {
     /**
-     * @var array
-     */
-    private $commandOutput = [];
-
-    /**
-     * @var md5
-     */
-    private $cacheId;
-
-    /**
      * @var RecommenderApi
      */
     private $recommenderApi;
@@ -101,20 +91,7 @@ class ApiCommands
      */
     public function callCommand($apiRequest, array $options = [])
     {
-        try {
-            $return = $this->recommenderApi->getClient()->send($apiRequest, $options);
-        } catch (\Exception $e) {
-            $return = false;
-        }
-
-        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_EVENT_SENT)) {
-            $event = new SentEvent($apiRequest, $options, $return);
-            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_EVENT_SENT, $event);
-            $return = $event->getReturn();
-            unset($event);
-        }
-
-        return $return;
+        return $this->recommenderApi->getClient()->send($apiRequest, $options);
     }
 
     /**

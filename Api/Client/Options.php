@@ -72,6 +72,9 @@ class Options
             switch ($entity) {
                 case 'itemId':
                     $addOptions['item'] = $this->clientModel->getRepository()->findOneBy(['itemId' => $options[$entity]]);
+                    if (!$addOptions['item']) {
+                        throw new \Exception('Item ID '.$options['itemId'].' not exist');
+                    }
                     unset($options['itemId']);
                     break;
                 case 'userId':
