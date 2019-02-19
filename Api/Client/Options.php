@@ -61,7 +61,7 @@ class Options
                     if (!isset($entities['userId'])) {
                         $addOptions['lead'] = $this->clientModel->getCurrentContact();
                     }
-                    continue;
+                    break;
             }
 
             // don't convert not exist params
