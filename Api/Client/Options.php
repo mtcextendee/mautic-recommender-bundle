@@ -72,7 +72,7 @@ class Options
             switch ($entity) {
                 case 'itemId':
                     $addOptions['item'] = $this->clientModel->getRepository()->findOneBy(['itemId' => $options[$entity]]);
-                    if (!$addOptions['item']) {
+                    if (empty($addOptions['item'])) {
                         throw new \Exception('Item ID '.$options['itemId'].' not exist');
                     }
                     unset($options['itemId']);
@@ -84,7 +84,6 @@ class Options
                 case 'dateAdded':
                     $addOptions['dateAdded'] = $options[$entity];
                     break;
-
             }
         }
 

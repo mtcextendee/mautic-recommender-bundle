@@ -32,11 +32,6 @@ class RecommenderApi
     protected $logger;
 
     /**
-     * @var CoreParametersHelper
-     */
-    private $coreParametersHelper;
-
-    /**
      * @var IntegrationHelper
      */
     private $integrationHelper;
