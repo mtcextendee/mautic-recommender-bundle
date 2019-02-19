@@ -195,9 +195,8 @@ class RecommenderController extends AbstractStandardFormController
 
         /** @var Processor $eventProcessor */
         $eventProcessor = $this->get('mautic.recommender.events.processor');
-        if ($eventDetail) {
-            $logger->log('error', 'Empty event details from pixel event: '.$recommender );
-            return;
+        if (empty($eventDetail)) {
+            $logger->log('error', 'Empty event details from pixel event: '.$recommender);
         }
 
         try {
@@ -209,13 +208,15 @@ class RecommenderController extends AbstractStandardFormController
             );
         } catch (\Exception $e) {
             $logger->log('error', $e->getMessage());
+            $error = $e->getMessage();
             return new JsonResponse(
                 [
                     'success' => 0,
-                    'error' => $e->getMessage()
+                    'error' => $error
                 ]
             );
         }
+
     }
 
     public function exampleAction($objectId)

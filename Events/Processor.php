@@ -80,13 +80,17 @@ class Processor
     }
 
     /**
-     * @param array $eventDetail
+     * @param array|null $eventDetail
      *
      * @return bool
      * @throws \Exception
      */
-    public function process(array $eventDetail)
+    public function process($eventDetail)
     {
+        if (empty($eventDetail)) {
+            throw new \Exception('Event detail of tracking event cannot be empty');
+        }
+
         if (!$this->security->isAnonymous()) {
             throw new \Exception('Can\'t load for loggedin users');
         }
