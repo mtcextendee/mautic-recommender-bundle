@@ -16,6 +16,7 @@ use Mautic\CoreBundle\Controller\AbstractStandardFormController;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Service\ContactSearch;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
+use Monolog\Logger;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -187,11 +188,17 @@ class RecommenderController extends AbstractStandardFormController
      */
     public function sendAction()
     {
+        /** @var Logger $logger */
+        $logger = $this->get('monolog.logger.mautic');
         $recommender         = $this->request->get('eventDetail');
         $eventDetail         = json_decode(base64_decode($recommender), true);
 
         /** @var Processor $eventProcessor */
         $eventProcessor = $this->get('mautic.recommender.events.processor');
+        if ($eventDetail) {
+            $logger->log('error', 'Empty event details from pixel event: '.$recommender );
+            return;
+        }
 
         try {
             $eventProcessor->process($eventDetail);
@@ -201,7 +208,7 @@ class RecommenderController extends AbstractStandardFormController
                 ]
             );
         } catch (\Exception $e) {
-            $this->get('monolog.logger.mautic')->log('error', $e->getMessage());
+            $logger->log('error', $e->getMessage());
             return new JsonResponse(
                 [
                     'success' => 0,
