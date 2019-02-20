@@ -64,6 +64,11 @@ class Options
                     break;
             }
 
+            if ($entity == 'itemId' && !isset($options[$entity])) {
+                //throw new \Exception('Item ID '.$options['itemId'].' not exist');
+                die();
+            }
+
             // don't convert not exist params
             if (!isset($options[$entity])) {
                 continue;
@@ -72,9 +77,6 @@ class Options
             switch ($entity) {
                 case 'itemId':
                     $addOptions['item'] = $this->clientModel->getRepository()->findOneBy(['itemId' => $options[$entity]]);
-                    if (empty($addOptions['item'])) {
-                        throw new \Exception('Item ID '.$options['itemId'].' not exist');
-                    }
                     unset($options['itemId']);
                     break;
                 case 'userId':
