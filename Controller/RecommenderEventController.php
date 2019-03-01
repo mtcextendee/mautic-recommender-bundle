@@ -98,40 +98,13 @@ class RecommenderEventController extends AbstractStandardFormController
         return $this->indexStandard($page);
     }
 
-    const NUM = 100;
-    const PROBABILITY_PURCHASED = 0.1;
-
     /**
      * @return \Mautic\CoreBundle\Controller\Response|\Symfony\Component\HttpFoundation\JsonResponse
      */
     public function newAction()
     {
-# Prepare requests for setting a catalog of computers
-        $requests = array();
-        for($i=0; $i<self::NUM; $i++)
-        {
-            $itemId = "computer-{$i}";
-            $r = new Reqs\SetItemValues(
-                $itemId,
-                //values:
-                [
-                    'price' => rand(15000, 25000),
-                    'num-cores' => rand(1, 8),
-                    'description' => 'Great computer',
-                    'in_stock_from' => new DateTime('NOW'),
-                    'image' => "http://examplesite.com/products/{$itemId}.jpg"
-                ],
-                //optional parameters:
-                ['cascadeCreate' => true] // Use cascadeCreate for creating item
-            // with given itemId, if it doesn't exist]
-            );
-            array_push($requests, $r);
-        }
-
         return $this->newStandard();
     }
-
-
 
     /**
      * @param $objectId
