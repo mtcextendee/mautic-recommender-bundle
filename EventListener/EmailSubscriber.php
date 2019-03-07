@@ -85,11 +85,12 @@ class EmailSubscriber extends CommonSubscriber
      */
     public function onEmailGenerate(EmailSendEvent $event)
     {
-        if ($event->getEmail() && $event->getEmail()->getId() && !empty($event->getLead()['id'])) {
+        if (!empty($event->getLead()['id'])) {
             $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
             $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
             $event->setContent($this->recommenderTokenReplacer->getReplacedContent());
-            $event->setSubject($this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject()));
+            // Cause empty subject
+            // $event->setSubject($this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject()));
         }
     }
 }
