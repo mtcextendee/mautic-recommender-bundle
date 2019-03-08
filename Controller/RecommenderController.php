@@ -190,13 +190,14 @@ class RecommenderController extends AbstractStandardFormController
     {
         /** @var Logger $logger */
         $logger = $this->get('monolog.logger.mautic');
-        $recommender         = $this->request->get('eventDetail');
-        $eventDetail         = json_decode(base64_decode($recommender), true);
+        $recommender = $this->request->get('eventDetail');
+        $eventDetail = json_decode(base64_decode($recommender), true);
+        $params = $this->request->get('params');
 
         /** @var Processor $eventProcessor */
         $eventProcessor = $this->get('mautic.recommender.events.processor');
         if (empty($eventDetail)) {
-            $logger->log('error', 'Empty event details from pixel event: '.$recommender);
+            $logger->log('error', 'Empty event details from pixel event: '.$recommender.' with params '.$params);
         }
 
         try {
@@ -207,7 +208,7 @@ class RecommenderController extends AbstractStandardFormController
                 ]
             );
         } catch (\Exception $e) {
-            $logger->log('error', $e->getMessage());
+            $logger->log('error', $e->getMessage().' with params '.$params);
             $error = $e->getMessage();
             return new JsonResponse(
                 [

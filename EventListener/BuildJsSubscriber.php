@@ -79,6 +79,7 @@ class BuildJsSubscriber extends CommonSubscriber
                             eventParams[attr] = event[2][attr];
                         }
                         parms['eventDetail'] = btoa(JSON.stringify(eventParams));
+                        parms['params'] = btoa(unescape(encodeURIComponent(JSON.stringify(params.params))));
                     }
                     MauticJS.makeCORSRequest('POST', '{$url}', parms, 
                         function(response) {

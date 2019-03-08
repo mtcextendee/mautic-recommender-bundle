@@ -78,7 +78,9 @@ class EventLog
         $builder->createManyToOne(
             'lead',
             'Mautic\LeadBundle\Entity\Lead'
-        )->addJoinColumn('lead_id', 'id', true, false, 'CASCADE')->build();
+        )->addJoinColumn('lead_id', 'id', true, false, 'SET NULL')
+            ->cascadePersist()
+            ->build();
     }
 
     /**
