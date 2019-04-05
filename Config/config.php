@@ -458,7 +458,7 @@ return [
                 ],
                 'mautic.plugin.recommender.event' => [
                     'route'    => 'mautic_recommender_event_index',
-                    'access'   => ['recommender:recommenderEvent:viewown', 'recommender:recommenderEvent:viewother'],
+                    'access'   => ['recommender:recommender:viewown', 'recommender:recommender:viewother'],
                     'checks'   => [
                         'integration' => [
                             'Recommender' => [
