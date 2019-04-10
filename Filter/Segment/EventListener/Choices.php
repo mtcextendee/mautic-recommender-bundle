@@ -16,6 +16,7 @@ use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use Symfony\Component\Translation\TranslatorInterface;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class Choices
 {
@@ -37,18 +38,28 @@ class Choices
     private $translator;
 
     /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
      * SegmentChoices constructor.
      *
      * @param Fields              $fields
      * @param ListModel           $listModel
      * @param TranslatorInterface $translator
      */
-    public function __construct(Fields $fields, ListModel $listModel, TranslatorInterface $translator)
-    {
+    public function __construct(
+        Fields $fields, 
+        ListModel $listModel, 
+        TranslatorInterface $translator,
+        IntegrationHelper $integrationHelper
+    ) {
 
         $this->fields = $fields;
         $this->listModel = $listModel;
         $this->translator = $translator;
+        $this->integrationHelper = $integrationHelper;    
     }
 
     /**
@@ -57,6 +68,11 @@ class Choices
      */
     public function addChoices(LeadListFiltersChoicesEvent $event, $object)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+        
         $choices = $this->getChoices();
         foreach (self::ALLOWED_TABLES as $table) {
             foreach ($choices[$table] as $key=>$options) {

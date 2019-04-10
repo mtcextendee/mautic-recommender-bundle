@@ -19,6 +19,7 @@ use Mautic\PageBundle\PageEvents;
 use Mautic\LeadBundle\LeadEvent;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class PageSubscriber.
@@ -35,6 +36,10 @@ class PageSubscriber extends CommonSubscriber
      */
     private $contactTracker;
 
+    /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
 
     /**
      * PageSubscriber constructor.
@@ -44,10 +49,12 @@ class PageSubscriber extends CommonSubscriber
      */
     public function __construct(
         RecommenderTokenReplacer $recommenderTokenReplacer,
-        ContactTracker $contactTracker
+        ContactTracker $contactTracker,
+        IntegrationHelper $integrationHelper        
     ) {
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
         $this->contactTracker = $contactTracker;
+        $this->integrationHelper = $integrationHelper;    
     }
 
     /**
@@ -68,6 +75,11 @@ class PageSubscriber extends CommonSubscriber
      */
     public function onPageBuild(Events\PageBuilderEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         if ($event->tokensRequested(RecommenderHelper::$recommenderRegex)) {
             $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
             $event->addTokensFromHelper($tokenHelper, RecommenderHelper::$recommenderRegex, 'name', 'id', true);
@@ -79,6 +91,11 @@ class PageSubscriber extends CommonSubscriber
      */
     public function onPageDisplay(Events\PageDisplayEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+        
         $lead    = $this->contactTracker->getContact();
         $leadId  = ($lead) ? $lead->getId() : null;
         if ($leadId && $event->getPage()) {
