@@ -1,5 +1,5 @@
 {
-  "name": "kuzmany/mautic-recommender-bundle",
+  "name": "d-code-ltd/mautic-recommender-bundle",
   "type": "mautic-plugin",
   "require": {
     "mautic/composer-plugin": "^1.0",
