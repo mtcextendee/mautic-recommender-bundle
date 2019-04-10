@@ -14,7 +14,8 @@ return [
                 'arguments' => [
                     'mautic.recommender.model.client',
                     'mautic.recommender.filter.recommender',
-                    'mautic.recommender.filter.factory'
+                    'mautic.recommender.filter.factory',
+                    'mautic.helper.integration'
                 ]
             ],
 
@@ -24,21 +25,24 @@ return [
                 'arguments' => [
                     'mautic.recommender.filter.factory',
                     'mautic.recommender.filter.fields.recommender',
-                    'mautic.recommender.segment.decoration'
+                    'mautic.recommender.segment.decoration',
+                    'mautic.helper.integration'
                 ],
             ],
 
             'mautic.recommender.js.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
                 'arguments' => [
-                    'mautic.helper.core_parameters'
+                    'mautic.helper.core_parameters',
+                    'mautic.helper.integration'
                 ],
             ],
             'mautic.recommender.pagebundle.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\PageSubscriber::class,
                 'arguments' => [
                     'mautic.recommender.service.replacer',
-                    'mautic.tracker.contact'
+                    'mautic.tracker.contact',
+                    'mautic.helper.integration'
                 ],
             ],
             'mautic.recommender.token.replacer.subscriber'  => [
@@ -47,6 +51,7 @@ return [
                     'mautic.recommender.service.replacer',
                     'mautic.dynamicContent.model.dynamicContent',
                     'mautic.focus.model.focus',
+                    'mautic.helper.integration'
                 ],
             ],
             'mautic.recommender.emailbundle.subscriber' => [
@@ -54,6 +59,7 @@ return [
                 'arguments' => [
                     'mautic.recommender.helper',
                     'mautic.recommender.service.replacer',
+                    'mautic.helper.integration'
                 ],
             ],
         ],

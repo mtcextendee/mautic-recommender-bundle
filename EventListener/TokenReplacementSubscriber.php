@@ -19,6 +19,7 @@ use Mautic\NotificationBundle\NotificationEvents;
 use MauticPlugin\MauticFocusBundle\FocusEvents;
 use MauticPlugin\MauticFocusBundle\Model\FocusModel;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class TokenReplacementSubscriber extends CommonSubscriber
 {
@@ -38,6 +39,10 @@ class TokenReplacementSubscriber extends CommonSubscriber
      */
     private $focusModel;
 
+    /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
 
     /**
      * @param RecommenderTokenReplacer $recommenderTokenReplacer
@@ -47,11 +52,13 @@ class TokenReplacementSubscriber extends CommonSubscriber
     public function __construct(
         RecommenderTokenReplacer $recommenderTokenReplacer,
         DynamicContentModel $dynamicContentModel,
-        FocusModel $focusModel
+        FocusModel $focusModel,
+        IntegrationHelper $integrationHelper
     ) {
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
         $this->dynamicContentModel      = $dynamicContentModel;
         $this->focusModel = $focusModel;
+        $this->integrationHelper = $integrationHelper;    
     }
 
     /**
@@ -71,6 +78,11 @@ class TokenReplacementSubscriber extends CommonSubscriber
      */
     public function onDynamicContentTokenReplacement(TokenReplacementEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }        
+
         $clickthrough = $event->getClickthrough();
         $leadId       = $clickthrough['lead'];
         $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($leadId);
@@ -82,6 +94,11 @@ class TokenReplacementSubscriber extends CommonSubscriber
      */
     public function onFocusTokenReplacement(TokenReplacementEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+        
         $clickthrough = $event->getClickthrough();
         if (empty($clickthrough['focus_id'])) {
             return;
