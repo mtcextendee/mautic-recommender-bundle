@@ -88,8 +88,12 @@ class EmailSubscriber extends CommonSubscriber
         if ($event->getEmail() && $event->getEmail()->getId() && !empty($event->getLead()['id'])) {
             $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
             $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
-            $event->setContent($this->recommenderTokenReplacer->getReplacedContent());
-            $event->setSubject($this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject()));
+            if ($content = $this->recommenderTokenReplacer->getReplacedContent()){
+                $event->setContent($content);
+            }
+            if ($subject = $this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject())){
+                $event->setSubject($subject);
+            }
         }
     }
 }
