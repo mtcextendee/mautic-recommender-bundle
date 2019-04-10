@@ -19,6 +19,7 @@ use Mautic\LeadBundle\LeadEvents;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class FiltersSubscriber extends CommonSubscriber
 {
@@ -39,18 +40,28 @@ class FiltersSubscriber extends CommonSubscriber
     private $decorator;
 
     /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
      * FiltersSubscriber constructor.
      *
      * @param FilterFactory $segmentFilterFactory
      * @param Choices       $choices
      * @param Decorator     $decorator
      */
-    public function __construct(FilterFactory $segmentFilterFactory, Choices $choices, Decorator $decorator)
-    {
+    public function __construct(
+        FilterFactory $segmentFilterFactory, 
+        Choices $choices, 
+        Decorator $decorator,
+        IntegrationHelper $integrationHelper
+    ) {
 
         $this->filterFactory = $segmentFilterFactory;
         $this->choices       = $choices;
         $this->decorator     = $decorator;
+        $this->integrationHelper = $integrationHelper;    
     }
 
     /**
@@ -74,6 +85,11 @@ class FiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersFiltering(LeadListFilteringEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
         $qb     = $event->getQueryBuilder();
         $filter = $event->getDetails();
         if (false !== strpos($filter['object'], 'recommender')) {
@@ -89,6 +105,11 @@ class FiltersSubscriber extends CommonSubscriber
      */
     public function onListFiltersGenerate(LeadListFiltersChoicesEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+        
         if (in_array($this->request->attributes->get('_route'), ['mautic_segment_action', 'mautic_recommender_action'])) {
             $this->choices->addChoicesToEvent($event, 'recommender_event');
         }

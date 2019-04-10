@@ -16,6 +16,7 @@ use Mautic\CoreBundle\Event\BuildJsEvent;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class BuildJsSubscriber.
@@ -29,14 +30,21 @@ class BuildJsSubscriber extends CommonSubscriber
     private $coreParametersHelper;
 
     /**
+     * @var IntegrationHelper
+     */
+    protected $integrationHelper;
+
+    /**
      * BuildJsSubscriber constructor.
      *
      * @param CoreParametersHelper $coreParametersHelper
      */
-    public function __construct(CoreParametersHelper $coreParametersHelper)
-    {
-
+    public function __construct(
+        CoreParametersHelper $coreParametersHelper, 
+        IntegrationHelper $integrationHelper
+    ) {
         $this->coreParametersHelper = $coreParametersHelper;
+        $this->integrationHelper = $integrationHelper;    
     }
 
     /**
@@ -56,6 +64,12 @@ class BuildJsSubscriber extends CommonSubscriber
      */
     public function onBuildJsTop(BuildJsEvent $event)
     {
+        $integration = $this->integrationHelper->getIntegrationObject('Recommender');
+        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+            return;
+        }
+
+        
         $url = $this->router->generate('mautic_recommender_send_event', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
         //basic js
