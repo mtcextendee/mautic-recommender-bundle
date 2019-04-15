@@ -48,6 +48,33 @@ class RecommenderEventType extends AbstractType
         );
 
         $builder->add(
+            'weight',
+            NumberType::class,
+            [
+                'label'       => 'mautic.plugin.recommender.form.event.weight',
+                'label_attr'  => ['class' => 'control-label'],
+                'attr'        => [
+                    'class'   => 'form-control',
+                ],
+                'required'    => true,
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'message' => 'mautic.core.value.required',
+                        ]
+                    ),
+                    new Range(
+                        [
+                            'min' => 0,
+                        ]
+                    ),
+                ],
+            ]
+        );
+
+
+
+        $builder->add(
             'buttons',
             'form_buttons'
         );
