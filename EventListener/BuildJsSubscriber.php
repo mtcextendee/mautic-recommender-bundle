@@ -69,51 +69,60 @@ class BuildJsSubscriber extends CommonSubscriber
             return;
         }
 
-        
         $url = $this->router->generate('mautic_recommender_send_event', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
         //basic js
         $js = <<<JS
         
-       MauticJS.recommenderEvent = function (params) {
-        parms = {};
+    MauticJS.recommenderEvent = function (params) {
+        var requestParams = {};
+        var queue = [];
         var eventParams = {};
         
-          if (typeof MauticJS.getInput === 'function') {
+        if (!params){
+            if (typeof MauticJS.getInput === 'function') {
                 queue = MauticJS.getInput('send', '{$eventLabel}');
             } else {
                 return false;
             }
-            if (queue) {
-                for (var i=0; i<queue.length; i++) {
-                    var event = queue[i];
+        }else{
+            queue.push(params);
+        }
+        
+        if (queue) {
+            for (var i=0; i<queue.length; i++) {
+                var event = queue[i];
+                //Even further ensure event context
+                if (event[0] == 'send' && event[1] == '{$eventLabel}'){
                     // Merge user defined tracking pixel parameters.
                     if (typeof event[2] === 'object') {
                         for (var attr in event[2]) {
                             eventParams[attr] = event[2][attr];
                         }
-                        parms['eventDetail'] = btoa(JSON.stringify(eventParams));
-                        parms['params'] = btoa(unescape(encodeURIComponent(JSON.stringify(params.params))));
+                        requestParams['eventDetail'] = btoa(JSON.stringify(eventParams));
+                        requestParams['params'] = btoa(unescape(encodeURIComponent(JSON.stringify(event))));
                     }
-                    MauticJS.makeCORSRequest('POST', '{$url}', parms, 
+                    MauticJS.makeCORSRequest('POST', '{$url}', requestParams, 
                         function(response) {
                         },
                         function() {
                             
                     });
-        
-       }
-                  }
+                }
             }
-            
-              // Process pageviews after new are added
+        }
+    }
+    
+    // Process events right after mtc.js loaded
+    MauticJS.recommenderEvent();
+
+    // Process events after new are added
     document.addEventListener('eventAddedToMauticQueue', function(e) {
       if(e.detail[0] == 'send' && e.detail[1] == '{$eventLabel}'){
-         MauticJS.recommenderEvent();
+         MauticJS.recommenderEvent(e.detail);
       }
     });
-       
-       MauticJS.onFirstEventDelivery(MauticJS.recommenderEvent);
+        
 JS;
         $event->appendJs($js, 'RecommenderTemplate');
     }
