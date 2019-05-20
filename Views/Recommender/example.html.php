@@ -33,9 +33,22 @@
 
         <div class="col-xs-4"><?php echo $view['form']->form($form); ?></div>
         <div class="col-xs-12">
-            <h4>SQL query:</h4>
+
             <hr>
-            <textarea style="width:100%" rows="5" readonly><?php echo $sqlQuery; ?></textarea>
+            <div class="collapse" id="recommender-sql-query">
+                <textarea style="width:100%" rows="5" readonly><?php echo $sqlQuery; ?></textarea>
+            </div>
+            <!-- lead detail collapseable toggler -->
+            <div class="hr-expand nm">
+                <span data-toggle="tooltip" title="<?php echo $view['translator']->trans('mautic.plugin.recommender.form.example.sqlquery.title'); ?>">
+                    <a href="javascript:void(0)" class="arrow text-muted collapsed" data-toggle="collapse" data-target="#recommender-sql-query">
+                       <span class="caret"></span>
+                       <?php echo $view['translator']->trans('mautic.plugin.recommender.form.example.sqlquery'); ?>
+                    </a>
+                </span>
+            </div>
+            <!--/ lead detail collapseable toggler -->
+
             <br>
             <br>
             <?php if ($contactId): ?>
