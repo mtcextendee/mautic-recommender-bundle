@@ -71,7 +71,7 @@ class RecommenderOrderBy
                 $tableAlias = $queryBuilder->getTableAlias($tableFromDecorator);
 
                 if (!$tableAlias) {
-                    $tableAlias = $this->generateRandomParameterName();
+                    $tableAlias = $this->randomParameterName->generateRandomParameterName();
                     $queryBuilder->leftJoin('l', $tableFromDecorator, $tableAlias, $tableAlias.'.'.idFromDecorator.' = l.event_id');
                 }
 
