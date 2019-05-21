@@ -235,6 +235,7 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderOrderBy::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
+                    'mautic.lead.model.random_parameter_name'
                 ]
             ],
             'mautic.recommender.query.builder.recommender.filter'  => [

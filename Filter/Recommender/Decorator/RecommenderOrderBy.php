@@ -12,6 +12,8 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator;
 
 
+use Mautic\LeadBundle\Segment\RandomParameterName;
+
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Filter\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder;
@@ -30,16 +32,20 @@ class RecommenderOrderBy
      */
     private $fields;
 
+    /** @var RandomParameterName */
+    private $randomParameterName;
 
     /**
      * SegmentChoices constructor.
      *
      * @param Fields $fields
+     * @param RandomParameterName $randomParameterName
      */
-    public function __construct(Fields $fields)
+    public function __construct(Fields $fields, RandomParameterName $randomParameterName)
     {
 
         $this->fields = $fields;
+        $this->randomParameterName = $randomParameterName;
     }
 
     public function getDictionary(QueryBuilder $queryBuilder, $column)
@@ -53,6 +59,7 @@ class RecommenderOrderBy
                     continue;
                 }
                 $tableFromDecorator = isset($field['decorator']['recommender']['foreign_table']) ? $field['decorator']['recommender']['foreign_table'] : $table;
+                $idFromDecorator = isset($field['decorator']['recommender']['foreign_identificator']) ? $field['decorator']['recommender']['foreign_identificator'] : 'id';
                 $keyFromDecorator = isset($field['decorator']['recommender']['key']) ? $field['decorator']['recommender']['key'] : $key;
 
                 // Order By from decorator
@@ -62,6 +69,11 @@ class RecommenderOrderBy
 
                 //Order by default by column
                 $tableAlias = $queryBuilder->getTableAlias($tableFromDecorator);
+
+                if (!$tableAlias) {
+                    $tableAlias = $this->generateRandomParameterName();
+                    $queryBuilder->leftJoin('l', $tableFromDecorator, $tableAlias, $tableAlias.'.'.idFromDecorator.' = l.event_id');
+                }
 
                 return $tableAlias.'.'.$keyFromDecorator;
             }
