@@ -72,7 +72,7 @@ class RecommenderOrderBy
 
                 if (!$tableAlias) {
                     $tableAlias = $this->randomParameterName->generateRandomParameterName();
-                    $queryBuilder->leftJoin('l', $tableFromDecorator, $tableAlias, $tableAlias.'.'.idFromDecorator.' = l.event_id');
+                    $queryBuilder->leftJoin('l', $tableFromDecorator, $tableAlias, $tableAlias.'.'.$idFromDecorator.' = l.event_id');
                 }
 
                 return $tableAlias.'.'.$keyFromDecorator;
