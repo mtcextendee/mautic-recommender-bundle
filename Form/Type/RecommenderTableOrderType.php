@@ -15,8 +15,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+
 
 class RecommenderTableOrderType extends AbstractType
 {
@@ -78,11 +81,55 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
-        $currentFunction = $options['function'] ?? null;
+        $builder->get('column')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function(FormEvent $event) {
+                $form = $event->getForm();
+                $this->setupAvailableFunctionChoices(
+                    $form->getParent(),
+                    $form->getData()
+                );
+            }
+        );
+        
+
+        
+    }
+
+    public function getAvabilableFunctionChoices($column){
+        $choices = [
+            ''       => $this->translator->trans('mautic.core.none'),
+            'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
+            'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
+            'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
+            'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
+            'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
+        ];
+
+        switch ($column){
+            case "weight":
+                unset($choices['']);
+            break;
+        }
+       
+        return $choices;
+    }
+
+    public function setupAvailableFunctionChoices(FormInterface $form, ?string $column)
+    {
+        if (null === $column) {
+            $form->remove('function');
+            return;
+        }
+        $choices = $this->getAvabilableFunctionChoices($column);
+        if (null === $choices) {
+            $form->remove('function');
+            return;
+        }
 
         // function
         $builder->add('function', 'choice', [
-            'choices' => $this->getAvailableFunctionChoices($currentFunction),
+            'choices'     => $choices,
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
@@ -93,26 +140,6 @@ class RecommenderTableOrderType extends AbstractType
                 'class' => 'form-control not-chosen',
             ],
         ]);
-    }
-
-    public function getAvailableFunctionChoices($currentColumn)
-    {
-        $choices = [
-            ''       => $this->translator->trans('mautic.core.none'),
-            'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
-            'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
-            'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
-            'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
-            'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
-        ];
-
-        switch ($currentColumn){
-            case "weight":
-                unset($choices['']);
-            break;
-        }
-       
-        return $choices;
     }
 
 
