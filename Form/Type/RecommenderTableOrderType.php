@@ -86,20 +86,20 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
-        if ($function){
-            $builder->add('function', 'choice', [
-                'choices'     => $choices,
-                'expanded'    => false,
-                'multiple'    => false,
-                'label'       => 'mautic.report.function',
-                'label_attr'  => ['class' => 'control-label'],            
-                'empty_value' => false,
-                'required'    => true,
-                'attr'        => [
-                    'class' => 'form-control not-chosen',
-                ],
-            ]);
-        }
+        
+        $builder->add('function', 'choice', [
+            'choices'     => $this->getAvabilableFunctionChoices(),
+            'expanded'    => false,
+            'multiple'    => false,
+            'label'       => 'mautic.report.function',
+            'label_attr'  => ['class' => 'control-label'],            
+            'empty_value' => false,
+            'required'    => true,
+            'attr'        => [
+                'class' => 'form-control not-chosen',
+            ],
+        ]);
+        
 
 
         $builder->get('column')->addEventListener(
