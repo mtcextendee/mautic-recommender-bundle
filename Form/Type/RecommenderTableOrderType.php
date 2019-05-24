@@ -49,9 +49,7 @@ class RecommenderTableOrderType extends AbstractType
         //$options['fields']['weight']
         // Build a list of columns
 
-        $data = $options['data'] ?? null;
-        $isEdit = $data && $data->getId();
-        $function = $data ? $data->getFunction() : null;
+        $column = $options['data']['column'] ?? null;        
 
 
         $fields = $options['fields'];
@@ -89,7 +87,7 @@ class RecommenderTableOrderType extends AbstractType
         
         
         $builder->add('function', 'choice', [
-            'choices'     => $this->getAvabilableFunctionChoices($function??null),
+            'choices'     => $this->getAvabilableFunctionChoices($column??null),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
