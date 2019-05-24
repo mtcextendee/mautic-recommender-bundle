@@ -117,7 +117,7 @@ class RecommenderTableOrderType extends AbstractType
         
     }
 
-    public function getAvabilableFunctionChoices($column){
+    public function getAvabilableFunctionChoices($column=null){
         $choices = [
             ''       => $this->translator->trans('mautic.core.none'),
             'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
