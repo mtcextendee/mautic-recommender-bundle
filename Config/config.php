@@ -429,6 +429,10 @@ return [
                 'path'       => '/recommender/{objectAction}/{objectId}',
                 'controller' => 'MauticRecommenderBundle:Recommender:execute',
             ],
+            'mautic_recommender_get_available_functions' => [
+                'path'       => '/recommender/getfunctions',
+                'controller' => 'MauticRecommenderBundle:Ajax:listAvailableFunctions',
+            ],  
         ],        
         'public' => [
             'mautic_recommender_generate_template' => [
@@ -439,13 +443,7 @@ return [
                 'path'       => '/recommender/event/send',
                 'controller' => 'MauticRecommenderBundle:Recommender:send',
             ],
-        ],
-        'ajax' => [
-            'mautic_recommender_get_available_functions' => [
-                'path'       => '/recommender/getfunctions/',
-                'controller' => 'MauticRecommenderBundle:listAvailableFunctions',
-            ],            
-        ],
+        ],        
         'api'    => [
             'mautic_recommender_api' => [
                 'path'       => '/recommender/{component}',

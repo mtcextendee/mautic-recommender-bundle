@@ -55,8 +55,6 @@ class AjaxController extends CommonAjaxController
         return $this->sendJsonResponse($data);
     }
 
-
-
     public function listAvailableFunctionsAction(Request $request)
     {
         $column = $request->request->get('column');
