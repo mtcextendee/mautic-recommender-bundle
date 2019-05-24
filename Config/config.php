@@ -421,25 +421,18 @@ return [
                 'path'       => '/recommenderEvent/{objectAction}/{objectId}',
                 'controller' => 'MauticRecommenderBundle:RecommenderEvent:execute',
             ],
+            'mautic_recommender_get_available_functions' => [
+                'path'       => '/recommender/getfunctions',
+                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',                
+            ],
             'mautic_recommender_index'  => [
                 'path'       => '/recommender/{page}',
-                //'controller' => 'MauticRecommenderBundle:Recommender:index',
-                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
+                'controller' => 'MauticRecommenderBundle:Recommender:index',                
             ],
             'mautic_recommender_action' => [
                 'path'       => '/recommender/{objectAction}/{objectId}',
                 'controller' => 'MauticRecommenderBundle:Recommender:execute',
-            ],
-            'mautic_recommender_get_available_functions' => [
-                'path'       => '/recommender/getfunctions/{valami}',
-                //'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
-                'controller' => 'MauticRecommenderBundle:Recommender:index',
-            ],
-            'mautic_recommender_get_available_functions2' => [
-                'path'       => '/recommender/getfunctions/{valami}',
-                //'controller' => 'MauticRecommenderBundle:Recommender:list',
-                'controller' => 'MauticRecommenderBundle:Recommender:index',
-            ],   
+            ],                
         ],        
         'public' => [
             'mautic_recommender_generate_template' => [

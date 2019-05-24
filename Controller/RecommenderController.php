@@ -227,7 +227,7 @@ class RecommenderController extends AbstractStandardFormController
     {
         return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
     }  
-    
+   /* 
     public function listAction()
     {
         $column = $this->request->get('column');
@@ -243,5 +243,6 @@ class RecommenderController extends AbstractStandardFormController
         );
 
         return $this->sendJsonResponse($data);
-    }         
+    }    
+    */     
 }
