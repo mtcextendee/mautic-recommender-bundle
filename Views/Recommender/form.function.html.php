@@ -1,1 +1,1 @@
-<?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
+<?php echo $view['form']->row($form['function']); ?>
