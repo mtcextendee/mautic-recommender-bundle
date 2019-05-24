@@ -18,6 +18,8 @@ use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+use MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTableOrderType;
+
 class AjaxController extends CommonAjaxController
 {
 
@@ -59,7 +61,7 @@ class AjaxController extends CommonAjaxController
     {
         $column = $request->request->get('column');
         //$tableOrderForm = $this->get();
-        $form = $this->createForm('mautic.form.type.recommender.table_order', array('data' => $column));
+        $form = $this->createForm(RecommenderTableOrderType::class, array('data' => $column));
         //return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
         
         $data['content'] = $this->get('mautic.helper.templating')->getTemplating()->render(
