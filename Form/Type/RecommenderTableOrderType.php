@@ -78,26 +78,43 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
+        $currentFunction = $options['function'] ?? null;
+
         // function
         $builder->add('function', 'choice', [
-            'choices' => [
-                'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
-                'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
-                'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
-                'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
-                'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
-            ],
+            'choices' => $this->getAvailableFunctionChoices($currentFunction),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
-            'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => 'mautic.core.none',
-            'required'    => false,
+            'label_attr'  => ['class' => 'control-label'],            
+            'empty_value' => false,
+            'required'    => true,
             'attr'        => [
                 'class' => 'form-control not-chosen',
             ],
         ]);
     }
+
+    public function getAvailableFunctionChoices($currentColumn)
+    {
+        $choices = [
+            ''       => $this->translator->trans('mautic.core.none'),
+            'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
+            'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
+            'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
+            'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
+            'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
+        ];
+
+        switch ($currentColumn){
+            case "weight":
+                unset($choices['']);
+            break;
+        }
+       
+        return $choices;
+    }
+
 
     /**
      * @param OptionsResolver $resolver
