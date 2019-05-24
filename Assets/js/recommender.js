@@ -21,6 +21,7 @@ mQuery(document).on('change', '.recommender-preview input:radio', function(){
 });
 
 Query(document).on('change', '#recommender_tableOrder_column', function(){
+    console.log('sdfsdfsdf');
     Mautic.ajaxActionRequest('plugin:recommender:listavailablefunctions', {column: mQuery(this).value()}, function (response) {
         console.log(response);
         if(response.content) {
