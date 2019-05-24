@@ -431,11 +431,13 @@ return [
             ],
             'mautic_recommender_get_available_functions' => [
                 'path'       => '/recommender/getfunctions',
-                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
+                //'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
+                'controller' => 'MauticRecommenderBundle:Recommender:index',
             ],
             'mautic_recommender_get_available_functions2' => [
                 'path'       => '/recommender/getfunctions',
-                'controller' => 'MauticRecommenderBundle:Recommender:list',
+                //'controller' => 'MauticRecommenderBundle:Recommender:list',
+                'controller' => 'MauticRecommenderBundle:Recommender:index',
             ],   
         ],        
         'public' => [
