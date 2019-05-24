@@ -149,7 +149,7 @@ class RecommenderTableOrderType extends AbstractType
         }
 
         // function
-        $builder->add('function', 'choice', [
+        $form->add('function', 'choice', [
             'choices'     => $choices,
             'expanded'    => false,
             'multiple'    => false,
