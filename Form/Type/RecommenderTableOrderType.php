@@ -87,8 +87,9 @@ class RecommenderTableOrderType extends AbstractType
         ]);
 
         
+        
         $builder->add('function', 'choice', [
-            'choices'     => $this->getAvabilableFunctionChoices(),
+            'choices'     => $this->getAvabilableFunctionChoices($function??null),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
@@ -99,6 +100,7 @@ class RecommenderTableOrderType extends AbstractType
                 'class' => 'form-control not-chosen',
             ],
         ]);
+        
         
 
 
