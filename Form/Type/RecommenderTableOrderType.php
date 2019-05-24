@@ -103,12 +103,15 @@ class RecommenderTableOrderType extends AbstractType
 
 
         $builder->get('column')->addEventListener(
-            FormEvents::POST_SUBMIT,
+            FormEvents::PRE_SET_DATA,
             function(FormEvent $event) {
                 $form = $event->getForm();
+                $column = $event->getData();
+                
+                    
                 $this->setupAvailableFunctionChoices(
-                    $form->getParent(),
-                    $form->getData()
+                    $form,
+                    $column
                 );
             }
         );
