@@ -108,13 +108,13 @@ class RecommenderTableOrderType extends AbstractType
                 $form = $event->getForm();
                 $column = $event->getData();
                 
-                    
-                $this->setupAvailableFunctionChoices(
-                    $form,
-                    $column
-                );
-            }
-        );
+
+                    $this->setupAvailableFunctionChoices(
+                        $form->getParent(),
+                        $column
+                    );
+                }
+            );
         
 
         
