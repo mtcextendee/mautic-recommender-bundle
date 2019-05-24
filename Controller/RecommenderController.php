@@ -226,5 +226,5 @@ class RecommenderController extends AbstractStandardFormController
     public function exampleAction($objectId)
     {
         return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
-    }
+    }    
 }

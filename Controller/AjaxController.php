@@ -54,4 +54,23 @@ class AjaxController extends CommonAjaxController
 
         return $this->sendJsonResponse($data);
     }
+
+
+
+    public function listAvailableFunctionsAction(Request $request)
+    {
+        $column = $request->request->get('column');
+        //$tableOrderForm = $this->get();
+        $form = $this->createForm('mautic.form.type.recommender.table_order', array('data' => $column));
+        //return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
+        
+        $data['content'] = $this->get('mautic.helper.templating')->getTemplating()->render(
+            'MauticRecommenderBundle:Recommender:form.function.html.php',
+            [
+                'form'  => $form->createView(),                    
+            ]
+        );
+
+        return $this->sendJsonResponse($data);
+    }
 }
