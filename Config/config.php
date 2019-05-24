@@ -431,7 +431,7 @@ return [
             ],
             'mautic_recommender_get_available_functions' => [
                 'path'       => '/recommender/getfunctions',
-                'controller' => 'MauticRecommenderBundle:Recommender:listavailablefunctions',
+                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
             ],  
         ],        
         'public' => [
