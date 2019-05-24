@@ -424,7 +424,7 @@ return [
             'mautic_recommender_index'  => [
                 'path'       => '/recommender/{page}',
                 //'controller' => 'MauticRecommenderBundle:Recommender:index',
-                'controller' => 'auticRecommenderBundle:Ajax:listavailablefunctions',
+                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
             ],
             'mautic_recommender_action' => [
                 'path'       => '/recommender/{objectAction}/{objectId}',
