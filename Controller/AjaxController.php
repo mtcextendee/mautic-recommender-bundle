@@ -53,9 +53,9 @@ class AjaxController extends CommonAjaxController
         }
 
         return $this->sendJsonResponse($data);
-    }
+    } 
 
-    public function listAvailableFunctionsAction(Request $request)
+    public function listavailablefunctionsAction(Request $request)
     {
         $column = $request->request->get('column');
         //$tableOrderForm = $this->get();
@@ -70,5 +70,5 @@ class AjaxController extends CommonAjaxController
         );
 
         return $this->sendJsonResponse($data);
-    }
+    }       
 }
