@@ -431,12 +431,12 @@ return [
                 'controller' => 'MauticRecommenderBundle:Recommender:execute',
             ],
             'mautic_recommender_get_available_functions' => [
-                'path'       => '/recommender/getfunctions',
+                'path'       => '/recommender/getfunctions/{valami}',
                 //'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
                 'controller' => 'MauticRecommenderBundle:Recommender:index',
             ],
             'mautic_recommender_get_available_functions2' => [
-                'path'       => '/recommender/getfunctions',
+                'path'       => '/recommender/getfunctions/{valami}',
                 //'controller' => 'MauticRecommenderBundle:Recommender:list',
                 'controller' => 'MauticRecommenderBundle:Recommender:index',
             ],   
