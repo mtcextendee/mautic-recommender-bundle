@@ -432,7 +432,11 @@ return [
             'mautic_recommender_get_available_functions' => [
                 'path'       => '/recommender/getfunctions',
                 'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
-            ],  
+            ],
+            'mautic_recommender_get_available_functions2' => [
+                'path'       => '/recommender/getfunctions',
+                'controller' => 'MauticRecommenderBundle:Recommender:list',
+            ],   
         ],        
         'public' => [
             'mautic_recommender_generate_template' => [

@@ -226,5 +226,22 @@ class RecommenderController extends AbstractStandardFormController
     public function exampleAction($objectId)
     {
         return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
-    }    
+    }  
+    
+     public function list()
+    {
+        $column = $this->request->get('column');
+        //$tableOrderForm = $this->get();
+        $form = $this->createForm('mautic.form.type.recommender.table_order', array('data' => $column));
+        //return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
+        
+        $data['content'] = $this->get('mautic.helper.templating')->getTemplating()->render(
+            'MauticRecommenderBundle:Recommender:form.function.html.php',
+            [
+                'form'  => $form->createView(),                    
+            ]
+        );
+
+        return $this->sendJsonResponse($data);
+    }         
 }
