@@ -20,12 +20,10 @@ mQuery(document).on('change', '.recommender-preview input:radio', function(){
     Mautic.recommenderUpdatePreview();
 });
 
-mQuery(document).on('change', '#recommender_tableOrder_column', function(){
-    console.log('recommender_tableOrder_column change');
-    Mautic.ajaxActionRequest('plugin:recommender:listavailablefunctions', {column: mQuery(this).val()}, function (response) {
-        console.log('recommender_tableOrder_column response', response);
+mQuery(document).on('change', '#recommender_tableOrder_column', function(){    
+    Mautic.ajaxActionRequest('plugin:recommender:listavailablefunctions', {column: mQuery(this).val()}, function (response) {        
         if(response.content) {
-            
+            mQuery('.order-function-choice').html(response.content);
         }        
     });
 });
