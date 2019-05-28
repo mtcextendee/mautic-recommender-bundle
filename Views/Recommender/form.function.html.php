@@ -1,1 +1,5 @@
-<?php echo $view['form']->row($form['function']); ?>
+<?php 
+	if (!empty($form['function'])){
+		echo $view['form']->row($form['function']);
+	} 
+?>

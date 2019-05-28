@@ -59,7 +59,7 @@ class AjaxController extends CommonAjaxController
 
     public function listavailablefunctionsAction(Request $request)
     {
-        $column = $request->query->get('column');
+        $column = $request->request->get('column', $request->query->get('column'));
         //$tableOrderForm = $this->get();
         $fields = $this->get('mautic.recommender.filter.fields.recommender')->getSelectOptions();
 
