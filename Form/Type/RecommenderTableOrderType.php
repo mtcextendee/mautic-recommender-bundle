@@ -136,6 +136,10 @@ class RecommenderTableOrderType extends AbstractType
                 unset($choices['']);           
             break;
         }
+
+        if (mb_ereg("date_added_\d+", $column)){
+            unset($choices['']);
+        }
        
         return $choices;
     }
