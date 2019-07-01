@@ -149,8 +149,7 @@ class RecommenderTableOrderType extends AbstractType
 
     public function setupAvailableFunctionChoices(FormInterface $form, ?string $column)
     {
-        if (null === $column) {
-            $form->remove('function');
+        if (null === $column) {            
             return;
         }
         $choices = $this->getAvabilableFunctionChoices($column);

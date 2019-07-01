@@ -1,5 +1,5 @@
 <?php 
-	if (!empty($form['function'])){
-		echo $view['form']->row($form['function']);
+	if (!empty($form['tableOrder']['function'])){
+		echo $view['form']->row($form['tableOrder']['function']);
 	} 
 ?>
