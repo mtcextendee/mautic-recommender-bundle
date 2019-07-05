@@ -58,8 +58,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '--timeout',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Set delay to ignore item to update. Default -1 day.',
-            '-1 day'
+            'Set delay to ignore item to update. Default -1 day.'            
         );
 
 
@@ -80,7 +79,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         /** @var Translator $translator */
         $translator = $this->getContainer()->get('translator');
 
-        if (!$integrationSetting->getIsPublished()) {
+        if (!$integrationSettings->getIsPublished()) {
             return $output->writeln('<info>'.$translator->trans('mautic.plugin.recommender.disabled').'</info>');
         }
 
