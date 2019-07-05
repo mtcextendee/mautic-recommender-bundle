@@ -98,6 +98,77 @@ class RecommenderIntegration extends AbstractIntegration
                     ],
                 ]
             );
+
+            $builder->add(
+                'item_import_url',
+                TextType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.item_import_url',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.item_import_url.tooltip',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'event_import_url',
+                TextType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.event_import_url',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.event_import_url.tooltip',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'batch_limit',
+                TextType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.batch_limit',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.batch_limit.tooltip',
+                        'placeholder'  => '100',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'timeout',
+                TextType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.timeout',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.timeout.tooltip',
+                        'placeholder'  => '-1 day',
+                    ],
+                ]
+            );
+
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param $section
+     *
+     * @return string
+     */
+    public function getFormNotes($section)
+    {
+        if ('features' === $section) {
+           return ['mautic.plugin.recommender.features.notes', 'warning'];
+        }
+
+        return parent::getFormNotes($section);        
     }
 }
