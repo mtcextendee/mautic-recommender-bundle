@@ -51,8 +51,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '--batch-limit',
             '-l',
             InputOption::VALUE_OPTIONAL,
-            'Set batch size of contacts to process per round. Defaults to 100.',
-            100
+            'Set batch size of contacts to process per round. Defaults to 100.'            
         );
 
         $this->addOption(
@@ -73,12 +72,15 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var IntegrationHelper $integrationHelper */
-        $integrationHelper = $this->getContainer()->get('mautic.helper.integration');
-        $integrationObject = $integrationHelper->getIntegrationObject('Recommender');
+        $integrationHelper      = $this->getContainer()->get('mautic.helper.integration');
+        $integrationObject      = $integrationHelper->getIntegrationObject('Recommender');
+        $integrationSettings    = $integrationObject->getIntegrationSettings();
+        $featureSettings        = $integrationSettings->getFeatureSettings();
+
         /** @var Translator $translator */
         $translator = $this->getContainer()->get('translator');
 
-        if (!$integrationObject->getIntegrationSettings()->getIsPublished()) {
+        if (!$integrationSetting->getIsPublished()) {
             return $output->writeln('<info>'.$translator->trans('mautic.plugin.recommender.disabled').'</info>');
         }
 
@@ -109,7 +111,23 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             );
         }
 
-        $file = $input->getOption('file');
+        if (!empty($input->getOption('file'))){
+            $file = $input->getOption('file');
+        }else{
+            switch ($type){
+                case "items": 
+                    if (!empty($featureSettings['items_import_url'])){
+                        $file = $featureSettings['items_import_url'];
+                    }
+                    break;
+                case "events":
+                    if (!empty($featureSettings['events_import_url'])){
+                        $file = $featureSettings['events_import_url'];
+                    }
+                    break;
+            }
+        }
+        
 
 
         if (!in_array($type, $this->getTypes()) && empty($file)) {
@@ -158,13 +176,29 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             }
         }
 
+        if (!empty($input->getOption('batch-limit')) && intval($input->getOption('batch-limit'))){
+            $batchLimit = intval($input->getOption('batch-limit'));
+        }elseif(!empty($featureSettings['batch_limit']) && intval($featureSettings['batch_limit'])){
+            $batchLimit = intval($featureSettings['batch_limit']);
+        }else{
+            $batchLimit = 100;
+        }
+        
+        if (!empty($input->getOption('timeout'))){
+            $timeout = $input->getOption('timeout');
+        }elseif(!empty($featureSettings['timeout'])){
+            $timeout = $featureSettings['timeout'];
+        }else{
+            $timeout = '-1 day';
+        }
+
 
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
 
         switch ($type) {
             case "items":
-                $apiCommands->ImportItems($items, $input->getOption('batch-limit'), $input->getOption('timeout'), $output);
+                $apiCommands->ImportItems($items, $batchLimit, $timeout, $output);
                 break;
             case "events":
                 /** @var Processor $eventProcessor */

@@ -100,27 +100,27 @@ class RecommenderIntegration extends AbstractIntegration
             );
 
             $builder->add(
-                'item_import_url',
+                'items_import_url',
                 TextType::class,
                 [
-                    'label'      => 'mautic.plugin.recommender.form.item_import_url',
+                    'label'      => 'mautic.plugin.recommender.form.items_import_url',
                     'label_attr' => ['class' => 'control-label'],
                     'attr'       => [
                         'class'        => 'form-control',
-                        'tooltip'      => 'mautic.plugin.recommender.form.item_import_url.tooltip',
+                        'tooltip'      => 'mautic.plugin.recommender.form.items_import_url.tooltip',
                     ],
                 ]
             );
 
             $builder->add(
-                'event_import_url',
+                'events_import_url',
                 TextType::class,
                 [
-                    'label'      => 'mautic.plugin.recommender.form.event_import_url',
+                    'label'      => 'mautic.plugin.recommender.form.events_import_url',
                     'label_attr' => ['class' => 'control-label'],
                     'attr'       => [
                         'class'        => 'form-control',
-                        'tooltip'      => 'mautic.plugin.recommender.form.event_import_url.tooltip',
+                        'tooltip'      => 'mautic.plugin.recommender.form.events_import_url.tooltip',
                     ],
                 ]
             );
