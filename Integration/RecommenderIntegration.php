@@ -7,6 +7,8 @@ use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\ListTemplateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class RecommenderIntegration extends AbstractIntegration
 {
@@ -127,7 +129,7 @@ class RecommenderIntegration extends AbstractIntegration
 
             $builder->add(
                 'batch_limit',
-                TextType::class,
+                NumberType::class,
                 [
                     'label'      => 'mautic.plugin.recommender.form.batch_limit',
                     'label_attr' => ['class' => 'control-label'],
