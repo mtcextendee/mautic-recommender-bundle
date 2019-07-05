@@ -101,7 +101,7 @@ class RecommenderIntegration extends AbstractIntegration
 
             $builder->add(
                 'items_import_url',
-                TextType::class,
+                UrlType::class,
                 [
                     'label'      => 'mautic.plugin.recommender.form.items_import_url',
                     'label_attr' => ['class' => 'control-label'],
@@ -114,7 +114,7 @@ class RecommenderIntegration extends AbstractIntegration
 
             $builder->add(
                 'events_import_url',
-                TextType::class,
+                UrlType::class,
                 [
                     'label'      => 'mautic.plugin.recommender.form.events_import_url',
                     'label_attr' => ['class' => 'control-label'],
