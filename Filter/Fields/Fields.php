@@ -104,7 +104,6 @@ class Fields
                             'recommender' => [
                                 'type'          => FilterQueryBuilder::getServiceId(),
                                 'foreign_table' => 'recommender_event',
-                                'foreign_identificator' => 'id',
                             ],
                         ]
                 ];

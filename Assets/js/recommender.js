@@ -20,14 +20,6 @@ mQuery(document).on('change', '.recommender-preview input:radio', function(){
     Mautic.recommenderUpdatePreview();
 });
 
-mQuery(document).on('change', '#recommender_tableOrder_column', function(){    
-    Mautic.ajaxActionRequest('plugin:recommender:listavailablefunctions', {column: mQuery(this).val()}, function (response) {        
-        if(response.content) {
-            mQuery('.order-function-choice').html(response.content);
-        }        
-    });
-});
-
 Mautic.recommenderUpdatePreview = function () {
     mQuery('#recommender-preview').fadeTo('normal', 0.4);
     mQuery('#recommender-preview-loader').show();

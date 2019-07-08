@@ -107,9 +107,7 @@ $templates = [
         <br>
         <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
         <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
-        <div class="order-function-choice">
-            <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
-        </div>
+        <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
     </div>
 </div>
 
