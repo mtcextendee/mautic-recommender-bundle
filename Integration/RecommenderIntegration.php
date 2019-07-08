@@ -102,6 +102,17 @@ class RecommenderIntegration extends AbstractIntegration
             );
 
             $builder->add(
+               'show_recommender_testbench',
+                'yesno_button_group',
+                [
+                    'label' => 'mautic.plugin.recommender.form.testbench',
+                    'attr'  => [
+                        'tooltip' => 'mautic.plugin.recommender.form.testbench.tooltip',
+                    ]                    
+                ]
+            );
+          
+            $builder->add(
                 'items_import_url',
                 UrlType::class,
                 [
@@ -154,7 +165,6 @@ class RecommenderIntegration extends AbstractIntegration
                     ],
                 ]
             );
-
         }
     }
 

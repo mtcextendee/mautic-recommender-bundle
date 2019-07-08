@@ -18,6 +18,8 @@ use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+use MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTableOrderType;
+
 class AjaxController extends CommonAjaxController
 {
 
@@ -53,5 +55,29 @@ class AjaxController extends CommonAjaxController
         }
 
         return $this->sendJsonResponse($data);
-    }
+    } 
+
+    public function listavailablefunctionsAction(Request $request)
+    {
+        $column = $request->request->get('column', $request->query->get('column'));
+        //$tableOrderForm = $this->get();
+        $fields = $this->get('mautic.recommender.filter.fields.recommender')->getSelectOptions();
+
+        $form = $this->get('form.factory')->createNamedBuilder('recommender','form',null,['auto_initialize'=>false])->add(
+            'tableOrder',
+            RecommenderTableOrderType::class,
+            array('data' => ['column' => $column], 'fields' => $fields)
+        )->getForm();
+
+        //return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
+        
+        $data['content'] = $this->get('mautic.helper.templating')->getTemplating()->render(
+            'MauticRecommenderBundle:Recommender:form.function.html.php',
+            [
+                'form'  => $form->createView(),                    
+            ]
+        );
+
+        return $this->sendJsonResponse($data);
+    }       
 }

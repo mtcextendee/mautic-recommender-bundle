@@ -173,7 +173,10 @@ class RecommenderController extends AbstractStandardFormController
         switch ($action) {
             case 'edit':
                 /** @var ContactSearch $contactSearch */
-                if (MAUTIC_ENV === 'dev') {
+                $featureSettings = $this->get('mautic.helper.integration')->getIntegrationObject(
+                    'Recommender'
+                )->getIntegrationSettings()->getFeatureSettings();
+                if (!empty($featureSettings['show_recommender_testbench'])){              
                     $viewParameters['tester'] = $this->get('mautic.recommender.contact.search')->renderForm($args['objectId'], $this);
                 }
                 break;
@@ -223,5 +226,5 @@ class RecommenderController extends AbstractStandardFormController
     public function exampleAction($objectId)
     {
         return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
-    }
+    }    
 }
