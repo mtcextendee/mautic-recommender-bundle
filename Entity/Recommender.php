@@ -77,7 +77,7 @@ class Recommender
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('filter', Type::STRING, 'filter')
-            ->addNamedField('fitlerTarget', Type::STRING, 'filter_target')
+            ->addNamedField('filterTarget', Type::STRING, 'filter_target')
             ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
