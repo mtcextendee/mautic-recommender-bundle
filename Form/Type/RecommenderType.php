@@ -306,20 +306,20 @@ class RecommenderType extends AbstractType
         );
 
         $builder->add(
-            'selfFilterMode',
+            'filterTarget',
             'choice',
             [
                 'choices'     => [
-                    'reflective' => 'mautic.plugin.recommender.form.self_filter_mode.reflective',
-                    'exclusive' => 'mautic.plugin.recommender.form.self_filter_mode.exclusive',
-                    'inclusive' => 'mautic.plugin.recommender.form.self_filter_mode.inclusive'
+                    'reflective' => 'mautic.plugin.recommender.form.filter_target.reflective',
+                    'exclusive' => 'mautic.plugin.recommender.form.filter_target.exclusive',
+                    'inclusive' => 'mautic.plugin.recommender.form.filter_target.inclusive'
                 ],
                 'choice_attr' => function($choice, $key, $value) {                    
-                    return ['tooltip' => "mautic.plugin.recommender.form.self_filter_mode.{$key}.tooltip"];
+                    return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$key}.tooltip"];
                 },
                 'expanded'    => true,
                 'multiple'    => false,
-                'label'       => 'mautic.plugin.recommender.form.self_filter_mode',
+                'label'       => 'mautic.plugin.recommender.form.filter_target',
                 'label_attr'  => ['class' => ''],
                 //'empty_value' => 'reflective',
                 'required'    => true,

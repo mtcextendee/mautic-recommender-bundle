@@ -96,7 +96,10 @@ $templates = [
                     </div>
                     <div class="col-md-9 selected-filters"
                          id="recommender_filters">
-                        <?php echo $view['form']->widget($form['filters']); ?>
+                         <div class="row">
+                            <?php echo $view['form']->widget($form['filters']); ?>
+                            <?php echo $view['form']->row($form['filterTarget']); ?>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,11 +110,7 @@ $templates = [
         <br>
         <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
         <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
-        <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
-
-        <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.options'); ?></strong></h4>
-        <br>
-        <?php echo $view['form']->row($form['selfFilterMode']); ?>
+        <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>       
     </div>
 </div>
 

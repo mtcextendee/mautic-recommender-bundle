@@ -54,7 +54,7 @@ class Recommender
     /**
      * @var string
      */
-    protected $selfFilterMode;
+    protected $filterTarget;
 
     /**
      * @var int
@@ -77,7 +77,7 @@ class Recommender
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('filter', Type::STRING, 'filter')
-            ->addNamedField('selfFilterMode', Type::STRING, 'self_filter_mode')
+            ->addNamedField('fitlerTarget', Type::STRING, 'filter_target')
             ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
@@ -306,9 +306,9 @@ class Recommender
      *
      * @return Recommender
      */
-    public function setSelfFilterMode($selfFilterMode)
+    public function setFilterTarget($filterTarget)
     {
-        $this->selfFilterMode = $selfFilterMode;
+        $this->filterTarget = $filterTarget;
 
         return $this;
     }
@@ -316,9 +316,9 @@ class Recommender
     /**
      * @return string
      */
-    public function getSelfFilterMode()
+    public function getFilterTarget()
     {
-        return $this->selfFilterMode;
+        return $this->filterTarget;
     }
 
 
