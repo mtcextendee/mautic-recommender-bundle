@@ -315,7 +315,7 @@ class RecommenderType extends AbstractType
                     'inclusive' => 'mautic.plugin.recommender.form.filter_target.inclusive'
                 ],
                 'choice_attr' => function($choice, $key, $value) {                    
-                    return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$key}.tooltip"];
+                    return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$value}.tooltip"];
                 },
                 'expanded'    => true,
                 'multiple'    => false,
