@@ -46,8 +46,6 @@ $templates = [
                 </div>
             </div>
 
-
-
             <div class="col-md-3">
                 <?php echo $view['form']->row($form['filter']); ?>
             </div>
