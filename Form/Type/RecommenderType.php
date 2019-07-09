@@ -312,8 +312,8 @@ class RecommenderType extends AbstractType
                 'choices'     => [
                     'reflective' => 'mautic.plugin.recommender.form.filter_target.reflective',
                     'exclusive' => 'mautic.plugin.recommender.form.filter_target.exclusive',
-                    'inclusive' => 'mautic.plugin.recommender.form.filter_target.inclusive'
-                    'proximity5' => 'mautic.plugin.recommender.form.filter_target.proximity5'
+                    'inclusive' => 'mautic.plugin.recommender.form.filter_target.inclusive',
+                    'proximity5' => 'mautic.plugin.recommender.form.filter_target.proximity5',
                     'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10'
                 ],
                 'choice_attr' => function($choice, $key, $value) {                    
