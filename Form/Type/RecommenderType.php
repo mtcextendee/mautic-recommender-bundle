@@ -317,11 +317,11 @@ class RecommenderType extends AbstractType
                 'choice_attr' => function($choice, $key, $value) {                    
                     return ['tooltip' => "mautic.plugin.recommender.form.self_filter_mode.{$key}.tooltip"];
                 },
-                'expanded'    => false,
+                'expanded'    => true,
                 'multiple'    => false,
                 'label'       => 'mautic.plugin.recommender.form.self_filter_mode',
                 'label_attr'  => ['class' => ''],
-                'empty_value' => 'reflective',
+                //'empty_value' => 'reflective',
                 'required'    => true,
                 'constraints' => [
                     new NotBlank(
