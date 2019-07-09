@@ -108,6 +108,10 @@ $templates = [
         <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
         <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
         <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
+
+        <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.options'); ?></strong></h4>
+        <br>
+        <?php echo $view['form']->row($form['selfFilterMode']); ?>
     </div>
 </div>
 
