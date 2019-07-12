@@ -39,6 +39,10 @@ class Item
    */
     protected $dateModified;
 
+    /**
+     * @var
+     */
+    protected $active = 1;
 
     public function __construct()
     {
@@ -58,9 +62,8 @@ class Item
             ->addId()
             ->addNamedField('itemId', 'string', 'item_id')
             ->addNamedField('dateAdded', 'datetime', 'date_added')
-            ->addNamedField('dateModified', 'datetime', 'date_modified');
-
-
+            ->addNamedField('dateModified', 'datetime', 'date_modified')
+            ->addNamedField('active', Type::BOOLEAN, 'active');
     }
 
     /**
@@ -150,5 +153,25 @@ class Item
     public function getDateModified()
     {
         return $this->dateModified;
+    }
+
+    /**
+     * @param boolean $active
+     *
+     * @return Item
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActive()
+    {
+        return $this->active;
     }
 }

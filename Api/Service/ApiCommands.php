@@ -113,7 +113,7 @@ class ApiCommands
      */
     public function ImportItems($items, $batchSize = 50, $timeout = '-1 day', Output $output)
     {
-        $clearBatch = 10;
+        $clearBatch = 10;       
         do {
             $i        = 1;
             $progress = ProgressBarHelper::init($output, $batchSize);
@@ -149,6 +149,73 @@ class ApiCommands
         $output->writeln('');
         $output->writeln('Imported '.$i.' items');
 
+    }
+
+    /**
+     * @param     $items
+     * @param int $batchSize
+     */
+    public function DeactivateMissingItems($items, Output $output)
+    {        
+        $itemsInJson = [];
+        foreach ($items as $key => $item) {
+            $itemsInJson[] = $item['item_id'];            
+        }
+
+        $itemRepository = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
+        $missingActiveItemsFromJson = $itemRepository->findActiveExcluding($itemsInJson);
+
+        $i        = 1;
+        $progress = ProgressBarHelper::init($output, count($missingItemsFromJson));
+        $progress->start();
+
+
+        foreach ($missingActiveItemsFromJson as $key => $item){
+            $itemEntity = $itemRepository->finyOneBy(['item_id' => $item['item_id']]);
+            $itemEntity->setActive(false);
+            $this->entityManager->persist($itemEntity);
+
+            $i++;
+            $progress->setProgress($i);
+        }
+
+        $progress->finish();
+        $output->writeln('');
+        $output->writeln('Deactivated '.$i.' items that were missing from the json');
+
+/*
+        do {
+            try {
+                $counter = 0;
+                foreach ($items as $key => $item) {
+                    $i += $this->recommenderApi->getClient()->send(
+                        'ImportItems',
+                        $item,
+                        ['timeout' => $timeout]
+                    );
+                    $progress->setProgress($i);
+                    if ($i % $clearBatch === 0) {
+                        $this->entityManager->clear(Item::class);
+                        $this->entityManager->clear(Property::class);
+                    }
+                    if ($i % $batchSize === 0) {
+                        $batchSize = 0;
+                        $progress->finish();
+                        break;
+                    }
+                }
+            } catch (\Exception $error) {
+                $batchSize = 0;
+                $progress->finish();
+                $output->writeln('');
+                $output->writeln($error->getMessage());
+                return;
+            }
+        } while ($batchSize > 0);
+
+        $output->writeln('');
+        $output->writeln('Imported '.$i.' items');
+*/
     }
 }
 
