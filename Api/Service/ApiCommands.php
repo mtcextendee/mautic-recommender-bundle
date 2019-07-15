@@ -182,40 +182,6 @@ class ApiCommands
         $progress->finish();
         $output->writeln('');
         $output->writeln('Deactivated '.$i.' items that were missing from the json');
-
-/*
-        do {
-            try {
-                $counter = 0;
-                foreach ($items as $key => $item) {
-                    $i += $this->recommenderApi->getClient()->send(
-                        'ImportItems',
-                        $item,
-                        ['timeout' => $timeout]
-                    );
-                    $progress->setProgress($i);
-                    if ($i % $clearBatch === 0) {
-                        $this->entityManager->clear(Item::class);
-                        $this->entityManager->clear(Property::class);
-                    }
-                    if ($i % $batchSize === 0) {
-                        $batchSize = 0;
-                        $progress->finish();
-                        break;
-                    }
-                }
-            } catch (\Exception $error) {
-                $batchSize = 0;
-                $progress->finish();
-                $output->writeln('');
-                $output->writeln($error->getMessage());
-                return;
-            }
-        } while ($batchSize > 0);
-
-        $output->writeln('');
-        $output->writeln('Imported '.$i.' items');
-*/
     }
 }
 
