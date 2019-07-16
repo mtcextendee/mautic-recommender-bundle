@@ -40,9 +40,9 @@ class Item
     protected $dateModified;
 
     /**
-     * @var
+     * @var bool
      */
-    protected $active = 1;
+    protected $active = true;
 
     public function __construct()
     {
@@ -59,6 +59,8 @@ class Item
         $builder->setTable('recommender_item')
             ->setCustomRepositoryClass(ItemRepository::class)
             ->addIndex(['item_id'], 'item_id_index')
+            ->addIndex(['active'], 'active_index')
+            ->addIndex(['date_modified'], 'date_modified_index')
             ->addId()
             ->addNamedField('itemId', 'string', 'item_id')
             ->addNamedField('dateAdded', 'datetime', 'date_added')
@@ -160,7 +162,7 @@ class Item
      *
      * @return Item
      */
-    public function setActive($active)
+    public function setActive(bool $active)
     {
         $this->active = $active;
 

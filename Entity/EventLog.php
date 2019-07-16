@@ -61,6 +61,8 @@ class EventLog
             ->setCustomRepositoryClass(ItemRepository::class)
             ->addIndex(['item_id'], 'item_id_index')
             ->addIndex(['event_id'], 'event_id_index')
+            ->addIndex(['lead_id'], 'lead_id_index')
+            ->addIndex(['date_added'], 'date_added_index')
             ->addId()
             ->addNamedField('dateAdded', 'datetime', 'date_added');
 
