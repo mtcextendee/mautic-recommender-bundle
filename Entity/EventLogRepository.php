@@ -76,8 +76,8 @@ class EventLogRepository extends CommonRepository
             $qb->leftJoin('ri', 'recommender_item_property_value', 'ripv', 'ri.id = ripv.item_id');
             $qb->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->like('re.properties', $qb->expr()->literal('%'.$options['search'].'%')),
-                    $qb->expr()->like('ri.properties', $qb->expr()->literal('%'.$options['search'].'%'))
+                    $qb->expr()->like('re.name', $qb->expr()->literal('%'.$options['search'].'%')),
+                    $qb->expr()->like('ripv.value', $qb->expr()->literal('%'.$options['search'].'%'))
                 )
             );
             $qb->groupBy($alias.'.id');
