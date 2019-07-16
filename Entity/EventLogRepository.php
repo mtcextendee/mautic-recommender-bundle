@@ -16,6 +16,7 @@ use Mautic\CoreBundle\Entity\CommonRepository;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 use Mautic\LeadBundle\Entity\Lead;
+use Mautic\LeadBundle\Entity\TimelineTrait;
 
 /**
  * Class EventLogRepository
@@ -23,6 +24,7 @@ use Mautic\LeadBundle\Entity\Lead;
  */
 class EventLogRepository extends CommonRepository
 {
+    use TimelineTrait;
 
     /**
      * @return string
