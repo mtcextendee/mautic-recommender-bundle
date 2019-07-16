@@ -15,6 +15,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
+use Mautic\LeadBundle\Entity\Lead;
+
 /**
  * Class EventLogRepository
  * @package MauticPlugin\MauticRecommenderBundle\Entity
@@ -46,4 +48,39 @@ class EventLogRepository extends CommonRepository
         return $qb->execute()->fetchAll();
     }
 
+     /**
+     * @param Lead         $contact     
+     * @param array        $options
+     *
+     * @return array
+     */
+    public function getTimeLineEvents(Lead $contact, array $options = [])
+    {
+        $alias = $this->getTableAlias();
+        $qb    = $this->getEntityManager()->getConnection()->createQueryBuilder()
+            ->select($alias.'.*')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', $alias);
+            
+            
+
+        if ($contact) {
+            $qb->andWhere($alias.'.lead_id = :lead')
+                ->setParameter('lead', $contact->getId());
+        }
+        
+        if (!empty($options['search'])) {
+            $qb->innerJoin($alias, 'recommender_event', 're', 're.id = '.$alias.'.event_id' );
+            $qb->innerJoin($alias, 'recommender_item', 'ri', 'ri.id = '.$alias.'.item_id' );
+            $qb->leftJoin('ri', 'recommender_item_property_value', 'ripv', 'ri.id = ripv.item_id');
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('re.properties', $qb->expr()->literal('%'.$options['search'].'%')),
+                    $qb->expr()->like('ri.properties', $qb->expr()->literal('%'.$options['search'].'%'))
+                )
+            );
+            $qb->groupBy($alias.'.id');
+        }
+
+        return $this->getTimelineResults($qb, $options, 're.name', $alias.'.date_added', [], ['date_added']);
+    }
 }
