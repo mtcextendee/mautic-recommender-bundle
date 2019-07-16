@@ -154,7 +154,7 @@ class MaintenanceSubscriber extends CommonSubscriber
                $rows += $qb->delete(MAUTIC_TABLE_PREFIX.$table)
                   ->where(
                     $qb->expr()->eq(
-                      'id', item_id
+                      'id', $item_id
                     )
                   )
                   ->execute();
