@@ -99,13 +99,13 @@ class MaintenanceSubscriber extends CommonSubscriber
                     $subQb->expr()->lte('l.date_added', ':date2'),
                     $subQb->expr()->isNull('l.last_active')
                   ));
-                $qb->setParameter('date2', $event->getDate()->format('Y-m-d H:i:s'));
+                $subQb->setParameter('date2', $event->getDate()->format('Y-m-d H:i:s'));
             }
             $rows = 0;
             $loop = 0;
             $subQb->setParameter('date', $event->getDate()->format('Y-m-d H:i:s'));
             while (true) {
-                $subQb->setMaxResults(10000)->setFirstResult($loop * 10000);
+                $subQb->setMaxResults(100)->setFirstResult($loop * 100);
 
                 $leadsIds = array_column($subQb->execute()->fetchAll(), 'id');
 
@@ -131,6 +131,34 @@ class MaintenanceSubscriber extends CommonSubscriber
      * @param $table tableName
      */
     private function cleanItems(MaintenanceEvent $event, $table){
-        
+        $qb = $this->db->createQueryBuilder()
+            ->setParameter('date', $event->getDate()->format('Y-m-d H:i:s'));
+
+        if ($event->isDryRun()) {
+            $qb->select('count(*) as records')
+              ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')              
+              ->andWhere($qb->expr()->lte('l.date_modified', ':date'))
+              ->andWhere($qb->expr()->eq('l.active', '0'));
+
+            $rows = $qb->execute()->fetchColumn();
+        } else {
+            $qb->select('id')
+              ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')              
+              ->andWhere($qb->expr()->lte('l.date_modified', ':date'))
+              ->andWhere($qb->expr()->eq('l.active', '0'));
+
+            $rows = $qb->execute()->fetchAll(\PDO::FETCH_COLUMN, 0);
+
+            foreach ($rows as $item_id){
+               $qb->delete(MAUTIC_TABLE_PREFIX.$table)
+                  ->where(
+                    $qb->expr()->eq(
+                      'id', item_id
+                    )
+                  )
+                  ->execute();
+            }         
+        }
+        $event->setStat($this->translator->trans('mautic.plugin.recommender.maintenance.'.$table), $rows, $qb->getSQL(), $qb->getParameters());
     }
 }
