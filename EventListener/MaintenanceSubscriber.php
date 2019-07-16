@@ -137,16 +137,16 @@ class MaintenanceSubscriber extends CommonSubscriber
         if ($event->isDryRun()) {
             $qb->select('count(*) as records')
               ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')              
-              ->andWhere($qb->expr()->lte('l.date_modified', ':date'))
-              ->andWhere($qb->expr()->eq('l.active', '0'));
-
+              ->andWhere($qb->expr()->lte('ri.date_modified', ':date'))
+              ->andWhere($qb->expr()->eq('ri.active', '0'));
+            echo $qb->getSql();
             $rows = $qb->execute()->fetchColumn();
         } else {
             $qb->select('id')
               ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')              
-              ->andWhere($qb->expr()->lte('l.date_modified', ':date'))
-              ->andWhere($qb->expr()->eq('l.active', '0'));
-
+              ->andWhere($qb->expr()->lte('ri.date_modified', ':date'))
+              ->andWhere($qb->expr()->eq('ri.active', '0'));
+            echo $qb->getSql();
             $rows = $qb->execute()->fetchAll(\PDO::FETCH_COLUMN, 0);
 
             foreach ($rows as $item_id){
