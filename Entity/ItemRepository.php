@@ -64,13 +64,15 @@ class ItemRepository extends CommonRepository
      * @return array
      */
     public function findActiveExcluding($itemIds)
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->from('MauticRecommenderBundle:Item', 'i')
-            ->select('i')
-            ->where($qb->expr()->eq('i.active', '1'))
-            ->where($qb->expr()->eq('i.item_id', itemIds))
-            ->getQuery()->getArrayResult();
+    {        
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('id, item_id')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'i')
+            ->andWhere($qb->expr()->eq('i.active', '1'));
+        if (!empty($itemIds)){
+            $qb->andWhere($qb->expr()->notIn('i.item_id', $itemIds));
+        }
+        return $qb->execute()->fetchAll();           
     }
 
     /**

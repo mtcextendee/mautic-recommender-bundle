@@ -159,23 +159,24 @@ class ApiCommands
     {        
         $itemsInJson = [];
         foreach ($items as $key => $item) {
-            $itemsInJson[] = $item['item_id'];            
+            $itemsInJson[] = $item['itemId'];            
         }
 
         $itemRepository = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
-        $missingActiveItemsFromJson = $itemRepository->findActiveExcluding($itemsInJson);
+        $activeItemsMissingFromJson = $itemRepository->findActiveExcluding($itemsInJson);
 
-        $i        = 1;
-        $progress = ProgressBarHelper::init($output, count($missingItemsFromJson));
+        $i        = 0;
+        $progress = ProgressBarHelper::init($output, count($activeItemsMissingFromJson));
         $progress->start();
 
 
-        foreach ($missingActiveItemsFromJson as $key => $item){
-            $itemEntity = $itemRepository->finyOneBy(['item_id' => $item['item_id']]);
-            $itemEntity->setActive(false);
-            $this->entityManager->persist($itemEntity);
-
+        foreach ($activeItemsMissingFromJson as $key => $item){
             $i++;
+
+            $itemEntity = $itemRepository->findOneBy(['itemId' => $item['item_id']]);
+            $itemEntity->setActive(false);
+            $itemRepository->saveEntity($itemEntity);
+
             $progress->setProgress($i);
         }
 
