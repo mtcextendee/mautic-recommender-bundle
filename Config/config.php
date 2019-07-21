@@ -54,6 +54,12 @@ return [
                     'mautic.helper.integration'
                 ],
             ],
+            'mautic.recommender.lead.timeline.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\LeadSubscriber::class,
+                'arguments' => [
+                    'mautic.helper.integration'
+                ],
+            ],
             'mautic.recommender.emailbundle.subscriber' => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\EmailSubscriber::class,
                 'arguments' => [
