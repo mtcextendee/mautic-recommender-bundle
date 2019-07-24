@@ -54,6 +54,12 @@ return [
                     'mautic.helper.integration'
                 ],
             ],
+            'mautic.recommender.lead.timeline.subscriber'  => [
+                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\LeadSubscriber::class,
+                'arguments' => [
+                    'mautic.helper.integration'
+                ],
+            ],
             'mautic.recommender.emailbundle.subscriber' => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\EmailSubscriber::class,
                 'arguments' => [
@@ -235,6 +241,7 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderOrderBy::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
+                    'mautic.lead.model.random_parameter_name'
                 ]
             ],
             'mautic.recommender.query.builder.recommender.filter'  => [
@@ -420,15 +427,19 @@ return [
                 'path'       => '/recommenderEvent/{objectAction}/{objectId}',
                 'controller' => 'MauticRecommenderBundle:RecommenderEvent:execute',
             ],
+            'mautic_recommender_get_available_functions' => [
+                'path'       => '/recommender/getfunctions',
+                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',                
+            ],
             'mautic_recommender_index'  => [
                 'path'       => '/recommender/{page}',
-                'controller' => 'MauticRecommenderBundle:Recommender:index',
+                'controller' => 'MauticRecommenderBundle:Recommender:index',                
             ],
             'mautic_recommender_action' => [
                 'path'       => '/recommender/{objectAction}/{objectId}',
                 'controller' => 'MauticRecommenderBundle:Recommender:execute',
-            ],
-        ],
+            ],                
+        ],        
         'public' => [
             'mautic_recommender_generate_template' => [
                 'path'       => '/recommender/template/{id}',
@@ -438,7 +449,7 @@ return [
                 'path'       => '/recommender/event/send',
                 'controller' => 'MauticRecommenderBundle:Recommender:send',
             ],
-        ],
+        ],        
         'api'    => [
             'mautic_recommender_api' => [
                 'path'       => '/recommender/{component}',

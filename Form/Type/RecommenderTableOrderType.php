@@ -15,8 +15,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+
 
 class RecommenderTableOrderType extends AbstractType
 {
@@ -45,6 +48,9 @@ class RecommenderTableOrderType extends AbstractType
 
         //$options['fields']['weight']
         // Build a list of columns
+
+        $column = $options['data']['column'] ?? null;        
+
 
         $fields = $options['fields'];
         unset($fields['mautic.lead.recommender_item'], $fields['mautic.lead.recommender_item_property_value']);
@@ -78,26 +84,95 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
-        // function
+        
+        
         $builder->add('function', 'choice', [
-            'choices' => [
-                'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
-                'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
-                'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
-                'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
-                'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
-            ],
+            'choices'     => $this->getAvabilableFunctionChoices($column??null),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
-            'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => 'mautic.core.none',
-            'required'    => false,
+            'label_attr'  => ['class' => 'control-label'],            
+            'empty_value' => false,
+            'required'    => true,
+            'attr'        => [
+                'class' => 'form-control not-chosen',
+            ],
+        ]);
+        
+        
+
+
+        $builder->get('column')->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function(FormEvent $event) {
+                $form = $event->getForm();
+                $column = $event->getData();
+                
+
+                    $this->setupAvailableFunctionChoices(
+                        $form->getParent(),
+                        $column
+                    );
+                }
+            );
+        
+
+        
+    }
+
+    public function getAvabilableFunctionChoices($column=null){
+        $choices = [
+            ''       => $this->translator->trans('mautic.core.none'),
+            'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
+            'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
+            'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
+            'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
+            'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
+        ];
+
+        switch ($column){
+            case "weight":
+            case "date_added":
+                unset($choices['']);           
+            break;
+        }
+
+        if (mb_ereg("date_added_\d+", $column)){
+            unset($choices['']);
+        }
+        if (mb_ereg("event_\d+", $column)){
+            unset($choices['']);
+        }        
+
+        return $choices;
+    }
+
+    public function setupAvailableFunctionChoices(FormInterface $form, ?string $column)
+    {
+        if (null === $column) {            
+            return;
+        }
+        $choices = $this->getAvabilableFunctionChoices($column);
+        if (null === $choices) {
+            $form->remove('function');
+            return;
+        }
+
+        // function
+        $form->add('function', 'choice', [
+            'choices'     => $choices,
+            'expanded'    => false,
+            'multiple'    => false,
+            'label'       => 'mautic.report.function',
+            'label_attr'  => ['class' => 'control-label'],            
+            'empty_value' => false,
+            'required'    => true,
             'attr'        => [
                 'class' => 'form-control not-chosen',
             ],
         ]);
     }
+
 
     /**
      * @param OptionsResolver $resolver
