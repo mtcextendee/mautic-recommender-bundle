@@ -7,6 +7,8 @@ use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\ListTemplateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class RecommenderIntegration extends AbstractIntegration
 {
@@ -98,6 +100,87 @@ class RecommenderIntegration extends AbstractIntegration
                     ],
                 ]
             );
+
+            $builder->add(
+                'show_recommender_testbench',
+                'yesno_button_group',
+                [
+                    'label' => 'mautic.plugin.recommender.form.testbench',
+                    'attr'  => [
+                        'tooltip' => 'mautic.plugin.recommender.form.testbench.tooltip',
+                    ]                    
+                ]
+            );
+            $builder->add(
+                'items_import_url',
+                UrlType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.items_import_url',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.items_import_url.tooltip',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'events_import_url',
+                UrlType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.events_import_url',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.events_import_url.tooltip',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'batch_limit',
+                NumberType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.batch_limit',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.batch_limit.tooltip',
+                        'placeholder'  => '100',
+                    ],
+                ]
+            );
+
+            $builder->add(
+                'timeout',
+                TextType::class,
+                [
+                    'label'      => 'mautic.plugin.recommender.form.timeout',
+                    'label_attr' => ['class' => 'control-label'],
+                    'attr'       => [
+                        'class'        => 'form-control',
+                        'tooltip'      => 'mautic.plugin.recommender.form.timeout.tooltip',
+                        'placeholder'  => '-1 day',
+                    ],
+                ]
+            );
+
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param $section
+     *
+     * @return string
+     */
+    public function getFormNotes($section)
+    {
+        if ('features' === $section) {
+           return ['mautic.plugin.recommender.features.notes', 'warning'];
+        }
+
+        return parent::getFormNotes($section);        
     }
 }
