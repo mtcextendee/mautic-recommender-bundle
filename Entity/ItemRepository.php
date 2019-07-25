@@ -70,6 +70,9 @@ class ItemRepository extends CommonRepository
             ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'i')
             ->andWhere($qb->expr()->eq('i.active', '1'));
         if (!empty($itemIds)){
+            foreach ($itemIds as &$item){
+                $item = $qb->expr()->literal($item);
+            }
             $qb->andWhere($qb->expr()->notIn('i.item_id', $itemIds));
         }
         return $qb->execute()->fetchAll();           
