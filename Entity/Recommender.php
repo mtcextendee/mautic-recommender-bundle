@@ -51,6 +51,10 @@ class Recommender
     /** @var  array */
     protected $tableOrder;
 
+    /**
+     * @var string
+     */
+    protected $filterTarget;
 
     /**
      * @var int
@@ -73,6 +77,7 @@ class Recommender
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('filter', Type::STRING, 'filter')
+            ->addNamedField('filterTarget', Type::STRING, 'filter_target')
             ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
@@ -293,6 +298,27 @@ class Recommender
     public function getTableOrder()
     {
         return $this->tableOrder;
+    }
+
+
+    /**
+     * @param string $filter
+     *
+     * @return Recommender
+     */
+    public function setFilterTarget($filterTarget)
+    {
+        $this->filterTarget = $filterTarget;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilterTarget()
+    {
+        return $this->filterTarget;
     }
 
 

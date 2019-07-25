@@ -293,7 +293,7 @@ class RecommenderType extends AbstractType
             $builderEvent = new FilterFormEvent($builder);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FORM_FILTER_GENERATE, $builderEvent);
             unset($builderEvent);
-        }
+        }        
 
         // function
         $builder->add(
@@ -302,6 +302,36 @@ class RecommenderType extends AbstractType
             [
                 'label'  => 'mautic.plugin.recommender.form.order_by',
                 'fields' => $this->choices->getSelectOptions(),
+            ]
+        );
+
+        $builder->add(
+            'filterTarget',
+            'choice',
+            [
+                'choices'     => [
+                    'reflective' => 'mautic.plugin.recommender.form.filter_target.reflective',
+                    'exclusive' => 'mautic.plugin.recommender.form.filter_target.exclusive',
+                    'inclusive' => 'mautic.plugin.recommender.form.filter_target.inclusive',
+                    'proximity5' => 'mautic.plugin.recommender.form.filter_target.proximity5',
+                    'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10'
+                ],
+                'choice_attr' => function($choice, $key, $value) {                    
+                    return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$value}.tooltip"];
+                },
+                'expanded'    => true,
+                'multiple'    => false,
+                'label'       => 'mautic.plugin.recommender.form.filter_target',
+                'label_attr'  => ['class' => ''],
+                //'empty_value' => 'reflective',
+                'required'    => true,
+                'constraints' => [
+                    new NotBlank(
+                        [
+                            'message' => 'mautic.core.value.required',
+                        ]
+                    ),
+                ],
             ]
         );
 

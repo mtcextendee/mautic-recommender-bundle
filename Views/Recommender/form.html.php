@@ -46,8 +46,6 @@ $templates = [
                 </div>
             </div>
 
-
-
             <div class="col-md-3">
                 <?php echo $view['form']->row($form['filter']); ?>
             </div>
@@ -96,7 +94,10 @@ $templates = [
                     </div>
                     <div class="col-md-9 selected-filters"
                          id="recommender_filters">
-                        <?php echo $view['form']->widget($form['filters']); ?>
+                         <div class="row">
+                            <?php echo $view['form']->row($form['filterTarget']); ?>
+                            <?php echo $view['form']->widget($form['filters']); ?>                            
+                        </div>
                     </div>
                 </div>
             </div>
