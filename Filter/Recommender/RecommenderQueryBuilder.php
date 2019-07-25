@@ -145,6 +145,9 @@ class RecommenderQueryBuilder
             }                    
         }
 
+        //Filter recommendations to active items
+        $queryBuilder->innerJoin('l', MAUTIC_TABLE_PREFIX.'recommender_item', 'ri', "ri.id = l.item_id AND ri.active='1'");
+
         $recombeeFilters = $recommenderToken->getRecommender()->getFilters();
         foreach ($recombeeFilters as $filter) {
             $filter       = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);

@@ -113,7 +113,7 @@ class ApiCommands
      */
     public function ImportItems($items, $batchSize = 50, $timeout = '-1 day', Output $output)
     {
-        $clearBatch = 10;
+        $clearBatch = 10;       
         do {
             $i        = 1;
             $progress = ProgressBarHelper::init($output, $batchSize);
@@ -149,6 +149,40 @@ class ApiCommands
         $output->writeln('');
         $output->writeln('Imported '.$i.' items');
 
+    }
+
+    /**
+     * @param     $items
+     * @param int $batchSize
+     */
+    public function DeactivateMissingItems($items, Output $output)
+    {        
+        $itemsInJson = [];
+        foreach ($items as $key => $item) {
+            $itemsInJson[] = $item['itemId'];            
+        }
+
+        $itemRepository = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
+        $activeItemsMissingFromJson = $itemRepository->findActiveExcluding($itemsInJson);
+
+        $i        = 0;
+        $progress = ProgressBarHelper::init($output, count($activeItemsMissingFromJson));
+        $progress->start();
+
+
+        foreach ($activeItemsMissingFromJson as $key => $item){
+            $i++;
+
+            $itemEntity = $itemRepository->findOneBy(['itemId' => $item['item_id']]);
+            $itemEntity->setActive(false);
+            $itemRepository->saveEntity($itemEntity);
+
+            $progress->setProgress($i);
+        }
+
+        $progress->finish();
+        $output->writeln('');
+        $output->writeln('Deactivated '.$i.' items that were missing from the json');
     }
 }
 

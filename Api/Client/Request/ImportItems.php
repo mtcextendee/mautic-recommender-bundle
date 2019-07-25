@@ -29,6 +29,7 @@ class ImportItems extends AbstractRequest
             }
         }
         $item->setDateModified((new DateTimeHelper())->getDateTime());
+        $item->setActive(true);
         $addItem->addEntity($item);
         $addItem->save();
 

@@ -59,6 +59,23 @@ class ItemRepository extends CommonRepository
     }
 
     /**
+     * @param array $itemIds
+     * 
+     * @return array
+     */
+    public function findActiveExcluding($itemIds)
+    {        
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('id, item_id')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'i')
+            ->andWhere($qb->expr()->eq('i.active', '1'));
+        if (!empty($itemIds)){
+            $qb->andWhere($qb->expr()->notIn('i.item_id', $itemIds));
+        }
+        return $qb->execute()->fetchAll();           
+    }
+
+    /**
      * @return array
      */
     public function getEventNamesAsChoices()

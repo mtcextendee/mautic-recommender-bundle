@@ -68,6 +68,12 @@ return [
                     'mautic.helper.integration'
                 ],
             ],
+            'mautic.recommender.maintenance.subscriber' => [
+                'class'     => 'MauticPlugin\MauticRecommenderBundle\EventListener\MaintenanceSubscriber',
+                'arguments' => [
+                    'doctrine.dbal.default_connection',
+                ],
+            ],
         ],
         'models'       => [
             'mautic.recommender.model.recommender' => [
