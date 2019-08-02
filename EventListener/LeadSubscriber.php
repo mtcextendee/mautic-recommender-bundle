@@ -12,11 +12,9 @@
 namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
-use Mautic\CoreBundle\Factory\ModelFactory;
-use Mautic\CoreBundle\Translation\Translator;
+use Mautic\LeadBundle\Event\LeadMergeEvent;
 use Mautic\LeadBundle\Event\LeadTimelineEvent;
 use Mautic\LeadBundle\LeadEvents;
-
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
