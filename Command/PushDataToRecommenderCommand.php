@@ -151,7 +151,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 );
             }
 
-            if (empty(!file_exists($file))) {
+            if (!file_exists($file)) {
                 return $output->writeln(
                     sprintf(
                         '<error>ERROR:</error> <info>'.$translator->trans(

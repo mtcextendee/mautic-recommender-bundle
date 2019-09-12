@@ -15,7 +15,6 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
-use Mautic\LeadBundle\Entity\Lead;
 
 class Item
 {
@@ -162,7 +161,7 @@ class Item
      *
      * @return Item
      */
-    public function setActive(bool $active)
+    public function setActive($active)
     {
         $this->active = $active;
 

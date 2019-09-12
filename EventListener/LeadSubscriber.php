@@ -15,6 +15,8 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\LeadBundle\Event\LeadTimelineEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
+use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
+use MauticPlugin\MauticRecommenderBundle\Entity\EventLogRepository;
 
 /**
  * Class LeadSubscriber.
@@ -73,7 +75,7 @@ class LeadSubscriber extends CommonSubscriber
             return;
         }
 
-        /** @var \Mautic\FormBundle\Entity\SubmissionRepository $submissionRepository */
+        /** @var EventLogRepository $eventLogRepository */
         $eventLogRepository = $this->em->getRepository('MauticRecommenderBundle:EventLog');
         $rows               = $eventLogRepository->getTimeLineEvents($event->getLead(), $event->getQueryOptions());
 
@@ -83,8 +85,8 @@ class LeadSubscriber extends CommonSubscriber
         if (!$event->isEngagementCount()) {
             // Add the submissions to the event array
             foreach ($rows['results'] as $row) {
+                /** @var EventLog $eventLogEntity */
                 $eventLogEntity   = $eventLogRepository->getEntity($row['id']);
-                
                 $event->addEvent(
                     [
                         'event'      => $eventTypeKey,
@@ -100,7 +102,12 @@ class LeadSubscriber extends CommonSubscriber
         }
     }
 
-    private function getLabel($eventLogEntity){
+    /**
+     * @param EventLog $eventLogEntity
+     *
+     * @return string
+     */
+    private function getLabel(EventLog $eventLogEntity){
         return $this->translator->trans(
             'mautic.plugin.recommender.event.timeline_event.label',
             [
