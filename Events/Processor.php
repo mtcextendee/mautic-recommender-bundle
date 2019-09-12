@@ -112,15 +112,19 @@ class Processor
                 )
             );
         }
-
-        if (isset($eventDetail['contactEmail'])) {
-            $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
-            $contact = current($contact);
-            if (!$contact instanceof Lead) {
-                throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
+        // Just provider from console
+        if (defined('IN_MAUTIC_CONSOLE')) {
+            if (isset($eventDetail['contactEmail'])) {
+                $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
+                $contact = current($contact);
+                if (!$contact instanceof Lead) {
+                    throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
+                }
+                unset($eventDetail['contactEmail']);
+                $this->leadModel->setSystemCurrentLead($contact);
+            } elseif (isset($eventDetail['contactId'])) {
+                $this->leadModel->setSystemCurrentLead($this->leadModel->getEntity($eventDetail['contactId']));
             }
-            unset($eventDetail['contactEmail']);
-            $this->leadModel->setSystemCurrentLead($contact);
         }
 
         $this->apiCommands->callCommand($eventLabel, $eventDetail);
