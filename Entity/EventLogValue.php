@@ -111,11 +111,10 @@ class EventLogValue
     }
 
     /**
-     * @param string $value
      *
      * @return ItemPropertyValue
      */
-    public function setValue(string $value)
+    public function setValue(string $value = null)
     {
         $this->value = $value;
 

@@ -15,13 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mautic\CoreBundle\Helper\ProgressBarHelper;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
-use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
 use MauticPlugin\MauticRecommenderBundle\Entity\Property;
-use MauticPlugin\MauticRecommenderBundle\Event\SentEvent;
-use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
-use OpenCloud\Common\Exceptions\JsonError;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -155,7 +151,7 @@ class ApiCommands
      * @param     $items
      * @param int $batchSize
      */
-    public function DeactivateMissingItems($items, Output $output)
+    public function deactivateMissingItems($items, Output $output)
     {        
         $itemsInJson = [];
         foreach ($items as $key => $item) {
