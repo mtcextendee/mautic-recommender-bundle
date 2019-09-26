@@ -110,6 +110,7 @@ class Processor
         }
         // Just provider from console
         if (defined('IN_MAUTIC_CONSOLE') ||  defined('IN_MAUTIC_API')) {
+
             if (isset($eventDetail['contactEmail'])) {
                 $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
                 $contact = current($contact);
@@ -120,6 +121,8 @@ class Processor
                 $this->leadModel->setSystemCurrentLead($contact);
             } elseif (isset($eventDetail['contactId'])) {
                 $this->leadModel->setSystemCurrentLead($this->leadModel->getEntity($eventDetail['contactId']));
+            } else {
+                throw new \Exception('One of parameters contactId/contactEmail is required');
             }
         }
 

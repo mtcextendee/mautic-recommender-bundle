@@ -31,6 +31,11 @@ class RecommenderApiController extends CommonApiController
      * @var array
      */
     private $allowedEvents = ['RecommenderEvent'];
+
+    /**
+     * @var array
+     */
+    private $requiredParams = ['contactId', 'contactEmail'];
     /**
      * @param FilterControllerEvent $event
      */
@@ -51,16 +56,17 @@ class RecommenderApiController extends CommonApiController
             return $this->badRequest(
                 sprintf("%s is not allowed. You can use just %s", $component, implode(', ', $this->allowedEvents))
             );
-        } elseif (empty($this->request->request->all())) {
-            $view = $this->view(['error' => 'Parameters cannot be empty.'], Codes::HTTP_OK);;
-
-            return $this->handleView($view);
         }
-        $eventDetail = $this->request->request->all();
+
+        if (!$eventDetail = $this->request->request->all()) {
+            return $this->badRequest('Parameters cannot be empty');
+        }
+
         try {
             $this->processor->process($eventDetail);
             /** @var ApiCommands $apiCommands */
             $view  = $this->view(['success'=>'1'], Codes::HTTP_OK);
+
             return $this->handleView($view);
         } catch (\Exception $exception) {
             return $this->badRequest($exception->getMessage());
