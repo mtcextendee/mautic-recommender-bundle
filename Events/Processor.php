@@ -91,10 +91,6 @@ class Processor
             throw new \Exception('Event detail of tracking event cannot be empty');
         }
 
-        if (!$this->security->isAnonymous()) {
-            throw new \Exception('Can\'t load for loggedin users');
-        }
-
         $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
 
         if (!isset($eventDetail['eventName'])) {
@@ -113,7 +109,7 @@ class Processor
             );
         }
         // Just provider from console
-        if (defined('IN_MAUTIC_CONSOLE')) {
+        if (defined('IN_MAUTIC_CONSOLE') ||  defined('IN_MAUTIC_API')) {
             if (isset($eventDetail['contactEmail'])) {
                 $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
                 $contact = current($contact);
