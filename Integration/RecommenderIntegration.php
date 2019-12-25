@@ -2,7 +2,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Integration;
 
-use Mautic\CampaignBundle\Form\Type\CampaignListType;
 use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\ListTemplateType;
@@ -12,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class RecommenderIntegration extends AbstractIntegration
 {
+    CONST NAME = 'Recommender';
 
     /**
      * RecommenderIntegration constructor.
@@ -28,7 +28,7 @@ class RecommenderIntegration extends AbstractIntegration
      */
     public function getName()
     {
-        return 'Recommender';
+        return self::NAME;
     }
 
     public function getIcon()
@@ -45,7 +45,6 @@ class RecommenderIntegration extends AbstractIntegration
     public function getSupportedFeatureTooltips()
     {
         return [
-            //    'tracking_page_enabled' => 'mautic.integration.form.features.tracking_page_enabled.tooltip',
         ];
     }
 
@@ -89,6 +88,8 @@ class RecommenderIntegration extends AbstractIntegration
     public function appendToForm(&$builder, $data, $formArea)
     {
         if ($formArea == 'features') {
+
+
             $builder->add(
                 'currency',
                 TextType::class,
@@ -103,7 +104,7 @@ class RecommenderIntegration extends AbstractIntegration
 
             $builder->add(
                 'show_recommender_testbench',
-                'yesno_button_group',
+                YesNoButtonGroupType::class,
                 [
                     'label' => 'mautic.plugin.recommender.form.testbench',
                     'attr'  => [
