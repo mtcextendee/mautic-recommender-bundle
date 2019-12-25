@@ -36,7 +36,7 @@ class Property
     /**
      * @var bool
      */
-    protected $segmentFilter;
+    protected $segmentFilter = false;
 
     /**
      * @var string
