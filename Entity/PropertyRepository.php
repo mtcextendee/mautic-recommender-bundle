@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
+use MauticPlugin\MauticRecommenderRecombeeBundle\Recombee\Sync\DAO\InputDAO;
 
 
 class PropertyRepository extends CommonRepository
@@ -25,11 +26,23 @@ class PropertyRepository extends CommonRepository
         return 'rip';
     }
 
+    /**
+     * @return array
+     */
     public function findAllArray()
     {
         return $this->getEntityManager()->createQueryBuilder()
                 ->from('MauticRecommenderBundle:Property', 'p')
                 ->select('p')
                 ->getQuery()->getArrayResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getPropertyNamesAsChoices()
+    {
+        $properties = $this->findAllArray();
+        return array_combine(array_column($properties, 'id'), array_column($properties, 'name'));
     }
 }

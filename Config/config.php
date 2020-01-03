@@ -1,5 +1,7 @@
 <?php
 
+use Doctrine\ORM\EntityRepository;
+
 return [
     'name'        => 'RecommenderTemplate',
     'description' => 'Recomendations engine',
@@ -159,6 +161,22 @@ return [
             ],
         ],
         'other'        => [
+
+            'mautic.recommender.integration.settings'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderSettings::class,
+                'arguments' => [
+                    'mautic.helper.integration',
+                    'mautic.helper.core_parameters'
+                ]
+            ],
+
+            'mautic.recommender.contact.search'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Service\ContactSearch::class,
+                'arguments' => [
+                    '@service_container'
+                ]
+            ],
+
             'mautic.recommender.contact.search'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Service\ContactSearch::class,
                 'arguments' => [
@@ -414,6 +432,30 @@ return [
                 ],
             ],
         ],
+        'repositories' => [
+            'mautic.recommender.repository.item' => [
+                'class'     => Doctrine\ORM\EntityRepository::class,
+                'factory'   => ['@doctrine.orm.entity_manager', 'getRepository'],
+                'arguments' => [
+                    \MauticPlugin\MauticRecommenderBundle\Entity\Item::class,
+                ],
+            ],
+            'mautic.recommender.repository.property' => [
+                'class'     => Doctrine\ORM\EntityRepository::class,
+                'factory'   => ['@doctrine.orm.entity_manager', 'getRepository'],
+                'arguments' => [
+                    \MauticPlugin\MauticRecommenderBundle\Entity\Property::class,
+                ],
+            ],
+            'mautic.recommender.repository.item.property.value' => [
+                'class'     => Doctrine\ORM\EntityRepository::class,
+                'factory'   => ['@doctrine.orm.entity_manager', 'getRepository'],
+                'arguments' => [
+                    \MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue::class,
+                ],
+            ],
+
+        ]
     ],
     'routes'      => [
         'main'   => [
@@ -523,6 +565,9 @@ return [
         ],
     ],
     'parameters'  => [
-        'eventLabel'=> 'RecommenderEvent'
+        'eventLabel'=> 'RecommenderEvent',
+        'recommender_ai'=> true,
+        'recommender_ai_database' => 'kuzmany-shopify',
+        'recommender_ai_secret_key' => 'jt9KE1ZOzQCHXN61OjS7KOxKDasVTZxHYKaSIKfpLSsuDqeflJ7xFv1r5Oz8Q5e2',
     ],
 ];

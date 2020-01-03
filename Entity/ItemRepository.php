@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
+use MauticPlugin\MauticRecommenderRecombeeBundle\Recombee\Sync\DAO\InputDAO;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ItemRepository extends CommonRepository
@@ -45,6 +46,24 @@ class ItemRepository extends CommonRepository
             ->setMaxResults($max)
             ->setParameter('contactId', $contactId);
         return $qb->execute()->fetchAll();
+    }
+
+    /**
+     * @param InputDAO $inputDAO
+     *
+     * @return array
+     */
+    public function getItemsToSync(InputDAO $inputDAO)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('ri.id, ri.item_id')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'ri')
+            ->where($qb->expr()->gt('ri.date_modified', ':dateModified'))
+            ->orderBy('ri.date_modified', 'ASC')
+            ->setMaxResults($inputDAO->getLimit())
+            ->setParameter('dateModified', $inputDAO->getStartDateTime()->format('Y-m-d H:i:s'));
+        return $qb->execute()->fetchAll();
+
     }
 
     /**

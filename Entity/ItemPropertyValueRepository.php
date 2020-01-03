@@ -46,7 +46,7 @@ class ItemPropertyValueRepository extends CommonRepository
     public function getValues($itemId = null)
     {
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
-        $qb->select('p.name, pv.value')
+        $qb->select('p.name, pv.value, p.type')
             ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'i')
             ->join('i', MAUTIC_TABLE_PREFIX.'recommender_item_property_value', 'pv', 'pv.item_id = i.id')
             ->join('pv', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'pv.property_id = p.id')
