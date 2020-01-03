@@ -100,7 +100,7 @@ class TokenReplacementSubscriber extends CommonSubscriber
         }
         
         $clickthrough = $event->getClickthrough();
-        if (empty($clickthrough['focus_id'])) {
+        if (empty($clickthrough['focus_id']) || empty($clickthrough['lead'])) {
             return;
         }
         $leadId       = $clickthrough['lead'];

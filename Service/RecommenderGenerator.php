@@ -16,7 +16,6 @@ use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
-use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
 use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
