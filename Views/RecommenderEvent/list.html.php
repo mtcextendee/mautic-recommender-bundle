@@ -11,7 +11,7 @@
 if ($tmpl == 'index') {
     $view->extend('MauticRecommenderBundle:RecommenderEvent:index.html.php');
 }
-/* @var \MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate[] $items */
+/* @var \MauticPlugin\MauticRecommenderBundle\Entity\Event[] $items */
 ?>
 <?php if (count($items)): ?>
     <div class="table-responsive page-list">
@@ -39,6 +39,15 @@ if ($tmpl == 'index') {
                         'orderBy'    => 'e.name',
                         'text'       => 'mautic.core.name',
                         'class'      => 'col-msg-name',
+                        'default'    => true,
+                    ]
+                );
+
+                echo $view->render(
+                    'MauticCoreBundle:Helper:tableheader.html.php',
+                    [
+                        'text'       => 'mautic.recommender.form.event.type',
+                        'class'      => 'col-msg-event-type',
                         'default'    => true,
                     ]
                 );
@@ -103,8 +112,10 @@ if ($tmpl == 'index') {
                         </a>
                     </td>
                     <td>
+                        <?php echo $item->getType(); ?>
+                    </td>
+                    <td>
                         <?php echo $item->getWeight(); ?>
-
                     </td>
                     <td class="visible-md visible-lg"><?php echo $item->getId(); ?></td>
                 </tr>

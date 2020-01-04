@@ -20,8 +20,11 @@ $recommender = $entity;
     <div class="col-md-6">
         <?php echo $view['form']->row($form['name']); ?>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-3">
         <?php echo $view['form']->row($form['weight']); ?>
+    </div>
+    <div class="col-md-3">
+        <?php echo $view['form']->row($form['type']); ?>
     </div>
 </div>
 

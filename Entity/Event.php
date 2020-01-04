@@ -15,10 +15,10 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping as ORM;
 use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
-use Mautic\LeadBundle\Entity\Lead;
 
 /**
  * Class Event
+ *
  * @package MauticPlugin\MauticRecommenderBundle\Entity
  */
 class Event
@@ -27,10 +27,16 @@ class Event
      * @var int
      */
     protected $id;
+
     /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var string
+     */
+    protected $type;
 
     /** @var  int */
     protected $weight = 0;
@@ -57,6 +63,11 @@ class Event
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('weight', Type::INTEGER, 'weight')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
+
+        $builder->createField('type', Type::STRING)
+            ->columnName('type')
+            ->nullable()
+            ->build();
     }
 
     /**
@@ -169,6 +180,30 @@ class Event
     public function getPublishStatus()
     {
 
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return Event
+     */
+    public function setType($type): Event
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getTypeTranslations()
+    {
     }
 
 }
