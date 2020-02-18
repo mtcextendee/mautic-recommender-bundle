@@ -91,7 +91,7 @@ $style['recommender-action'][] = "";
 $style['recommender-action'] = implode("; ", $style['recommender-action']);
 
 
-$style['recommender-name'] = [];
+$style['recommender-name'] = ['margin: 0'];
 if (!empty($recommender->getProperties()['itemNameColor'])):
     $style['recommender-name'][] =  'color:#'.$recommender->getProperties()['itemNameColor'];     
 endif;
@@ -192,7 +192,7 @@ if ($i == 0 || ($i % $recommender->getProperties()['columns']) === 0) {
             <p class="recombe-short-description" style="<?php echo $style['recombe-short-description']; ?>"><?php echo $recommender->getProperties()['itemShortDescription']; ?></p>
         <?php endif; ?>
         <?php if (!empty($recommender->getProperties()['itemPrice'])): ?>
-            <p class="recommender-price-case">
+            <p class="recommender-price-case" style="<?php echo $style['recommender-price-case']; ?>">
             <span class="recommender-price" style="<?php echo $style['recommender-price']; ?>">
                 <?php echo $recommender->getProperties(
                 )['itemPrice']; ?><?php if (!empty($settings['currency'])): ?><?php echo $settings['currency']; ?><?php endif; ?>
