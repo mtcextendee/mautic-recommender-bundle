@@ -33,7 +33,7 @@ $style['recommender-row'][] = "";
 $style['recommender-row'] = implode("; ", $style['recommender-row']);
 
 
-$style['recommender-col'] = [];
+$style['recommender-col'] = ['vertical-align: top'];
 if (!empty($recommender->getProperties()['colBackground'])):
     $style['recommender-col'][] = 'background-color:#'.$recommender->getProperties()['colBackground'];
 endif;
