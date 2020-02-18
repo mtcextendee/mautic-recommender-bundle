@@ -30,7 +30,8 @@ echo $view->render(
         [
             'recommender' => $recommender,
             'settings' => $settings,
-            'preview' => $preview
+            'preview' => $preview,
+            'index'=> $i
         ]
     );
     ?>

@@ -213,8 +213,10 @@ class RecommenderGenerator
     private function getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate)
     {
         $output = $headerTemplate->render($this->getFirstItem());
-        foreach ($this->getItems() as $item) {
-            $output .= $bodyTemplate->render($item);
+        foreach ($this->getItems() as $i => $item) {
+            $output .= $bodyTemplate->render($item, [
+                'index' => $i
+            ]);
         }
         $output.= $footerTemplate->render($this->getFirstItem());
         return $output;
