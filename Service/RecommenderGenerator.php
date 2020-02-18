@@ -214,9 +214,8 @@ class RecommenderGenerator
     {
         $output = $headerTemplate->render($this->getFirstItem());
         foreach ($this->getItems() as $i => $item) {
-            $output .= $bodyTemplate->render($item, [
-                'index' => $i
-            ]);
+            $item['index'] = $i;
+            $output .= $bodyTemplate->render($item);
         }
         $output.= $footerTemplate->render($this->getFirstItem());
         return $output;
