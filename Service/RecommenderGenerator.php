@@ -160,7 +160,7 @@ class RecommenderGenerator
      *
      * @return string|void
      */
-    public function getContentByToken(RecommenderToken $recommenderToken)
+    public function getContentByToken(RecommenderToken $recommenderToken, $view = 'Page')
     {
         if (!$recommenderToken->getRecommender() instanceof Recommender) {
             return;
@@ -173,21 +173,21 @@ class RecommenderGenerator
         }
         if ($recommenderTemplate->getTemplateMode() == 'basic') {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Builder/Page:generator-header.html.php',
+                'MauticRecommenderBundle:Builder/'.$view.':generator-header.html.php',
                 [
                     'recommender' => $recommenderTemplate,
                     'settings'=>$recommenderToken->getSettings()
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Builder/Page:generator-footer.html.php',
+                'MauticRecommenderBundle:Builder/'.$view.':generator-footer.html.php',
                 [
                     'recommender' => $recommenderTemplate,
                     'settings'=>$recommenderToken->getSettings()
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
-                'MauticRecommenderBundle:Builder/Page:generator-body.html.php',
+                'MauticRecommenderBundle:Builder/'.$view.':generator-body.html.php',
                 [
                     'recommender' => $recommenderTemplate,
                     'settings'=>$recommenderToken->getSettings()
