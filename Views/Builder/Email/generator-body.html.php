@@ -150,21 +150,30 @@ $style['recommender-price-old'] = implode("; ", $style['recommender-price-old'])
 
 
 
-$i = $index;
-if ($i == 0 || ($i % $recommender->getProperties()['columns']) === 0) {
-    if ($i > 0) {
+if (isset($index)){
+    $i = $index;
+    if ($i == 0 || ($i % $recommender->getProperties()['columns']) === 0) {
+        if ($i > 0) {
+            ?>
+            </tr>
+            <?php
+        }
         ?>
-        </tr>
+        <tr style="<?php echo $style['recommender-row']; ?>">
         <?php
     }
-    ?>
-    <tr style="<?php echo $style['recommender-row']; ?>">
-    <?php
+}else{
+    echo "{% if index == 0 or index is divisible by(" . 12 / $recommender->getProperties()['columns'] . ") %}";
+    echo "{% if index > 0 %}";
+    echo "</tr>";
+    echo "{% endif %}";
+    echo "<tr style=\"" . $style['recommender-row'] . "\">";
+    echo "{% endif %}";
 }
-;
+
 ?>
 
-    <td style="<?php echo $style['recommender-col']; ?>">
+    <td style="<?php echo $style['recommender-col']; ?>" >
         <?php
         if (!empty($recommender->getProperties()['itemImage'])): ?>
             <?php if (!empty($recommender->getProperties()['itemUrl'])): ?>
