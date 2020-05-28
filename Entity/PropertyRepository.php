@@ -11,9 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
-use MauticPlugin\MauticRecommenderRecombeeBundle\Recombee\Sync\DAO\InputDAO;
 
 
 class PropertyRepository extends CommonRepository

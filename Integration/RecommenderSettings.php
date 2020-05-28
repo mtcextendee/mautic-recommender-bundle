@@ -17,6 +17,7 @@ use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticRecommenderBundle\Integration\DTO\RecombeeSettings;
+use MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger;
 
 class RecommenderSettings
 {
@@ -74,6 +75,15 @@ class RecommenderSettings
         }
 
         return [];
+    }
+
+    /**
+     * @param DebugLogger $logger
+     */
+    public function initiateDebugLogger(DebugLogger $logger): void
+    {
+        // Yes it's a hack to prevent from having to pass the logger as a dependency into dozens of classes
+        // So not doing anything with the logger, just need Symfony to initiate the service
     }
 
 }

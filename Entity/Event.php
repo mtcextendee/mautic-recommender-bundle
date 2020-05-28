@@ -187,7 +187,7 @@ class Event
      *
      * @return Event
      */
-    public function setType($type): Event
+    public function setType($type)
     {
         $this->type = $type;
 

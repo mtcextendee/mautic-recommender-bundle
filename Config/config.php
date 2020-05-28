@@ -161,13 +161,21 @@ return [
             ],
         ],
         'other'        => [
-
+            'mautic.recommender.logger' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger::class,
+                'arguments' => [
+                    'monolog.logger.mautic',
+                ],
+            ],
             'mautic.recommender.integration.settings'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderSettings::class,
                 'arguments' => [
                     'mautic.helper.integration',
                     'mautic.helper.core_parameters'
-                ]
+                ],
+                'methodCalls' => [
+                    'initiateDebugLogger' => ['mautic.recommender.logger'],
+                ],
             ],
 
             'mautic.recommender.contact.search'  => [

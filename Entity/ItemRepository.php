@@ -11,11 +11,8 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderRecombeeBundle\Recombee\Sync\DAO\InputDAO;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 class ItemRepository extends CommonRepository
 {
