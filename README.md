@@ -32,7 +32,6 @@ The first product recommendations system to Mautic.  Increase your customer sati
 - Flexible template builder
 - Custom tracking events
 - Multi channel support
-- Google Analytics integration
 
 Documentation: [docs.mtcextendee.com](https://docs.mtcextendee.com/)
 
