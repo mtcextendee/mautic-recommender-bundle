@@ -25,7 +25,4 @@ class RecommenderAttr
     {
         return $this->recommenderAttr;
     }
-
-
 }
-

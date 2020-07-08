@@ -16,7 +16,6 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuil
 
 class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
 {
-
     /**
      * {@inheritdoc}
      */
@@ -49,11 +48,10 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
         return 'value';
     }
 
-
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
-        $filterOperator = $filter->getOperator();
+        $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
             $parameters = [];
@@ -64,13 +62,13 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
             $parameters = $this->generateRandomParameterName();
         }
         $filterParametersHolder = $filter->getParameterHolder($parameters);
-        $tableAlias = $this->generateRandomParameterName();
-        $tableAlias2 = $this->generateRandomParameterName();
+        $tableAlias             = $this->generateRandomParameterName();
+        $tableAlias2            = $this->generateRandomParameterName();
 
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
             ->select('NULL')->from($filter->getTable(), $tableAlias)
-            ->innerJoin($tableAlias, 'recommender_event_log', $tableAlias2, $tableAlias2.'.item_id = '.$tableAlias.'.item_id' )
+            ->innerJoin($tableAlias, 'recommender_event_log', $tableAlias2, $tableAlias2.'.item_id = '.$tableAlias.'.item_id')
             ->andWhere($tableAlias2.'.'.$this->getIdentificator().' = l.id')
             ->andWhere($tableAlias.'.property_id = '.$filter->getField());
 

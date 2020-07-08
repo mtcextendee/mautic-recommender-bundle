@@ -116,7 +116,7 @@ class FilterQueryBuilder extends RecommenderFilterQueryBuilder
                 break;
             case 'notGt':
             case 'notLt':
-                $expr = strtolower(str_replace('not', '', $filterOperator));
+                $expr       = strtolower(str_replace('not', '', $filterOperator));
                 $expression = $subQueryBuilder->expr()->orX(
                     $subQueryBuilder->expr()->isNull($tableAlias.'.'.$filter->getField()),
                     $subQueryBuilder->expr()->$expr($tableAlias.'.'.$filter->getField(), $filterParametersHolder)
@@ -146,6 +146,7 @@ class FilterQueryBuilder extends RecommenderFilterQueryBuilder
         //$queryBuilder->setParametersPairs();
 //        $queryBuilder->setParametersPairs($parameters, $filterParameters);
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
+
         return $queryBuilder;
     }
 }

@@ -16,11 +16,11 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuil
 
 class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
 {
-
     public function getTable()
     {
         return 'recommender_item_property_value';
     }
+
     /**
      * @return string
      */
@@ -28,7 +28,6 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
     {
         return 'item_id';
     }
-
 
     /**
      * @return string
@@ -49,7 +48,7 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
-        $filterOperator = $filter->getOperator();
+        $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
             $parameters = [];
@@ -60,7 +59,7 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
             $parameters = $this->generateRandomParameterName();
         }
         $filterParametersHolder = $filter->getParameterHolder($parameters);
-        $tableAlias = $this->generateRandomParameterName();
+        $tableAlias             = $this->generateRandomParameterName();
 
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
@@ -132,9 +131,9 @@ class ItemValueQueryBuilder extends RecommenderFilterQueryBuilder
 
                 $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
         }
-      //  $queryBuilder->setParametersPairs($parameters, $filterParameters);
+        //  $queryBuilder->setParametersPairs($parameters, $filterParameters);
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
+
         return $queryBuilder;
     }
-
 }

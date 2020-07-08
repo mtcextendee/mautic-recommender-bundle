@@ -6,5 +6,4 @@ use Mautic\PluginBundle\Bundle\PluginBundleBase;
 
 class MauticRecommenderBundle extends PluginBundleBase
 {
-
 }

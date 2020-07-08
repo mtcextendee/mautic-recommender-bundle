@@ -14,7 +14,6 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 use Mautic\CoreBundle\Entity\CommonRepository;
 use MauticPlugin\MauticRecommenderBundle\Helper;
 
-
 class ItemPropertyValueRepository extends CommonRepository
 {
     /**
@@ -52,6 +51,7 @@ class ItemPropertyValueRepository extends CommonRepository
             ->join('pv', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'pv.property_id = p.id')
             ->where($qb->expr()->eq('i.id', ':itemId'))
             ->setParameter('itemId', $itemId);
+
         return $qb->execute()->fetchAll();
     }
 }

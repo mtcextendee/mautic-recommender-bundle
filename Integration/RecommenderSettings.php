@@ -21,7 +21,7 @@ use MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger;
 
 class RecommenderSettings
 {
-     /**
+    /**
      * @var IntegrationHelper
      */
     private $integrationHelper;
@@ -49,9 +49,9 @@ class RecommenderSettings
      */
     public function __construct(IntegrationHelper $integrationHelper, CoreParametersHelper $coreParametersHelper)
     {
-        $this->integrationHelper = $integrationHelper;
+        $this->integrationHelper    = $integrationHelper;
         $this->coreParametersHelper = $coreParametersHelper;
-        $this->settings = $this->getIntegrationSettings('Recommender');
+        $this->settings             = $this->getIntegrationSettings('Recommender');
     }
 
     public function isEnabled()
@@ -85,5 +85,4 @@ class RecommenderSettings
         // Yes it's a hack to prevent from having to pass the logger as a dependency into dozens of classes
         // So not doing anything with the logger, just need Symfony to initiate the service
     }
-
 }

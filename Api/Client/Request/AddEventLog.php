@@ -19,7 +19,7 @@ use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
 class AddEventLog extends AbstractRequest
 {
     /**
-     * Just return new entity
+     * Just return new entity.
      *
      * @return EventLogValue
      */
@@ -36,4 +36,3 @@ class AddEventLog extends AbstractRequest
         return $this->getModel()->getEventLogRepository();
     }
 }
-

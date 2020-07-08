@@ -11,16 +11,15 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener;
 
-
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\Model\ListModel;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use Symfony\Component\Translation\TranslatorInterface;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class Choices
 {
-    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value'];
+    const ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value'];
 
     /**
      * @var Fields
@@ -50,16 +49,15 @@ class Choices
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        Fields $fields, 
-        ListModel $listModel, 
+        Fields $fields,
+        ListModel $listModel,
         TranslatorInterface $translator,
         IntegrationHelper $integrationHelper
     ) {
-
-        $this->fields = $fields;
-        $this->listModel = $listModel;
-        $this->translator = $translator;
-        $this->integrationHelper = $integrationHelper;    
+        $this->fields            = $fields;
+        $this->listModel         = $listModel;
+        $this->translator        = $translator;
+        $this->integrationHelper = $integrationHelper;
     }
 
     /**
@@ -72,7 +70,7 @@ class Choices
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
-        
+
         $choices = $this->getChoices();
         foreach (self::ALLOWED_TABLES as $table) {
             foreach ($choices[$table] as $key=>$options) {
@@ -103,6 +101,7 @@ class Choices
                 ];
             }
         }
+
         return $choices;
     }
 }

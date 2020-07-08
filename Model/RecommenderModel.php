@@ -23,7 +23,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class RecommenderModel extends FormModel implements AjaxLookupModelInterface
 {
-
     /**
      * Retrieve the permissions base.
      *
@@ -87,6 +86,7 @@ class RecommenderModel extends FormModel implements AjaxLookupModelInterface
             $options['action'] = $action;
         }
         $options['update_select'] = 'recommender_template';
+
         return $formFactory->create('MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderType', $entity, $options);
     }
 

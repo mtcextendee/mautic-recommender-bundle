@@ -18,7 +18,6 @@ use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Api\Client\Client;
 use Monolog\Logger;
 
-
 class RecommenderApi
 {
     /**
@@ -41,7 +40,6 @@ class RecommenderApi
      */
     private $versionHelper;
 
-
     /**
      * TwilioApi constructor.
      *
@@ -49,7 +47,6 @@ class RecommenderApi
      * @param IntegrationHelper $integrationHelper
      * @param Logger            $logger
      * @param VersionHelper     $versionHelper
-     *
      * @param Client            $client
      *
      * @internal param CoreParametersHelper $coreParametersHelper
@@ -61,7 +58,6 @@ class RecommenderApi
         VersionHelper $versionHelper,
         Client $client
     ) {
-
         $this->logger = $logger;
         $this->client = $client;
 
@@ -69,7 +65,6 @@ class RecommenderApi
 
         $integration = $integrationHelper->getIntegrationObject('Recommender');
         if (($integration && $integration->getIntegrationSettings()->getIsPublished()) || isset($_POST['integration_details'])) {
-
             $keys = $integration->getDecryptedApiKeys();
 
             if (!empty($_POST['integration_details']['apiKeys'])) {
@@ -79,7 +74,6 @@ class RecommenderApi
                 $keys['database']   = trim(getenv('d'));
                 $keys['secret_key'] = trim(getenv('s'));
             }
-
         }
 
         $database = '';
@@ -92,17 +86,17 @@ class RecommenderApi
             $secretKey = $keys['secret_key'];
         }
 
-      /*  $this->client = new Client(
-            $database,
-            $secretKey,
-            'https',
-            ['serviceName' => 'Mautic '.$versionHelper->getVersion()]
-        );*/
+        /*  $this->client = new Client(
+              $database,
+              $secretKey,
+              'https',
+              ['serviceName' => 'Mautic '.$versionHelper->getVersion()]
+          );*/
 
         parent::__construct($pageTrackableModel);
         $this->integrationHelper = $integrationHelper;
-        $this->versionHelper = $versionHelper;
-        $this->client = $client;
+        $this->versionHelper     = $versionHelper;
+        $this->client            = $client;
     }
 
     /**
@@ -112,5 +106,4 @@ class RecommenderApi
     {
         return $this->client;
     }
-
 }

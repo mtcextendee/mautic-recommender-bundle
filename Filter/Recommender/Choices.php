@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 
-
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
@@ -20,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class Choices
 {
-    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item', 'recommender_item_property_value', ];
+    const ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item', 'recommender_item_property_value'];
 
     /**
      * @var Fields
@@ -48,9 +47,8 @@ class Choices
      */
     public function __construct(Fields $fields, ListModel $listModel, TranslatorInterface $translator)
     {
-
-        $this->fields = $fields;
-        $this->listModel = $listModel;
+        $this->fields     = $fields;
+        $this->listModel  = $listModel;
         $this->translator = $translator;
     }
 
@@ -85,8 +83,8 @@ class Choices
                 }
             }
         }
-        return $this->fieldChoices;
 
+        return $this->fieldChoices;
     }
 
     /**
@@ -95,7 +93,7 @@ class Choices
     public function getSelectOptions()
     {
         $choices = $this->getChoices();
-        $opt = [];
+        $opt     = [];
         foreach (self::ALLOWED_TABLES as $table) {
             if (isset($choices[$table])) {
                 foreach ($choices[$table] as $key=>$options) {
@@ -103,6 +101,7 @@ class Choices
                 }
             }
         }
+
         return $opt;
     }
 
@@ -122,10 +121,9 @@ class Choices
                     $properties['type'] = $field['type'];
                 }
                 if (isset($properties['type'])) {
-                 //   $properties['type'] = RecommenderHelper::typeToTypeTranslator($properties['type']);
+                    //   $properties['type'] = RecommenderHelper::typeToTypeTranslator($properties['type']);
                 }
                 $choices[$table][$key] = [
-
                     'properties' => $properties,
                     'operators'  => $this->listModel->getOperatorsForFieldType(
                         $properties['type']
@@ -133,10 +131,10 @@ class Choices
                 ];
 
                 switch ($table) {
-                    case "recommender_item":
+                    case 'recommender_item':
                         $choices[$table][$key]['label'] = $this->translator->trans('mautic.plugin.recommender.form.item').' '.$this->translator->trans($field['name']);
                         break;
-                    case "recommender_item_property_value":
+                    case 'recommender_item_property_value':
                         $choices[$table][$key]['label'] =  $this->translator->trans($field['name']);
                         break;
                     default:
@@ -145,6 +143,7 @@ class Choices
                 }
             }
         }
+
         return $choices;
     }
 }

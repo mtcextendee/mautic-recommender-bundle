@@ -23,7 +23,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class Fields
 {
-     use OperatorListTrait;
+    use OperatorListTrait;
 
     /** @var array */
     private $fields = [];
@@ -47,7 +47,7 @@ class Fields
     public function __construct(RecommenderClientModel $recommenderClientModel, TranslatorInterface $translator)
     {
         $this->recommenderClientModel = $recommenderClientModel;
-        $this->translator = $translator;
+        $this->translator             = $translator;
     }
 
     /**
@@ -67,8 +67,7 @@ class Fields
     {
         // Load fields from recommender_event_log db table
         if ($table == 'recommender_event_log' && !isset($this->fields[$table])) {
-
-            $events = $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices();
+            $events                                              = $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices();
             $this->fields['recommender_event_log']['event_id']   =
                 [
                     'name'       => 'mautic.plugin.recommender.form.event.name',
@@ -76,9 +75,8 @@ class Fields
                         'type' => 'select',
                         'list' => $events,
                     ],
-                    'decorator' =>
-                        [
-                            'recommender' => ['type'=>ItemEventQueryBuilder::getServiceId()]
+                    'decorator' => [
+                            'recommender' => ['type'=>ItemEventQueryBuilder::getServiceId()],
                         ],
                 ];
             $this->fields['recommender_event_log']['date_added'] =
@@ -87,10 +85,9 @@ class Fields
                     'properties' => [
                         'type' => 'datetime',
                     ],
-                    'decorator' =>
-                        [
-                            'recommender' => ['type'=>ItemEventQueryBuilder::getServiceId()]
-                        ]
+                    'decorator' => [
+                            'recommender' => ['type'=>ItemEventQueryBuilder::getServiceId()],
+                        ],
                 ];
 
             $this->fields['recommender_event_log']['weight'] =
@@ -99,14 +96,13 @@ class Fields
                     'properties' => [
                         'type' => 'number',
                     ],
-                    'decorator' =>
-                        [
+                    'decorator' => [
                             'recommender' => [
-                                'type'          => FilterQueryBuilder::getServiceId(),
-                                'foreign_table' => 'recommender_event',
+                                'type'                  => FilterQueryBuilder::getServiceId(),
+                                'foreign_table'         => 'recommender_event',
                                 'foreign_identificator' => 'id',
                             ],
-                        ]
+                        ],
                 ];
 
             foreach ($events as $eventId=>$eventName) {
@@ -116,64 +112,60 @@ class Fields
                         'properties' => [
                             'type' => 'datetime',
                         ],
-                        'decorator' =>
-                            [
+                        'decorator' => [
                                 'key'         => $eventId,
                                 'recommender' => [
-                                    'type'=>ItemEventDateQueryBuilder::getServiceId(),
+                                    'type'=> ItemEventDateQueryBuilder::getServiceId(),
 
-     'orderBy'=>  'IF(l.event_id = '.$eventId.', l.date_added, null)'
-                                ]
+     'orderBy'=> 'IF(l.event_id = '.$eventId.', l.date_added, null)',
+                                ],
                             ],
                     ];
             }
-
-        }else if ($table == 'recommender_item' && !isset($this->fields[$table])) {
-                $this->fields['recommender_item']['item_id']        =
+        } elseif ($table == 'recommender_item' && !isset($this->fields[$table])) {
+            $this->fields['recommender_item']['item_id']        =
                     [
                         'name'       => 'mautic.plugin.recommender.form.item.id',
                         'properties' => [
-                            'type' => 'text'
+                            'type' => 'text',
                         ],
-                        'decorator' =>
-                            [
-                                'recommender' => ['type'=>ItemQueryBuilder::getServiceId()]
+                        'decorator' => [
+                                'recommender' => ['type'=>ItemQueryBuilder::getServiceId()],
                             ],
                     ];
-            }
-        elseif ($table == 'recommender_event_log_property_value' && !isset($this->fields[$table])) {
+        } elseif ($table == 'recommender_event_log_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
             foreach ($eventProperties as $property) {
                 $property['decorator'] =
                     [
-                        'key' => $property['id'],
+                        'key'         => $property['id'],
                         'recommender' => [
-                            'type'=>ItemEventValueQueryBuilder::getServiceId(),
-                            'orderBy'=>  '(SELECT v.value
-FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.property_id = '.$property['id'].')'
-                        ]
-
+                            'type'   => ItemEventValueQueryBuilder::getServiceId(),
+                            'orderBy'=> '(SELECT v.value
+FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.property_id = '.$property['id'].')',
+                        ],
                     ];
                 $this->fields['recommender_event_log_property_value']['event_'.$property['id']] = $property;
             }
-        }elseif ($table == 'recommender_item_property_value' && !isset($this->fields[$table])) {
+        } elseif ($table == 'recommender_item_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
             foreach ($eventProperties as $property) {
                 $property['decorator'] =
                     [
-                        'key'=>$property['id'],
+                        'key'         => $property['id'],
                         'recommender' => [
-                            'type'=>ItemValueQueryBuilder::getServiceId()
-                        ]
+                            'type'=> ItemValueQueryBuilder::getServiceId(),
+                        ],
                     ];
                 $this->fields['recommender_item_property_value']['item_'.$property['id']] = $property;
             }
         }
+
         return isset($this->fields[$table]) ? $this->fields[$table] : [];
     }
 
     /**
-     * Remove prefix from property key (item_64, event_44)
+     * Remove prefix from property key (item_64, event_44).
      *
      * @param $key
      *
@@ -181,7 +173,6 @@ FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.pr
      */
     public function cleanKey($key)
     {
-        return str_replace(['item_','event_'],'', $key);
-
+        return str_replace(['item_', 'event_'], '', $key);
     }
 }

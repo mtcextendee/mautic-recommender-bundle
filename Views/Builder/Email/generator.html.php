@@ -13,26 +13,25 @@ if (!isset($preview)) {
     $preview = false;
 }
 
-
 echo $view->render(
     'MauticRecommenderBundle:Builder\Email:generator-header.html.php',
     [
         'recommender' => $recommender,
-        'settings' => $settings,
-        'preview'  => $preview,
+        'settings'    => $settings,
+        'preview'     => $preview,
     ]
 );
 ?>
 </tr>
-            <?php for ($i = 0; $i < $recommender->getNumberOfItems(); $i++): ?>
+            <?php for ($i = 0; $i < $recommender->getNumberOfItems(); ++$i): ?>
                 <?php
                 echo $view->render(
                     'MauticRecommenderBundle:Builder\Email:generator-body.html.php',
                     [
                         'recommender' => $recommender,
-                        'settings' => $settings,
-                        'preview'  => $preview,
-                        'index'=> $i
+                        'settings'    => $settings,
+                        'preview'     => $preview,
+                        'index'       => $i,
                     ]
                 );
                 ?>
@@ -43,8 +42,8 @@ echo $view->render(
     'MauticRecommenderBundle:Builder\Email:generator-footer.html.php',
     [
         'recommender' => $recommender,
-        'settings' => $settings,
-        'preview'  => $preview,
+        'settings'    => $settings,
+        'preview'     => $preview,
     ]
 );
 ?>

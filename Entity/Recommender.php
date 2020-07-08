@@ -17,7 +17,6 @@ use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 use Mautic\CoreBundle\Entity\FiltersEntityTrait;
 
-
 class Recommender
 {
     use FiltersEntityTrait;
@@ -32,7 +31,7 @@ class Recommender
      */
     protected $name;
 
-    /** @var  array */
+    /** @var array */
     protected $properties;
 
     /**
@@ -40,7 +39,7 @@ class Recommender
      */
     protected $filter;
 
-    /** @var  RecommenderTemplate */
+    /** @var RecommenderTemplate */
     protected $template;
 
     /**
@@ -48,7 +47,7 @@ class Recommender
      */
     protected $dateAdded;
 
-    /** @var  array */
+    /** @var array */
     protected $tableOrder;
 
     /**
@@ -96,7 +95,6 @@ class Recommender
             'MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate'
         )->addJoinColumn('template_id', 'id', true, false, 'CASCADE')->build();
         self::addFiltersMetadata($builder);
-
     }
 
     /**
@@ -222,22 +220,18 @@ class Recommender
 
     public function getCreatedBy()
     {
-
     }
 
     public function getHeader()
     {
-
     }
 
     public function getPublishStatus()
     {
-
     }
 
     public function isChanged()
     {
-
     }
 
     /**
@@ -300,7 +294,6 @@ class Recommender
         return $this->tableOrder;
     }
 
-
     /**
      * @param string $filter
      *
@@ -320,6 +313,4 @@ class Recommender
     {
         return $this->filterTarget;
     }
-
-
 }

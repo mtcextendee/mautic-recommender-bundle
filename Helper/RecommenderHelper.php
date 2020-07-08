@@ -14,13 +14,13 @@ namespace MauticPlugin\MauticRecommenderBundle\Helper;
 use Doctrine\ORM\EntityManager;
 use Mautic\CoreBundle\Security\Permissions\CorePermissions;
 use Mautic\LeadBundle\Entity\Lead;
+use Mautic\PageBundle\Event\PageDisplayEvent;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
+use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\Translation\TranslatorInterface;
-use Mautic\PageBundle\Event\PageDisplayEvent;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
-use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 
 const NUM                   = 50;
 const PROBABILITY_PURCHASED = 0.2;
@@ -30,7 +30,6 @@ const PROBABILITY_PURCHASED = 0.2;
  */
 class RecommenderHelper
 {
-
     public static $recommenderRegex = '{recommender=(.*?)}';
 
     /**
@@ -39,7 +38,7 @@ class RecommenderHelper
     protected $integrationHelper;
 
     /**
-     * @var TemplateModel $recommenderModel
+     * @var TemplateModel
      */
     protected $recommenderModel;
 
@@ -47,7 +46,6 @@ class RecommenderHelper
      * @var Translator
      */
     protected $translator;
-
 
     /**
      * @var Client
@@ -80,11 +78,11 @@ class RecommenderHelper
         CorePermissions $security,
         EntityManager $entityManager
     ) {
-        $this->integrationHelper = $integrationHelper;
+        $this->integrationHelper    = $integrationHelper;
         $this->recommenderModel     = $recommenderModel;
-        $this->translator        = $translator;
-        $this->security          = $security;
-        $this->entityManager     = $entityManager;
+        $this->translator           = $translator;
+        $this->security             = $security;
+        $this->entityManager        = $entityManager;
     }
 
     /**
@@ -121,11 +119,9 @@ class RecommenderHelper
             ->where(
                 $q->expr()->like('e.type', ':type')
             )
-            ->setParameter('type', "recommender%")
+            ->setParameter('type', 'recommender%')
             ->orderBy('e.id', 'DESC');
 
         return $q->execute()->fetchAll();
     }
-
-
 }

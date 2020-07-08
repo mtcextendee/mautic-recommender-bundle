@@ -16,14 +16,13 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use Mautic\LeadBundle\Event\LeadListFiltersChoicesEvent;
 use Mautic\LeadBundle\LeadEvents;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class FiltersSubscriber extends CommonSubscriber
 {
-
     /**
      * @var FilterFactory
      */
@@ -52,16 +51,15 @@ class FiltersSubscriber extends CommonSubscriber
      * @param Decorator     $decorator
      */
     public function __construct(
-        FilterFactory $segmentFilterFactory, 
-        Choices $choices, 
+        FilterFactory $segmentFilterFactory,
+        Choices $choices,
         Decorator $decorator,
         IntegrationHelper $integrationHelper
     ) {
-
-        $this->filterFactory = $segmentFilterFactory;
-        $this->choices       = $choices;
-        $this->decorator     = $decorator;
-        $this->integrationHelper = $integrationHelper;    
+        $this->filterFactory     = $segmentFilterFactory;
+        $this->choices           = $choices;
+        $this->decorator         = $decorator;
+        $this->integrationHelper = $integrationHelper;
     }
 
     /**
@@ -99,7 +97,6 @@ class FiltersSubscriber extends CommonSubscriber
         }
     }
 
-
     /**
      * @param BuildJsEvent $event
      */
@@ -109,7 +106,7 @@ class FiltersSubscriber extends CommonSubscriber
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
-        
+
         if (in_array($this->request->attributes->get('_route'), ['mautic_segment_action', 'mautic_recommender_action'])) {
             $this->choices->addChoicesToEvent($event, 'recommender_event');
         }

@@ -18,12 +18,12 @@ use Mautic\CoreBundle\Model\AjaxLookupModelInterface;
 use Mautic\CoreBundle\Model\FormModel;
 use Mautic\CoreBundle\Model\TranslationModelTrait;
 use Mautic\CoreBundle\Model\VariantModelTrait;
-use MauticPlugin\MauticMTCPilotBundle\MTCPilotEvents;
+use Mautic\LeadBundle\Entity\Lead;
 use MauticPlugin\MauticMTCPilotBundle\Entity\MTCPilot;
 use MauticPlugin\MauticMTCPilotBundle\Entity\MTCPilotRepository;
 use MauticPlugin\MauticMTCPilotBundle\Entity\Stat;
 use MauticPlugin\MauticMTCPilotBundle\Event\MTCPilotEvent;
-use Mautic\LeadBundle\Entity\Lead;
+use MauticPlugin\MauticMTCPilotBundle\MTCPilotEvents;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplateRepository;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderEvent;
@@ -33,7 +33,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class TemplateModel extends FormModel implements AjaxLookupModelInterface
 {
-
     /**
      * Retrieve the permissions base.
      *
@@ -96,6 +95,7 @@ class TemplateModel extends FormModel implements AjaxLookupModelInterface
         if (!empty($action)) {
             $options['action'] = $action;
         }
+
         return $formFactory->create('recommender_templates', $entity, $options);
     }
 
@@ -179,5 +179,4 @@ class TemplateModel extends FormModel implements AjaxLookupModelInterface
 
         return $results;
     }
-
 }

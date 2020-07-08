@@ -28,7 +28,6 @@ class RecommenderTemplatesType extends AbstractType
      */
     protected $security;
 
-
     /**
      * @var RouterInterface
      */
@@ -90,8 +89,6 @@ class RecommenderTemplatesType extends AbstractType
             ]
         );
 
-
-
         $builder->add(
             'templateMode',
             'button_group',
@@ -107,7 +104,7 @@ class RecommenderTemplatesType extends AbstractType
                     'mautic.plugin.recommender.form.html'   => 'html',
                 ],
                 'choices_as_values' => true,
-                'data'=> $options['data']->getTemplateMode() ?:'basic'
+                'data'              => $options['data']->getTemplateMode() ?: 'basic',
             ]
         );
 
@@ -115,11 +112,11 @@ class RecommenderTemplatesType extends AbstractType
             'properties',
             RecommenderPropertiesType::class,
             [
-                'label' => false,
+                'label'      => false,
                 'attr'       => [
                     'data-show-on' => '{"recommender_templateMode_0":"checked"}',
                 ],
-                'data'=>$options['data']->getProperties()
+                'data'=> $options['data']->getProperties(),
             ]
         );
 
@@ -127,13 +124,12 @@ class RecommenderTemplatesType extends AbstractType
             'template',
             RecommenderTemplateType::class,
             [
-                'label' => 'mautic.plugin.recommender.template',
+                'label'      => 'mautic.plugin.recommender.template',
                 'attr'       => [
                     'data-show-on' => '{"recommender_templateMode_1":"checked"}',
                 ],
             ]
         );
-
 
         $builder->add('isPublished', 'yesno_button_group');
 

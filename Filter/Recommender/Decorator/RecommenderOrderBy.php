@@ -11,9 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator;
 
-
 use Mautic\LeadBundle\Segment\RandomParameterName;
-
 use MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields;
 use MauticPlugin\MauticRecommenderBundle\Filter\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder;
@@ -25,7 +23,7 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemValueQuery
 
 class RecommenderOrderBy
 {
-    CONST ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value'];
+    const ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value'];
 
     /**
      * @var Fields
@@ -38,19 +36,17 @@ class RecommenderOrderBy
     /**
      * SegmentChoices constructor.
      *
-     * @param Fields $fields
+     * @param Fields              $fields
      * @param RandomParameterName $randomParameterName
      */
     public function __construct(Fields $fields, RandomParameterName $randomParameterName)
     {
-
-        $this->fields = $fields;
+        $this->fields              = $fields;
         $this->randomParameterName = $randomParameterName;
     }
 
     public function getDictionary(QueryBuilder $queryBuilder, $column)
     {
-
         $dictionary = [];
         foreach (self::ALLOWED_TABLES as $table) {
             $fields = $this->fields->getFields($table);
@@ -59,8 +55,8 @@ class RecommenderOrderBy
                     continue;
                 }
                 $tableFromDecorator = isset($field['decorator']['recommender']['foreign_table']) ? $field['decorator']['recommender']['foreign_table'] : $table;
-                $idFromDecorator = isset($field['decorator']['recommender']['foreign_identificator']) ? $field['decorator']['recommender']['foreign_identificator'] : 'id';
-                $keyFromDecorator = isset($field['decorator']['recommender']['key']) ? $field['decorator']['recommender']['key'] : $key;
+                $idFromDecorator    = isset($field['decorator']['recommender']['foreign_identificator']) ? $field['decorator']['recommender']['foreign_identificator'] : 'id';
+                $keyFromDecorator   = isset($field['decorator']['recommender']['key']) ? $field['decorator']['recommender']['key'] : $key;
 
                 // Order By from decorator
                 if (isset($field['decorator']['recommender']['orderBy'])) {
@@ -77,8 +73,6 @@ class RecommenderOrderBy
 
                 return $tableAlias.'.'.$keyFromDecorator;
             }
-
         }
     }
 }
-

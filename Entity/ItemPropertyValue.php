@@ -40,7 +40,6 @@ class ItemPropertyValue
 
     private $changes = [];
 
-
     /**
      * @param ORM\ClassMetadata $metadata
      */
@@ -59,12 +58,10 @@ class ItemPropertyValue
             'MauticPlugin\MauticRecommenderBundle\Entity\Item'
         )->addJoinColumn('item_id', 'id', true, false, 'CASCADE')->build();
 
-
         $builder->createManyToOne(
             'property',
             'MauticPlugin\MauticRecommenderBundle\Entity\Property'
         )->addJoinColumn('property_id', 'id', true, false, 'CASCADE')->build();
-
     }
 
     /**
@@ -140,7 +137,7 @@ class ItemPropertyValue
      */
     public function setValue($value)
     {
-        if($this->value != $value) {
+        if ($this->value != $value) {
             $this->changes['value'] = isset($this->value) ? $this->value : '';
         }
         $this->value = $value;
@@ -174,8 +171,10 @@ class ItemPropertyValue
             if (empty($this->changes[$key])) {
                 return true;
             }
+
             return $this->changes[$key];
         }
+
         return false;
     }
 }

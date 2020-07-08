@@ -11,12 +11,10 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Helper;
 
-
 use MauticPlugin\MauticCrmBundle\Integration\Salesforce\QueryBuilder;
 
 class SqlQuery
 {
-
     public static $query;
 
     /**
@@ -26,7 +24,7 @@ class SqlQuery
      */
     public static function getQuery($query)
     {
-        $q = $query->getSQL();
+        $q                  = $query->getSQL();
         $params             = $query->getParameters();
 
         foreach ($params as $name => $param) {

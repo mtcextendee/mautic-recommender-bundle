@@ -22,7 +22,6 @@ $index        = count($form['filters']->vars['value']) ? max(array_keys($form['f
 $id           = $form->vars['data']->getId();
 $filterErrors = ($view['form']->containsErrors($form['filters'])) ? 'class="text-danger"' : '';
 
-
 $templates = [
     'select' => 'select-template',
 ];
@@ -61,18 +60,18 @@ $templates = [
                             <?php
                             foreach ($fields as $object => $field):
                                 $header = $object;
-                                $icon = ($object == 'company') ? 'building' : 'user';
+                                $icon   = ($object == 'company') ? 'building' : 'user';
                                 ?>
                                 <optgroup label="<?php echo $view['translator']->trans('mautic.lead.'.$header); ?>">
                                     <?php foreach ($field as $value => $params):
-                                        $list = (!empty($params['properties']['list'])) ? $params['properties']['list'] : [];
+                                        $list    = (!empty($params['properties']['list'])) ? $params['properties']['list'] : [];
                                         $choices = \Mautic\LeadBundle\Helper\FormFieldHelper::parseList(
                                             $list,
                                             true,
                                             ('boolean' === $params['properties']['type'])
                                         );
-                                        $list = json_encode($choices);
-                                        $callback = (!empty($params['properties']['callback'])) ? $params['properties']['callback'] : '';
+                                        $list      = json_encode($choices);
+                                        $callback  = (!empty($params['properties']['callback'])) ? $params['properties']['callback'] : '';
                                         $operators = (!empty($params['operators'])) ? $view->escape(
                                             json_encode($params['operators'])
                                         ) : '{}';

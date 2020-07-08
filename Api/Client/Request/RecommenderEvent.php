@@ -20,10 +20,10 @@ class RecommenderEvent extends AbstractRequest
 {
     public function run()
     {
-        $event = $this->getModel()->getEventRepository()->findOneBy(['name' => $this->getOptions()['eventName']]);
-        $options = $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'contactId','userId', 'dateAdded'], ['event'=> $event]);
+        $event       = $this->getModel()->getEventRepository()->findOneBy(['name' => $this->getOptions()['eventName']]);
+        $options     = $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'contactId', 'userId', 'dateAdded'], ['event'=> $event]);
         $addEventLog = $this->getClient()->send('AddEventLog', $options);
-        $eventLog = $addEventLog->add();
+        $eventLog    = $addEventLog->add();
         $addEventLog->save();
 
         $addEventLogPropertyValues = $this->getClient()->send('AddEventLogPropertyValues', $this->getOptionsResolver()->getOptionsWithEntities([], ['eventLog'=> $eventLog]));
@@ -32,6 +32,4 @@ class RecommenderEvent extends AbstractRequest
 
         return false;
     }
-
 }
-

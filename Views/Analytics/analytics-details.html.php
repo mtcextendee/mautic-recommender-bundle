@@ -56,9 +56,11 @@
     ); ?>';
     var dateTo = '<?php echo (new \Mautic\CoreBundle\Helper\DateTimeHelper($dateTo))->toLocalString('Y-m-d'); ?>';
     var metricsGraph = 'ga:sessions';
-    <?php if (!empty($metrics['ecommerce'])) { ?>
+    <?php if (!empty($metrics['ecommerce'])) {
+        ?>
     metricsGraph = metricsGraph + ',ga:transactions';
-    <?php } ?>
+    <?php
+    } ?>
     if (typeof analyticsReady == 'undefined') {
         var analyticsReady = false;
     }

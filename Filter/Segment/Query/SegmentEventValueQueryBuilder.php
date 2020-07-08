@@ -10,12 +10,10 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query;
 
-
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventValueQueryBuilder;
 
 class SegmentEventValueQueryBuilder extends ItemEventValueQueryBuilder
 {
-
     /**
      * @return string
      */

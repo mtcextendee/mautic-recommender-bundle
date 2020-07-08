@@ -21,7 +21,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 abstract class AbstractRequest
 {
-
     /** @var   */
     protected $options;
     protected $optionsResolver;
@@ -38,37 +37,35 @@ abstract class AbstractRequest
      */
     private $client;
 
-    /** @var array  */
+    /** @var array */
     protected $entities = [];
 
-
-    /** @var array  */
+    /** @var array */
     private $deleteEntities = [];
 
-    /** @var PropertyAccessor  */
+    /** @var PropertyAccessor */
     private $accessor;
-
 
     /**
      * ItemRequest constructor.
      *
-     * @param Client  $client
+     * @param Client $client
      */
     public function __construct(Client $client)
     {
-        $this->client = $client;
-        $this->options = $this->client->getOptions();
+        $this->client          = $client;
+        $this->options         = $this->client->getOptions();
         $this->optionsResolver =  $this->client->getOptionsResolver();
-        $this->model   = $this->client->getClientModel();
-        $this->accessor = new PropertyAccessor();
-
-
+        $this->model           = $this->client->getClientModel();
+        $this->accessor        = new PropertyAccessor();
     }
 
     /**
-     * New entity
+     * New entity.
      */
-    protected function newEntity(){}
+    protected function newEntity()
+    {
+    }
 
     protected function find()
     {
@@ -76,7 +73,7 @@ abstract class AbstractRequest
     }
 
     /**
-     *  Run script
+     *  Run script.
      */
     public function run()
     {
@@ -89,7 +86,6 @@ abstract class AbstractRequest
         $this->addEntity($this->setValues($newEntity));
 
         return $newEntity;
-
     }
 
     public function addIfNotExist()
@@ -120,6 +116,7 @@ abstract class AbstractRequest
     {
         $entity = $this->find();
         $this->addEntity($this->setValues($entity));
+
         return $entity;
     }
 
@@ -127,17 +124,16 @@ abstract class AbstractRequest
     {
         if (count($this->getEntities()) == 1) {
             return $this->getRepo()->saveEntity($this->getEntities()[0]);
-        }elseif(count($this->getEntities()) > 1){
+        } elseif (count($this->getEntities()) > 1) {
             return $this->getRepo()->saveEntities($this->getEntities());
         }
     }
-
 
     public function delete()
     {
         if (count($this->getDeleteEntities()) == 1) {
             return $this->getRepo()->deleteEntity($this->getDeleteEntities()[0]);
-        }elseif(count($this->getDeleteEntities()) > 1){
+        } elseif (count($this->getDeleteEntities()) > 1) {
             return $this->getRepo()->deleteEntities($this->getDeleteEntities());
         }
     }
@@ -149,7 +145,7 @@ abstract class AbstractRequest
      */
     public function setValues($entity)
     {
-        foreach ($this->getOptions() as $key=>$value){
+        foreach ($this->getOptions() as $key=>$value) {
             try {
                 $this->accessor->setValue($entity, $key, $value);
             } catch (\Exception $exception) {
@@ -159,7 +155,7 @@ abstract class AbstractRequest
         return $entity;
     }
 
-       /**
+    /**
      * @return mixed
      */
     public function getRepo()
@@ -207,7 +203,6 @@ abstract class AbstractRequest
         return $this->deleteEntities;
     }
 
-
     /**
      * @param object $entity
      */
@@ -233,7 +228,7 @@ abstract class AbstractRequest
     }
 
     /**
-     * Return property type
+     * Return property type.
      *
      * @param $property
      *
@@ -243,7 +238,7 @@ abstract class AbstractRequest
     {
         if (is_array($property)) {
             return 'select';
-        } elseif (in_array($property, [false, true, "false", "true"], true)) {
+        } elseif (in_array($property, [false, true, 'false', 'true'], true)) {
             return 'bool';
         } elseif (is_numeric($property)) {
             return 'int';
@@ -258,7 +253,6 @@ abstract class AbstractRequest
         }
     }
 
-
     /**
      * @param $date
      *
@@ -266,21 +260,18 @@ abstract class AbstractRequest
      */
     private function isDateTime($date)
     {
-        $d = \DateTime::createFromFormat('Y-m-d g:i:s', $date);
+        $d  = \DateTime::createFromFormat('Y-m-d g:i:s', $date);
         $d2 = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
 
-        if(($d && $d->format('Y-m-d g:i:s') == $date) || ($d2 && $d2->format('Y-m-d H:i:s') == $date))
-        {
+        if (($d && $d->format('Y-m-d g:i:s') == $date) || ($d2 && $d2->format('Y-m-d H:i:s') == $date)) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
     /**
-     * Check if the value is a valid date
+     * Check if the value is a valid date.
      *
      * @param mixed $value
      *
@@ -293,6 +284,7 @@ abstract class AbstractRequest
         }
         try {
             new \DateTime($value);
+
             return true;
         } catch (\Exception $e) {
             return false;
@@ -300,7 +292,7 @@ abstract class AbstractRequest
     }
 
     /**
-     * Check if has settings by client
+     * Check if has settings by client.
      *
      * @param $setting
      *
@@ -311,6 +303,7 @@ abstract class AbstractRequest
         if (isset($this->getClient()->getSettings()[$setting])) {
             return true;
         }
+
         return false;
     }
 
@@ -319,7 +312,5 @@ abstract class AbstractRequest
         if ($this->hasSetting($setting)) {
             return $this->getClient()->getSettings()[$setting];
         }
-
     }
 }
-

@@ -27,7 +27,7 @@ use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 
 class FiltersFilterSubscriber extends CommonSubscriber
 {
-    CONST TYPE = 'filters';
+    const TYPE = 'filters';
 
     /**
      * @var RecommenderClientModel
@@ -44,7 +44,6 @@ class FiltersFilterSubscriber extends CommonSubscriber
      */
     private $filterFactory;
 
-
     /**
      * PointsFilterSubscriber constructor.
      *
@@ -53,10 +52,9 @@ class FiltersFilterSubscriber extends CommonSubscriber
      */
     public function __construct(RecommenderClientModel $clientModel, RecommenderQueryBuilder $recommenderQueryBuilder, FilterFactory $filterFactory)
     {
-
-        $this->clientModel = $clientModel;
+        $this->clientModel             = $clientModel;
         $this->recommenderQueryBuilder = $recommenderQueryBuilder;
-        $this->filterFactory = $filterFactory;
+        $this->filterFactory           = $filterFactory;
     }
 
     /**
@@ -71,7 +69,6 @@ class FiltersFilterSubscriber extends CommonSubscriber
             RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS               => [
                 ['onFilterResults', 5],
             ],
-
         ];
     }
 
@@ -95,8 +92,8 @@ class FiltersFilterSubscriber extends CommonSubscriber
             SqlQuery::debugQuery($qb);
             $results = $qb->execute()->fetchAll();
             foreach ($results as &$result) {
-                $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;
-                $properties = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
+                $properties           = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);
+                $properties           = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
                 $translatedProperties = [];
                 foreach ($properties as $property=>$value) {
                     $translatedProperties[InputHelper::alphanum(InputHelper::transliterate($property))] = $value;
@@ -128,5 +125,4 @@ class FiltersFilterSubscriber extends CommonSubscriber
     {
         return $this->clientModel;
     }
-
 }

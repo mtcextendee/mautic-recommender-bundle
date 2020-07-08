@@ -9,7 +9,6 @@ return [
     'version'     => '0.0.1',
     'services'    => [
         'events'       => [
-
             /* Recommender filters  */
             'mautic.recommender.filter.filters'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\FiltersFilterSubscriber::class,
@@ -17,8 +16,8 @@ return [
                     'mautic.recommender.model.client',
                     'mautic.recommender.filter.recommender',
                     'mautic.recommender.filter.factory',
-                    'mautic.helper.integration'
-                ]
+                    'mautic.helper.integration',
+                ],
             ],
 
             /* Segment filters  */
@@ -28,7 +27,7 @@ return [
                     'mautic.recommender.filter.factory',
                     'mautic.recommender.filter.fields.recommender',
                     'mautic.recommender.segment.decoration',
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
 
@@ -36,7 +35,7 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\BuildJsSubscriber::class,
                 'arguments' => [
                     'mautic.helper.core_parameters',
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.pagebundle.subscriber'  => [
@@ -44,7 +43,7 @@ return [
                 'arguments' => [
                     'mautic.recommender.service.replacer',
                     'mautic.tracker.contact',
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.token.replacer.subscriber'  => [
@@ -53,13 +52,13 @@ return [
                     'mautic.recommender.service.replacer',
                     'mautic.dynamicContent.model.dynamicContent',
                     'mautic.focus.model.focus',
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.lead.timeline.subscriber'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\LeadSubscriber::class,
                 'arguments' => [
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.emailbundle.subscriber' => [
@@ -67,7 +66,7 @@ return [
                 'arguments' => [
                     'mautic.recommender.helper',
                     'mautic.recommender.service.replacer',
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.maintenance.subscriber' => [
@@ -88,8 +87,8 @@ return [
                 'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderEventModel::class,
             ],
             'mautic.recommender.model.client' => [
-                'class' => MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel::class,
-                'arguments' => ['mautic.tracker.contact']
+                'class'     => MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel::class,
+                'arguments' => ['mautic.tracker.contact'],
             ],
         ],
         'forms'        => [
@@ -156,7 +155,7 @@ return [
                     'mautic.lead.model.list',
                     'mautic.recommender.model.client',
                     'mautic.recommender.filter.fields.recommender',
-                    'router'
+                    'router',
                 ],
             ],
         ],
@@ -171,7 +170,7 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderSettings::class,
                 'arguments' => [
                     'mautic.helper.integration',
-                    'mautic.helper.core_parameters'
+                    'mautic.helper.core_parameters',
                 ],
                 'methodCalls' => [
                     'initiateDebugLogger' => ['mautic.recommender.logger'],
@@ -181,15 +180,15 @@ return [
             'mautic.recommender.contact.search'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Service\ContactSearch::class,
                 'arguments' => [
-                    '@service_container'
-                ]
+                    '@service_container',
+                ],
             ],
 
             'mautic.recommender.contact.search'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Service\ContactSearch::class,
                 'arguments' => [
-                    '@service_container'
-                ]
+                    '@service_container',
+                ],
             ],
 
             'mautic.recommender.events.processor'  => [
@@ -200,8 +199,8 @@ return [
                     'mautic.recommender.service.api.commands',
                     'mautic.recommender.model.event',
                     'translator',
-                    'mautic.lead.model.lead'
-                ]
+                    'mautic.lead.model.lead',
+                ],
             ],
 
             /* Filters */
@@ -210,36 +209,36 @@ return [
                 'arguments' => [
                     '@service_container',
                     'mautic.lead.model.lead_segment_schema_cache',
-                ]
+                ],
             ],
             'mautic.recommender.filter.fields.segment'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\Choices::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
                     'mautic.lead.model.list',
-                    'translator'
-                ]
+                    'translator',
+                ],
             ],
             'mautic.recommender.filter.fields'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields::class,
                 'arguments' => [
                     'mautic.recommender.model.client',
-                    'translator'
-                ]
+                    'translator',
+                ],
             ],
             'mautic.recommender.segment.decoration' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator::class,
                 'arguments' => [
                     'mautic.lead.model.lead_segment_filter_operator',
                     'mautic.lead.repository.lead_segment_filter_descriptor',
-                    'mautic.recommender.filter.fields.dictionary'
+                    'mautic.recommender.filter.fields.dictionary',
                 ],
             ],
             'mautic.recommender.filter.fields.dictionary'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\SegmentDictionary::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
-                ]
+                ],
             ],
             'mautic.recommender.query.builder.segment.event'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventQueryBuilder::class,
@@ -260,21 +259,21 @@ return [
                 'arguments' => [
                     'mautic.lead.model.lead_segment_filter_operator',
                     'mautic.lead.repository.lead_segment_filter_descriptor',
-                    'mautic.recommender.filter.recommender.dictionary'
+                    'mautic.recommender.filter.recommender.dictionary',
                 ],
             ],
             'mautic.recommender.filter.recommender.dictionary'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderDictionary::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
-                ]
+                ],
             ],
             'mautic.recommender.filter.recommender.orderby'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderOrderBy::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
-                    'mautic.lead.model.random_parameter_name'
-                ]
+                    'mautic.lead.model.random_parameter_name',
+                ],
             ],
             'mautic.recommender.query.builder.recommender.filter'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\FilterQueryBuilder::class,
@@ -310,7 +309,6 @@ return [
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
 
-
             'mautic.recommender.query.builder.segment.event_value'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentEventValueQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
@@ -334,16 +332,16 @@ return [
                     'mautic.lead.model.random_parameter_name',
                     'mautic.recommender.filter.factory',
                     'mautic.recommender.recommender.decoration',
-                    'mautic.recommender.filter.recommender.orderby'
-                ]
+                    'mautic.recommender.filter.recommender.orderby',
+                ],
             ],
             'mautic.recommender.filter.fields.recommender'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices::class,
                 'arguments' => [
                     'mautic.recommender.filter.fields',
                     'mautic.lead.model.list',
-                    'translator'
-                ]
+                    'translator',
+                ],
             ],
 
             /* Client */
@@ -361,7 +359,7 @@ return [
                     'mautic.recommender.model.template',
                     'translator',
                     'mautic.security',
-                    'doctrine.orm.entity_manager'
+                    'doctrine.orm.entity_manager',
                 ],
             ],
             'mautic.recommender.api.recommender'                => [
@@ -371,7 +369,7 @@ return [
                     'mautic.helper.integration',
                     'monolog.logger.mautic',
                     'mautic.helper.template.version',
-                    'mautic.recommender.client'
+                    'mautic.recommender.client',
                 ],
             ],
             'mautic.recommender.service.api.commands'        => [
@@ -382,7 +380,7 @@ return [
                     'translator',
                     'mautic.recommender.service.token.finder',
                     'event_dispatcher',
-                    'doctrine.orm.entity_manager'
+                    'doctrine.orm.entity_manager',
                 ],
             ],
             'mautic.recommender.service.token'               => [
@@ -390,7 +388,7 @@ return [
                 'arguments' => [
                     'mautic.recommender.model.recommender',
                     'mautic.lead.model.lead',
-                    'mautic.helper.integration'
+                    'mautic.helper.integration',
                 ],
             ],
             'mautic.recommender.service.token.finder'        => [
@@ -416,7 +414,7 @@ return [
                     'twig',
                     'mautic.recommender.service.api.commands',
                     'mautic.helper.templating',
-                    'event_dispatcher'
+                    'event_dispatcher',
                 ],
             ],
             'mautic.recommender.service.token.html.replacer' => [
@@ -462,8 +460,7 @@ return [
                     \MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue::class,
                 ],
             ],
-
-        ]
+        ],
     ],
     'routes'      => [
         'main'   => [
@@ -485,17 +482,17 @@ return [
             ],
             'mautic_recommender_get_available_functions' => [
                 'path'       => '/recommender/getfunctions',
-                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',                
+                'controller' => 'MauticRecommenderBundle:Ajax:listavailablefunctions',
             ],
             'mautic_recommender_index'  => [
                 'path'       => '/recommender/{page}',
-                'controller' => 'MauticRecommenderBundle:Recommender:index',                
+                'controller' => 'MauticRecommenderBundle:Recommender:index',
             ],
             'mautic_recommender_action' => [
                 'path'       => '/recommender/{objectAction}/{objectId}',
                 'controller' => 'MauticRecommenderBundle:Recommender:execute',
-            ],                
-        ],        
+            ],
+        ],
         'public' => [
             'mautic_recommender_generate_template' => [
                 'path'       => '/recommender/template/{id}',
@@ -505,7 +502,7 @@ return [
                 'path'       => '/recommender/event/send',
                 'controller' => 'MauticRecommenderBundle:Recommender:send',
             ],
-        ],        
+        ],
         'api'    => [
             'mautic_recommender_api' => [
                 'path'       => '/recommender/{component}',
@@ -518,9 +515,9 @@ return [
         'main' => [
             'items' => [
                 'mautic.plugin.recommender' => [
-                    'access'   => ['recommender:recommender:viewown', 'recommender:recommender:viewother'],
+                    'access'    => ['recommender:recommender:viewown', 'recommender:recommender:viewother'],
                     'iconClass' => 'fa fa-table',
-                    'checks'   => [
+                    'checks'    => [
                         'integration' => [
                             'Recommender' => [
                                 'enabled' => true,
@@ -573,9 +570,9 @@ return [
         ],
     ],
     'parameters'  => [
-        'eventLabel'=> 'RecommenderEvent',
-        'recommender_ai'=> true,
-        'recommender_ai_database' => 'kuzmany-shopify',
+        'eventLabel'                => 'RecommenderEvent',
+        'recommender_ai'            => true,
+        'recommender_ai_database'   => 'kuzmany-shopify',
         'recommender_ai_secret_key' => 'jt9KE1ZOzQCHXN61OjS7KOxKDasVTZxHYKaSIKfpLSsuDqeflJ7xFv1r5Oz8Q5e2',
     ],
 ];

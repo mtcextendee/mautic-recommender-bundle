@@ -33,18 +33,18 @@ class RecommenderPropertiesType extends AbstractType
             ChoiceType::class,
             [
                 'choices' => [
-                    '2' => '6',
-                    '3' => '4',
-                    '4' => '3',
-                    '6' => '2',
+                    '2'  => '6',
+                    '3'  => '4',
+                    '4'  => '3',
+                    '6'  => '2',
                     '12' => '1',
                 ],
-                'expanded' => false,
-                'multiple' => false,
-                'label' => 'mautic.recommender.form.columns',
-                'label_attr' => ['class' => ''],
+                'expanded'    => false,
+                'multiple'    => false,
+                'label'       => 'mautic.recommender.form.columns',
+                'label_attr'  => ['class' => ''],
                 'empty_value' => false,
-                'required' => true,
+                'required'    => true,
                 'data'        => isset($options['data']['columns']) ? $options['data']['columns'] : 3,
                 'constraints' => [
                     new NotBlank(
@@ -194,7 +194,6 @@ class RecommenderPropertiesType extends AbstractType
             ]
         );
 
-
         $builder->add(
             'itemNameSize',
             'text',
@@ -228,8 +227,7 @@ class RecommenderPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemNameBold']) ? :false,
-
+                'data'        => isset($options['data']['itemNameBold']) ?: false,
             ]
         );
 
@@ -245,7 +243,6 @@ class RecommenderPropertiesType extends AbstractType
                 'required'   => false,
             ]
         );
-
 
         $builder->add(
             'itemImage',
@@ -293,8 +290,7 @@ class RecommenderPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemShortDescriptionBold']) ? :false,
-
+                'data'        => isset($options['data']['itemShortDescriptionBold']) ?: false,
             ]
         );
 
@@ -310,8 +306,6 @@ class RecommenderPropertiesType extends AbstractType
                 'required'   => false,
             ]
         );
-
-
 
         $builder->add(
             'itemUrl',
@@ -352,7 +346,6 @@ class RecommenderPropertiesType extends AbstractType
                 'required'   => false,
             ]
         );
-
 
         $builder->add(
             'itemActionHover',
@@ -428,8 +421,7 @@ class RecommenderPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemActionBold']) ? :false,
-
+                'data'        => isset($options['data']['itemActionBold']) ?: false,
             ]
         );
 
@@ -486,7 +478,6 @@ class RecommenderPropertiesType extends AbstractType
             ]
         );
 
-
         $builder->add(
             'itemPriceSize',
             'text',
@@ -507,8 +498,7 @@ class RecommenderPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemPriceBold']) ? :false,
-
+                'data'        => isset($options['data']['itemPriceBold']) ?: false,
             ]
         );
 
@@ -525,7 +515,6 @@ class RecommenderPropertiesType extends AbstractType
             ]
         );
 
-
         $builder->add(
             'itemOldPrice',
             RecommenderTagsType::class,
@@ -538,7 +527,6 @@ class RecommenderPropertiesType extends AbstractType
                 'required'   => false,
             ]
         );
-
 
         $builder->add(
             'itemOldPriceColor',
@@ -553,7 +541,6 @@ class RecommenderPropertiesType extends AbstractType
                 'required'   => false,
             ]
         );
-
 
         $builder->add(
             'itemOldPriceSize',
@@ -588,8 +575,7 @@ class RecommenderPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemOldPriceBold']) ? :false,
-
+                'data'        => isset($options['data']['itemOldPriceBold']) ?: false,
             ]
         );
 
@@ -618,8 +604,6 @@ class RecommenderPropertiesType extends AbstractType
                 'required' => false,
             ]
         );
-
-
     }
 
     /**

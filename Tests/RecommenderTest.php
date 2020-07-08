@@ -38,12 +38,11 @@ class RecommendereTest extends AbstractMauticTestCase
      */
     private $leadInTest;
 
-
     public function setUp()
     {
         parent::setUp();
-        $this->leadModel     = $this->container->get('mautic.lead.model.lead');
-        $this->apiCommand    = $this->container->get('mautic.recommender.service.api.commands');
+        $this->leadModel        = $this->container->get('mautic.lead.model.lead');
+        $this->apiCommand       = $this->container->get('mautic.recommender.service.api.commands');
         $this->recommenderToken = $this->container->get('mautic.recommender.service.token');
     }
 
@@ -89,7 +88,6 @@ class RecommendereTest extends AbstractMauticTestCase
 
         $this->assertForMultipleApiCall();
 
-
         // token userId = 1 itemId = 1, limit = 9
         $this->recommenderToken->setToken(['id' => 1, 'userId' => $this->leadInTest->getId(), 'limit' => 9]);
 
@@ -99,7 +97,6 @@ class RecommendereTest extends AbstractMauticTestCase
             $this->recommenderToken->getOptions(true)
         );
         $this->assertTrue(!empty($this->apiCommand->getCommandOutput()['recomms']));
-
 
         return;
         $this->apiCommand->callCommand(
@@ -114,13 +111,11 @@ class RecommendereTest extends AbstractMauticTestCase
             $this->getItemsToEvent(['id', 'amount', 'price', 'profit'])
         );
         $this->assertForMultipleApiCall();
-
     }
 
     private function assertForSingleApiCall()
     {
         $this->assertEquals($this->apiCommand->getCommandOutput(), 'ok');
-
     }
 
     private function assertForMultipleApiCall()
@@ -128,7 +123,6 @@ class RecommendereTest extends AbstractMauticTestCase
         $this->assertCount(2, $this->apiCommand->getCommandOutput());
         $this->assertArraySubset([0 => ['code' => 200]], $this->apiCommand->getCommandOutput());
     }
-
 
     private function createLead()
     {
@@ -178,11 +172,10 @@ class RecommendereTest extends AbstractMauticTestCase
     }
 
     /**
-     * Get Items for tests - single item, multiple item, fill with userId in default
+     * Get Items for tests - single item, multiple item, fill with userId in default.
      *
      * @param bool $keysAttr If true We use just itemId and userId
      * @param bool $first
-     *
      * @param bool $userId
      *
      * @return array
@@ -200,7 +193,6 @@ class RecommendereTest extends AbstractMauticTestCase
             $userId = $this->leadInTest->getId();
         }
 
-
         foreach ($this->getItems() as $keyFromItems => $item) {
             foreach ($keys as $key) {
                 $keyForArray = $key;
@@ -217,5 +209,4 @@ class RecommendereTest extends AbstractMauticTestCase
 
         return $returnItems;
     }
-
 }

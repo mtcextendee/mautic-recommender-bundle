@@ -36,6 +36,7 @@ class RecommenderApiController extends CommonApiController
      * @var array
      */
     private $requiredParams = ['contactId', 'contactEmail'];
+
     /**
      * @param FilterControllerEvent $event
      */
@@ -54,7 +55,7 @@ class RecommenderApiController extends CommonApiController
         defined('IN_MAUTIC_API') or define('IN_MAUTIC_API', 1);
         if (!in_array($component, $this->allowedEvents)) {
             return $this->badRequest(
-                sprintf("%s is not allowed. You can use just %s", $component, implode(', ', $this->allowedEvents))
+                sprintf('%s is not allowed. You can use just %s', $component, implode(', ', $this->allowedEvents))
             );
         }
 

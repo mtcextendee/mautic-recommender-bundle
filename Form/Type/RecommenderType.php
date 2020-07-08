@@ -38,7 +38,6 @@ use Symfony\Component\Validator\Constraints\Range;
 
 class RecommenderType extends AbstractType
 {
-
     /**
      * @var EventDispatcherInterface
      */
@@ -54,7 +53,7 @@ class RecommenderType extends AbstractType
      */
     private $translator;
 
-    /** @var  array */
+    /** @var array */
     private $fieldChoices;
 
     /**
@@ -97,7 +96,6 @@ class RecommenderType extends AbstractType
         Choices $choices,
         RouterInterface $router
     ) {
-
         $this->dispatcher             = $dispatcher;
         $this->entityManager          = $entityManager;
         $this->translator             = $translator;
@@ -113,7 +111,6 @@ class RecommenderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder->add(
             'name',
             TextType::class,
@@ -293,7 +290,7 @@ class RecommenderType extends AbstractType
             $builderEvent = new FilterFormEvent($builder);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FORM_FILTER_GENERATE, $builderEvent);
             unset($builderEvent);
-        }        
+        }
 
         // function
         $builder->add(
@@ -310,13 +307,13 @@ class RecommenderType extends AbstractType
             'choice',
             [
                 'choices'     => [
-                    'reflective' => 'mautic.plugin.recommender.form.filter_target.reflective',
-                    'exclusive' => 'mautic.plugin.recommender.form.filter_target.exclusive',
-                    'inclusive' => 'mautic.plugin.recommender.form.filter_target.inclusive',
-                    'proximity5' => 'mautic.plugin.recommender.form.filter_target.proximity5',
-                    'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10'
+                    'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
+                    'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
+                    'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
+                    'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
+                    'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
                 ],
-                'choice_attr' => function($choice, $key, $value) {                    
+                'choice_attr' => function ($choice, $key, $value) {
                     return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$value}.tooltip"];
                 },
                 'expanded'    => true,
@@ -334,7 +331,6 @@ class RecommenderType extends AbstractType
                 ],
             ]
         );
-
 
         $builder->add(
             'buttons',

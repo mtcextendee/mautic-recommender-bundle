@@ -15,15 +15,13 @@ use MauticPlugin\MauticRecommenderBundle\Entity\EventLogValue;
 
 class AddItemValues extends AbstractRequest
 {
-
     public function add()
     {
         $options = $this->getOptions();
-        $item = $options['item'];
+        $item    = $options['item'];
         unset($options['item']);
-$i = 0;
+        $i = 0;
         foreach ($options as $key => $option) {
-
             /** @var AddProperty $addProperty */
             $addProperty = $this->getClient()->send(
                 'AddProperty',
@@ -52,7 +50,7 @@ $i = 0;
     }
 
     /**
-     * Just return new entity
+     * Just return new entity.
      *
      * @return EventLogValue
      */
@@ -68,6 +66,4 @@ $i = 0;
     {
         return $this->getModel()->getEventLogValueRepository();
     }
-
 }
-

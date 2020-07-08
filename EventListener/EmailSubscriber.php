@@ -16,9 +16,9 @@ use Mautic\CoreBundle\Helper\BuilderTokenHelper;
 use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Event\EmailBuilderEvent;
 use Mautic\EmailBundle\Event\EmailSendEvent;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class EmailSubscriber.
@@ -47,13 +47,13 @@ class EmailSubscriber extends CommonSubscriber
      * @param RecommenderTokenReplacer $recommenderTokenReplacer
      */
     public function __construct(
-        RecommenderHelper $recommenderHelper, 
-        RecommenderTokenReplacer $recommenderTokenReplacer, 
+        RecommenderHelper $recommenderHelper,
+        RecommenderTokenReplacer $recommenderTokenReplacer,
         IntegrationHelper $integrationHelper
     ) {
         $this->recommenderHelper        = $recommenderHelper;
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
-        $this->integrationHelper = $integrationHelper;    
+        $this->integrationHelper        = $integrationHelper;
     }
 
     /**
@@ -108,14 +108,14 @@ class EmailSubscriber extends CommonSubscriber
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
-        
+
         if ($event->getEmail() && $event->getEmail()->getId() && !empty($event->getLead()['id'])) {
             $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
             $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
-            if ($content = $this->recommenderTokenReplacer->getReplacedContent('Email')){
+            if ($content = $this->recommenderTokenReplacer->getReplacedContent('Email')) {
                 $event->setContent($content);
             }
-            if ($subject = $this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject())){
+            if ($subject = $this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject())) {
                 $event->setSubject($subject);
             }
         }

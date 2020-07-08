@@ -21,11 +21,11 @@ class AddDetailView extends AbstractRequest
     public function run()
     {
         $addEvent = $this->getClient()->send('AddEvent', ['name'=> $this->getClient()->getEndpoint()]);
-        $event = $addEvent->addIfNotExist();
+        $event    = $addEvent->addIfNotExist();
         $addEvent->save();
 
         $addEventLog = $this->getClient()->send('AddEventLog', $this->getOptionsResolver()->getOptionsWithEntities(['itemId', 'contactId'], ['event'=> $event]));
-        $eventLog = $addEventLog->add();
+        $eventLog    = $addEventLog->add();
         $addEventLog->save();
 
         $addEventLogPropertyValues = $this->getClient()->send('AddEventLogPropertyValues', $this->getOptionsResolver()->getOptionsWithEntities([], ['eventLog'=> $eventLog]));
@@ -34,6 +34,4 @@ class AddDetailView extends AbstractRequest
 
         return false;
     }
-
 }
-

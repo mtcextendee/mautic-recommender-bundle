@@ -17,8 +17,6 @@ use Mautic\LeadBundle\LeadEvents;
 
 class OperatorsSubscriber extends CommonSubscriber
 {
-
-
     /**
      * OperatorsSubscriber constructor.
      *
@@ -27,7 +25,6 @@ class OperatorsSubscriber extends CommonSubscriber
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -45,11 +42,10 @@ class OperatorsSubscriber extends CommonSubscriber
      */
     public function onDictionaryGenerated(LeadListDictionaryGeneratedEvent $event)
     {
-       // $dictionaries = $this->recommenderDictionary->getDictionary();
+        // $dictionaries = $this->recommenderDictionary->getDictionary();
      /*   $dictionaries = [];
         foreach ($dictionaries as $key=>$dictionary) {
             $event->addTranslation($key, $dictionary);
         }*/
-
     }
 }

@@ -62,8 +62,8 @@ class MaintenanceSubscriber extends CommonSubscriber
      * This function cleans old data from recommender_event_log table like standard Mautic cleanup: old data of unidentified contacts OR with --gdpr option: very old contacts are cleaned up
      * Later we may add funcionality clean old data overall. But that may require plugin setting. 
      */
-    private function cleanEventLog(MaintenanceEvent $event, $table){
-
+    private function cleanEventLog(MaintenanceEvent $event, $table)
+    {
         $qb = $this->db->createQueryBuilder()
             ->setParameter('date', $event->getDate()->format('Y-m-d H:i:s'));
 
@@ -85,7 +85,6 @@ class MaintenanceSubscriber extends CommonSubscriber
             }
 
             $rows = $qb->execute()->fetchColumn();
-
         } else {
             $subQb = $this->db->createQueryBuilder();
             $subQb->select('id')->from(MAUTIC_TABLE_PREFIX.'leads', 'l')
@@ -130,35 +129,36 @@ class MaintenanceSubscriber extends CommonSubscriber
      * @param MaintenanceEvent $event
      * @param $table tableName
      */
-    private function cleanItems(MaintenanceEvent $event, $table){
+    private function cleanItems(MaintenanceEvent $event, $table)
+    {
         $qb = $this->db->createQueryBuilder()
             ->setParameter('date', $event->getDate()->format('Y-m-d H:i:s'));
 
         if ($event->isDryRun()) {
             $qb->select('count(*) as records')
-              ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')              
+              ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')
               ->andWhere($qb->expr()->lte('ri.date_modified', ':date'))
               ->andWhere($qb->expr()->eq('ri.active', '0'));
 
             $rows = $qb->execute()->fetchColumn();
         } else {
             $qb->select('id')
-              ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')              
+              ->from(MAUTIC_TABLE_PREFIX.$table, 'ri')
               ->andWhere($qb->expr()->lte('ri.date_modified', ':date'))
               ->andWhere($qb->expr()->eq('ri.active', '0'));
 
             $itemIds = $qb->execute()->fetchAll(\PDO::FETCH_COLUMN, 0);
-            $rows = 0;
+            $rows    = 0;
 
-            foreach ($itemIds as $item_id){
-               $rows += $qb->delete(MAUTIC_TABLE_PREFIX.$table)
+            foreach ($itemIds as $item_id) {
+                $rows += $qb->delete(MAUTIC_TABLE_PREFIX.$table)
                   ->where(
                     $qb->expr()->eq(
                       'id', $item_id
                     )
                   )
                   ->execute();
-            }         
+            }
         }
         $event->setStat($this->translator->trans('mautic.plugin.recommender.maintenance.'.$table), $rows, $qb->getSQL(), $qb->getParameters());
     }

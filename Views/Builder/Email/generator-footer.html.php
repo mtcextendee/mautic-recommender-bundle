@@ -9,7 +9,6 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-
 ?>
 </tr>
 </table>
@@ -18,11 +17,12 @@
 <tr>
     <td align="center" valign="top">
         <?php if ($preview) {
-            echo html_entity_decode($recommender->getProperties()['footer']);
-            ?>
-        <?php } else {
-            echo $recommender->getProperties()['footer']; ?>
-        <?php } ?>
+    echo html_entity_decode($recommender->getProperties()['footer']); ?>
+        <?php
+} else {
+        echo $recommender->getProperties()['footer']; ?>
+        <?php
+    } ?>
     </td>
 </tr>
 </table>

@@ -16,14 +16,13 @@ use MauticPlugin\MauticRecommenderBundle\Entity\EventLogValue;
 
 class AddEvent extends AbstractRequest
 {
-
     public function find()
     {
         return $this->getRepo()->findOneBy(['name' => $this->getOptions()['name']]);
     }
 
     /**
-     * Just return new entity
+     * Just return new entity.
      *
      * @return EventLogValue
      */
@@ -39,6 +38,4 @@ class AddEvent extends AbstractRequest
     {
         return $this->getModel()->getEventRepository();
     }
-
 }
-

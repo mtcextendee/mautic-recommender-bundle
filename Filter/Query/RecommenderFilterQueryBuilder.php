@@ -16,7 +16,7 @@ use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 
 class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
 {
-    public function setParameters(QueryBuilder $queryBuilder, $parameters, $filterParameters, ContactSegmentFilter $filter )
+    public function setParameters(QueryBuilder $queryBuilder, $parameters, $filterParameters, ContactSegmentFilter $filter)
     {
         $type = 'string';
         if (isset($filter->contactSegmentFilterCrate->getArray()['type'])) {
@@ -24,11 +24,12 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
         }
         if (!is_array($parameters)) {
             $type = $this->transformType($type, $filterParameters);
+
             return $queryBuilder->setParameter($parameters, $filterParameters, $type);
         }
         foreach ($parameters as $parameter) {
             $parameterValue = array_shift($filterParameters);
-            $type = $this->transformType($type, $parameterValue);
+            $type           = $this->transformType($type, $parameterValue);
             $queryBuilder->setParameter($parameter, $parameterValue, $type);
         }
     }
@@ -46,11 +47,13 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
             break;
             case 'bool':
                 $parameter = (bool) $parameter;
+
                 return 'boolean';
             break;
             case 'int':
             case 'number':
                 $parameter = (int) $parameter;
+
                 return 'integer';
                 break;
             default:

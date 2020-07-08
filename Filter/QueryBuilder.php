@@ -19,8 +19,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter;
 
-
-
 /**
  * QueryBuilder class is responsible to dynamically create SQL queries.
  *
@@ -40,7 +38,6 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter;
  */
 class QueryBuilder extends \Mautic\LeadBundle\Segment\Query\QueryBuilder
 {
-
     /**
      * Return aliases of all currently registered tables.
      *
@@ -49,8 +46,8 @@ class QueryBuilder extends \Mautic\LeadBundle\Segment\Query\QueryBuilder
     public function getAllTableAliases()
     {
         $queryParts = $this->getQueryParts();
-        $froms = $queryParts['from'];
-        $tables = [];
+        $froms      = $queryParts['from'];
+        $tables     = [];
         foreach ($froms as $item) {
             $tables[$item['table']][]   = $item['alias'];
         }
@@ -63,5 +60,4 @@ class QueryBuilder extends \Mautic\LeadBundle\Segment\Query\QueryBuilder
 
         return $tables;
     }
-
 }

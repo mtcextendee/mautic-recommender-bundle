@@ -29,55 +29,53 @@ class Client
     private $settings = [];
     private $optionsResolver;
 
-
-
     private $endpoint;
 
-    /** @var  RecommenderToken */
+    /** @var RecommenderToken */
     private $token;
 
     /**
      * Client constructor.
      *
      * @param RecommenderClientModel $clientModel
-     *
      */
     public function __construct(RecommenderClientModel $clientModel)
     {
         $this->propertyAccessor = new PropertyAccessor();
-        $this->clientModel = $clientModel;
-
+        $this->clientModel      = $clientModel;
     }
 
     /**
      * @param string $endpoint
-     * @param array $options
+     * @param array  $options
      *
      * @throws ApiEndpointNotFoundException
      */
     public function send($endpoint, array $options, $settings = [])
     {
-        $this->endpoint = $endpoint;
-        $this->options = $options;
-        $this->settings = $settings;
+        $this->endpoint        = $endpoint;
+        $this->options         = $options;
+        $this->settings        = $settings;
         $this->optionsResolver = new Options($this);
-        $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$endpoint;
+        $class                 = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$endpoint;
         if (!class_exists($class)) {
             throw new ApiEndpointNotFoundException('Endpoint class '.$class.' doesn\'t exist.');
         }
         $loader = new $class($this);
+
         return $loader->run();
     }
 
     public function display(RecommenderToken $recommenderToken)
     {
-        $this->endpoint = $recommenderToken->getType();
-        $this->token = $recommenderToken;
-        $this->options = $recommenderToken->getOptions();
+        $this->endpoint        = $recommenderToken->getType();
+        $this->token           = $recommenderToken;
+        $this->options         = $recommenderToken->getOptions();
         $this->optionsResolver = new Options($this);
-        $class = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$this->endpoint;
+        $class                 = 'MauticPlugin\MauticRecommenderBundle\Api\Client\Request\\'.$this->endpoint;
         if (class_exists($class)) {
             $loader = new $class($this);
+
             return $loader->run();
         }
     }
@@ -97,7 +95,6 @@ class Client
     {
         return $this->optionsResolver;
     }
-
 
     /**
      * @return RecommenderClientModel
@@ -123,4 +120,3 @@ class Client
         return $this->settings;
     }
 }
-

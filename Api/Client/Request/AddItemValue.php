@@ -11,19 +11,18 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
-use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 use MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValue;
+use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 
 class AddItemValue extends AbstractRequest
 {
-
     public function find()
     {
         return $this->getRepo()->findOneBy(['item' => $this->getOptionsResolver()->getOption('item'), 'property'=> $this->getOptionsResolver()->getOption('property')]);
     }
 
     /**
-     * Just return new entity
+     * Just return new entity.
      *
      * @return ItemPropertyValue
      */
@@ -91,4 +90,3 @@ class AddItemValue extends AbstractRequest
     //     return $items;
     // }
 }
-

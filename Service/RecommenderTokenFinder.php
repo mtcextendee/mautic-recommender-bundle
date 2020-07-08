@@ -14,11 +14,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Service;
 use Mautic\PageBundle\Event\PageDisplayEvent;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 
-
-
 class RecommenderTokenFinder
 {
-
     private $recommenderTokens = [];
 
     private $recommenderRegex = '{recommender=(.*?)}';
@@ -27,7 +24,6 @@ class RecommenderTokenFinder
      * @var RecommenderToken
      */
     private $recommenderToken;
-
 
     public function __construct(RecommenderToken $recommenderToken)
     {
@@ -45,9 +41,9 @@ class RecommenderTokenFinder
             $this->recommenderToken->setId($match);
             $this->recommenderTokens[$matches[0][$key]] = $this->recommenderToken;
         }
+
         return $this->recommenderTokens;
     }
-
 
     /**
      * @return array
@@ -64,7 +60,4 @@ class RecommenderTokenFinder
     {
         $this->recommenderTokens = $recommenderTokens;
     }
-
-
 }
-

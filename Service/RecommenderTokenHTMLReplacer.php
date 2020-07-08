@@ -11,10 +11,8 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Service;
 
-
 class RecommenderTokenHTMLReplacer
 {
-
     private $tokenValues = [];
 
     private $recommenderTokens = [];
@@ -25,7 +23,6 @@ class RecommenderTokenHTMLReplacer
     private $recommenderGenerator;
 
     private $recommenderToken;
-
 
     /**
      * RecommenderTokenHTMLReplacer constructor.
@@ -38,7 +35,6 @@ class RecommenderTokenHTMLReplacer
         $this->recommenderGenerator = $recommenderGenerator;
         $this->recommenderToken     = $recommenderToken;
     }
-
 
     public function findTokens($content)
     {
@@ -57,12 +53,9 @@ class RecommenderTokenHTMLReplacer
             // in case we want to just change the slot contents:
             // $slot->appendChild($newnode);
             $recommenderBlock->parentNode->replaceChild($newnode, $newContent);
-
-
         }
         $dom->saveHTML();
     }
-
 
     /**
      * @param \DOMElement $recommenderBlock
@@ -78,7 +71,4 @@ class RecommenderTokenHTMLReplacer
 
         return $tokenValues;
     }
-
-
 }
-

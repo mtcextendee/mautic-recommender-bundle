@@ -48,13 +48,10 @@ class Property
      */
     protected $dateAdded;
 
-
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
     }
-
-
 
     /**
      * @param ORM\ClassMetadata $metadata
@@ -69,7 +66,7 @@ class Property
             ->addNamedField('name', 'string', 'name')
             ->addNamedField('type', 'string', 'type')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
-            $builder->addNullableField('segmentFilter', Type::BOOLEAN, 'segment_filter');
+        $builder->addNullableField('segmentFilter', Type::BOOLEAN, 'segment_filter');
     }
 
     /**
@@ -167,7 +164,6 @@ class Property
         return $this->type;
     }
 
-
     /**
      * @param \DateTime $dateAdded
      *
@@ -189,7 +185,7 @@ class Property
     }
 
     /**
-     * @param boolean $segmentFilter
+     * @param bool $segmentFilter
      *
      * @return Property
      */

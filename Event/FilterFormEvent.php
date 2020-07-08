@@ -28,7 +28,6 @@ class FilterFormEvent extends CommonEvent
      */
     public function __construct(FormBuilderInterface $builder)
     {
-
         $this->builder = $builder;
     }
 

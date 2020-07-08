@@ -38,7 +38,6 @@ class EventLogValue
      */
     protected $value;
 
-
     /**
      * @param ORM\ClassMetadata $metadata
      */
@@ -56,12 +55,10 @@ class EventLogValue
             'MauticPlugin\MauticRecommenderBundle\Entity\EventLog'
         )->addJoinColumn('event_log_id', 'id', true, false, 'CASCADE')->build();
 
-
         $builder->createManyToOne(
             'property',
             'MauticPlugin\MauticRecommenderBundle\Entity\Property'
         )->addJoinColumn('property_id', 'id', true, false, 'CASCADE')->build();
-
     }
 
     /**
@@ -111,7 +108,6 @@ class EventLogValue
     }
 
     /**
-     *
      * @return ItemPropertyValue
      */
     public function setValue(string $value = null)
@@ -130,15 +126,15 @@ class EventLogValue
     }
 
     /**
-     * @param EventLog     $eventLog
+     * @param EventLog $eventLog
      * @param Property $property
      * @param string   $value
      */
     public function setValues(EventLog $eventLog, Property $property, $value)
     {
         $this->eventLog     = $eventLog;
-        $this->property = $property;
-        $this->value    = $value;
+        $this->property     = $property;
+        $this->value        = $value;
     }
 
     /**

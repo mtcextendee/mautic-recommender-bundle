@@ -44,7 +44,6 @@ if ($tmpl == 'index') {
                     ]
                 );
 
-
                 echo $view->render(
                     'MauticCoreBundle:Helper:tableheader.html.php',
                     [

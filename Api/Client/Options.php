@@ -15,7 +15,7 @@ use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 
 class Options
 {
-    /** @var RecommenderClientModel  */
+    /** @var RecommenderClientModel */
     protected $clientModel;
 
     /**
@@ -37,8 +37,8 @@ class Options
      */
     public function __construct(Client $client)
     {
-        $this->client = $client;
-        $this->options = $this->client->getOptions();
+        $this->client      = $client;
+        $this->options     = $this->client->getOptions();
         $this->clientModel = $this->client->getClientModel();
     }
 
@@ -46,7 +46,6 @@ class Options
      * Get options with auto fill entities - userId, itemId...
      *
      * @param array $entities
-     *
      * @param array $addOptions
      *
      * @return array
@@ -55,7 +54,6 @@ class Options
     {
         $options = $this->options;
         foreach ($entities as $entity) {
-
             switch ($entity) {
                 case 'contactId':
                     if (!isset($entities['userId'])) {
@@ -66,7 +64,7 @@ class Options
 
             if ($entity == 'itemId' && !isset($options[$entity])) {
                 throw new \Exception('Item ID param not exist');
-               // die();
+                // die();
             }
 
             // don't convert not exist params
@@ -79,7 +77,7 @@ class Options
                     $addOptions['item'] = $this->clientModel->getRepository()->findOneBy(['itemId' => $options[$entity]]);
                     if (!$addOptions['item']) {
                         throw new \Exception('Item ID '.$options[$entity].' not found');
-                   //     die();
+                        //     die();
                     }
                     unset($options['itemId']);
                     break;
@@ -93,12 +91,11 @@ class Options
             }
         }
 
-
         return array_merge($this->getOptions(), $addOptions);
     }
 
     /**
-     * Get options - raw format
+     * Get options - raw format.
      *
      * @return array
      */
@@ -115,7 +112,6 @@ class Options
         return $options;
     }
 
-
     public function addOption($key, $value)
     {
         if (!isset($this->options[$key])) {
@@ -129,6 +125,4 @@ class Options
             return $this->getOptions()[$key];
         }
     }
-
 }
-

@@ -51,16 +51,15 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '--batch-limit',
             '-l',
             InputOption::VALUE_OPTIONAL,
-            'Set batch size of contacts to process per round. Defaults to 100.'            
+            'Set batch size of contacts to process per round. Defaults to 100.'
         );
 
         $this->addOption(
             '--timeout',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Set delay to ignore item to update. Default -1 day.'            
+            'Set delay to ignore item to update. Default -1 day.'
         );
-
 
         parent::configure();
     }
@@ -110,24 +109,22 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             );
         }
 
-        if (!empty($input->getOption('file'))){
+        if (!empty($input->getOption('file'))) {
             $file = $input->getOption('file');
-        }else{
-            switch ($type){
-                case "items": 
-                    if (!empty($featureSettings['items_import_url'])){
+        } else {
+            switch ($type) {
+                case 'items':
+                    if (!empty($featureSettings['items_import_url'])) {
                         $file = $featureSettings['items_import_url'];
                     }
                     break;
-                case "events":
-                    if (!empty($featureSettings['events_import_url'])){
+                case 'events':
+                    if (!empty($featureSettings['events_import_url'])) {
                         $file = $featureSettings['events_import_url'];
                     }
                     break;
             }
         }
-        
-
 
         if (!in_array($type, $this->getTypes()) && empty($file)) {
             return $output->writeln(
@@ -175,40 +172,39 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             }
         }
 
-        if (!empty($input->getOption('batch-limit')) && intval($input->getOption('batch-limit'))){
+        if (!empty($input->getOption('batch-limit')) && intval($input->getOption('batch-limit'))) {
             $batchLimit = intval($input->getOption('batch-limit'));
-        }elseif(!empty($featureSettings['batch_limit']) && intval($featureSettings['batch_limit'])){
+        } elseif (!empty($featureSettings['batch_limit']) && intval($featureSettings['batch_limit'])) {
             $batchLimit = intval($featureSettings['batch_limit']);
-        }else{
+        } else {
             $batchLimit = 100;
         }
-        
-        if (!empty($input->getOption('timeout'))){
+
+        if (!empty($input->getOption('timeout'))) {
             $timeout = $input->getOption('timeout');
-        }elseif(!empty($featureSettings['timeout'])){
+        } elseif (!empty($featureSettings['timeout'])) {
             $timeout = $featureSettings['timeout'];
-        }else{
+        } else {
             $timeout = '-1 day';
         }
-
 
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
 
         switch ($type) {
-            case "items":
+            case 'items':
                 $apiCommands->ImportItems($items, $batchLimit, $timeout, $output);
                 $items = \JsonMachine\JsonMachine::fromFile($file);
                 $apiCommands->deactivateMissingItems($items, $output);
                 break;
-            case "events":
+            case 'events':
                 /** @var Processor $eventProcessor */
                 $eventProcessor = $this->getContainer()->get('mautic.recommender.events.processor');
                 $counter        = 0;
                 foreach ($items as $item) {
                     try {
                         $eventProcessor->process($item);
-                        $counter++;
+                        ++$counter;
                     } catch (\Exception $e) {
                         $output->writeln($e->getMessage());
                     }

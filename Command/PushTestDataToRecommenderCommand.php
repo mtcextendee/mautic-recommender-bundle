@@ -25,7 +25,6 @@ class PushTestDataToRecommenderCommand extends ContainerAwareCommand
         $this->setName('mautic:recommender:import:testdata')
             ->setDescription('Import test data to Recommender');
 
-
         parent::configure();
     }
 
@@ -37,20 +36,20 @@ class PushTestDataToRecommenderCommand extends ContainerAwareCommand
         // Create events first
         /** @var RecommenderEventModel $recommenderEventModel */
         $recommenderEventModel = $this->getContainer()->get('mautic.recommender.model.event');
-        $eventNames = [2=>'DetailView', 3=>'Wishlist', 5=>'addToCart', 10=>'Purchase'];
+        $eventNames            = [2=>'DetailView', 3=>'Wishlist', 5=>'addToCart', 10=>'Purchase'];
         foreach ($eventNames as $weight=>$eventName) {
             if (!$entity = $recommenderEventModel->getRepository()->findBy(['name' => $eventName])) {
                 $event = new Event();
                 $event->setName($eventName);
                 $event->setWeight($weight);
                 $recommenderEventModel->saveEntity($event);
-            };
+            }
         }
 
         // Import items first
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
-        $items = \JsonMachine\JsonMachine::fromFile(__DIR__.'/data/items.json');
+        $items       = \JsonMachine\JsonMachine::fromFile(__DIR__.'/data/items.json');
         $apiCommands->ImportItems($items, 1000, '-1 day', $output);
 
         // then import events
@@ -61,7 +60,7 @@ class PushTestDataToRecommenderCommand extends ContainerAwareCommand
         foreach ($items as $item) {
             try {
                 $eventProcessor->process($item);
-                $counter++;
+                ++$counter;
             } catch (\Exception $e) {
                 $output->writeln($e->getMessage());
             }
@@ -69,6 +68,4 @@ class PushTestDataToRecommenderCommand extends ContainerAwareCommand
         $output->writeln('');
         $output->writeln('Imported '.$counter.' events');
     }
-
-
 }

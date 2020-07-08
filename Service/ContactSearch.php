@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Service;
 
-
 use Mautic\CoreBundle\Controller\CommonController;
 use Mautic\CoreBundle\Helper\CookieHelper;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\ContactSearchType;
@@ -45,7 +44,7 @@ class ContactSearch
      */
     private $container;
 
-    /** @var  int */
+    /** @var int */
     private $objectId;
 
     /** @var RecommenderTokenReplacer|object */
@@ -54,7 +53,6 @@ class ContactSearch
     public function __construct(
         Container $container
     ) {
-
         $this->container                = $container;
         $this->request                  = $this->container->get('request_stack')->getCurrentRequest();
         $this->clientModel              = $this->container->get('mautic.recommender.model.client');
@@ -96,14 +94,12 @@ class ContactSearch
             [
                 'action'  => $this->getAction(),
                 'choices' => $this->getChoices(),
-
             ]
         );
     }
 
     public function getEntitiesArgs()
     {
-
         $filter           = ['force' => [['column' => 'l.email', 'expr' => 'neq', 'value' => '']]];
         $filter['string'] = $this->getSearch();
 
@@ -175,12 +171,11 @@ class ContactSearch
             'form'        => $this->getForm()->createView(),
             'recommender' => $this->recommenderTokenReplacer->getRecommenderToken()->getRecommender(),
             'contactId'   => $this->getContact(),
-
         ];
     }
 
     /**
-     * Get action of url for example
+     * Get action of url for example.
      *
      * @return string
      */
@@ -192,9 +187,8 @@ class ContactSearch
         );
     }
 
-
     /**
-     * Get unserialized content from cookie
+     * Get unserialized content from cookie.
      *
      * @param null|string $key
      *
@@ -214,7 +208,7 @@ class ContactSearch
     }
 
     /**
-     * Get search
+     * Get search.
      *
      * @return string
      */
@@ -224,7 +218,7 @@ class ContactSearch
     }
 
     /**
-     * Get contact ID from form
+     * Get contact ID from form.
      *
      * @return string
      */
@@ -236,7 +230,7 @@ class ContactSearch
     }
 
     /**
-     * Get template type
+     * Get template type.
      *
      * @return string
      */
@@ -252,7 +246,4 @@ class ContactSearch
     {
         return $this->clientModel->getContactRepository();
     }
-
-
 }
-

@@ -53,7 +53,7 @@ class ItemEventDateQueryBuilder extends RecommenderFilterQueryBuilder
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
-        $filterOperator = $filter->getOperator();
+        $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
             $parameters = [];
@@ -64,7 +64,7 @@ class ItemEventDateQueryBuilder extends RecommenderFilterQueryBuilder
             $parameters = $this->generateRandomParameterName();
         }
         $filterParametersHolder = $filter->getParameterHolder($parameters);
-        $tableAlias = $this->generateRandomParameterName();
+        $tableAlias             = $this->generateRandomParameterName();
 
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
@@ -119,7 +119,7 @@ class ItemEventDateQueryBuilder extends RecommenderFilterQueryBuilder
                 break;
             case 'notGt':
             case 'notLt':
-                $expr = strtolower(str_replace('not', '', $filterOperator));
+                $expr       = strtolower(str_replace('not', '', $filterOperator));
                 $expression = $subQueryBuilder->expr()->orX(
                     $subQueryBuilder->expr()->isNull($tableAlias.'.'.$this->filterField()),
                     $subQueryBuilder->expr()->$expr($tableAlias.'.'.$this->filterField(), $filterParametersHolder)
@@ -149,6 +149,7 @@ class ItemEventDateQueryBuilder extends RecommenderFilterQueryBuilder
         }
         //  $queryBuilder->setParametersPairs($parameters, $filterParameters);
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
+
         return $queryBuilder;
     }
 }

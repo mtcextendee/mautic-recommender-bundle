@@ -13,7 +13,6 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
 use Mautic\CoreBundle\Entity\CommonRepository;
 
-
 class PropertyRepository extends CommonRepository
 {
     /**
@@ -41,6 +40,7 @@ class PropertyRepository extends CommonRepository
     public function getPropertyNamesAsChoices()
     {
         $properties = $this->findAllArray();
+
         return array_combine(array_column($properties, 'id'), array_column($properties, 'name'));
     }
 }

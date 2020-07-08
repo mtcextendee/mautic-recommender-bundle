@@ -17,9 +17,7 @@ use Mautic\ApiBundle\Serializer\Driver\ApiMetadataDriver;
 use Mautic\CoreBundle\Doctrine\Mapping\ClassMetadataBuilder;
 
 /**
- * Class Event
- *
- * @package MauticPlugin\MauticRecommenderBundle\Entity
+ * Class Event.
  */
 class Event
 {
@@ -38,7 +36,7 @@ class Event
      */
     protected $type;
 
-    /** @var  int */
+    /** @var int */
     protected $weight = 0;
 
     /**
@@ -169,17 +167,14 @@ class Event
 
     public function getCreatedBy()
     {
-
     }
 
     public function getHeader()
     {
-
     }
 
     public function getPublishStatus()
     {
-
     }
 
     /**
@@ -205,5 +200,4 @@ class Event
     public function getTypeTranslations()
     {
     }
-
 }

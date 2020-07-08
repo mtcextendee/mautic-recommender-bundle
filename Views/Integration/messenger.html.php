@@ -14,6 +14,6 @@
     <strong><?php echo $view['translator']->trans('mautic.plugin.mtcpilot.callback.url'); ?></strong>
     <br>
     <?php
-    echo str_replace('http://','https://', $view['router']->url('mtcpilot_callback'));
+    echo str_replace('http://', 'https://', $view['router']->url('mtcpilot_callback'));
     ?>
 </p>

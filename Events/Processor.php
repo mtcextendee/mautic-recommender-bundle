@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Events;
 
-
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\CoreBundle\Security\Permissions\CorePermissions;
 use Mautic\LeadBundle\Entity\Lead;
@@ -70,7 +69,6 @@ class Processor
         TranslatorInterface $translator,
         LeadModel $leadModel
     ) {
-
         $this->coreParametersHelper = $coreParametersHelper;
         $this->security             = $security;
         $this->apiCommands          = $apiCommands;
@@ -83,6 +81,7 @@ class Processor
      * @param array|null $eventDetail
      *
      * @return bool
+     *
      * @throws \Exception
      */
     public function process($eventDetail)
@@ -109,8 +108,7 @@ class Processor
             );
         }
         // Just provider from console
-        if (defined('IN_MAUTIC_CONSOLE') ||  defined('IN_MAUTIC_API')) {
-
+        if (defined('IN_MAUTIC_CONSOLE') || defined('IN_MAUTIC_API')) {
             if (isset($eventDetail['contactEmail'])) {
                 $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
                 $contact = current($contact);
@@ -130,6 +128,4 @@ class Processor
 
         return true;
     }
-
 }
-

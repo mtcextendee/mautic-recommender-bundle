@@ -17,7 +17,6 @@ namespace MauticPlugin\MauticRecommenderBundle;
  */
 final class RecommenderEvents
 {
-
     /**
      * The mautic.recommender_pre_save event is thrown right before a asset is persisted.
      *
@@ -58,7 +57,6 @@ final class RecommenderEvents
      */
     const POST_DELETE = 'mautic.recommender_post_delete';
 
-
     /**
      * The mautic.email.on_campaign_trigger_action event is fired when the campaign action triggers.
      *
@@ -68,7 +66,6 @@ final class RecommenderEvents
      * @var string
      */
     const ON_CAMPAIGN_TRIGGER_ACTION = 'mautic.plugin.recommender.on_campaign_trigger_action';
-
 
     /**
      * The mautic.email.on_campaign_trigger_action event is fired when the campaign action triggers.
@@ -95,6 +92,4 @@ final class RecommenderEvents
     const ON_RECOMMENDER_FILTER_RESULTS               = 'mautic.plugin.recommender.filter_results';
     const ON_RECOMMENDER_EVENT_SENT                   = 'mautic.plugin.recommender.before_send_event';
     const LIST_FILTERS_ON_FILTERING                   = 'mautic.plugin.recommender.filters_filtering';
-
-
 }

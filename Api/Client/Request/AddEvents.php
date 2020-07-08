@@ -16,11 +16,9 @@ use MauticPlugin\MauticRecommenderBundle\Entity\EventLogValue;
 
 class AddEvents extends AbstractRequest
 {
-
     public function add()
     {
         foreach ($this->getOptionsResolver()->getOptions() as $option) {
-
         }
     }
 
@@ -31,6 +29,4 @@ class AddEvents extends AbstractRequest
     {
         return $this->getModel()->getEventRepository();
     }
-
 }
-

@@ -40,7 +40,6 @@ class SentEvent extends CommonEvent
      */
     public function __construct($apiRequest, $options, $return = false)
     {
-
         $this->apiRequest = $apiRequest;
         $this->options    = $options;
         $this->return     = $return;
@@ -63,7 +62,7 @@ class SentEvent extends CommonEvent
     }
 
     /**
-     * @param boolean $return
+     * @param bool $return
      */
     public function setReturn($return)
     {

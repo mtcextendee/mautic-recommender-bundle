@@ -36,7 +36,6 @@ class RecommenderTagsType extends AbstractType
      */
     public function __construct(ApiCommands $apiCommands)
     {
-
         $this->apiCommands = $apiCommands;
     }
 
@@ -46,7 +45,6 @@ class RecommenderTagsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
     }
 
     /**
@@ -70,7 +68,6 @@ class RecommenderTagsType extends AbstractType
             'multiple'    => false,
             'required'    => false,
         ]);
-
     }
 
     /**

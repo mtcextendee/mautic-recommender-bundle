@@ -42,6 +42,7 @@ class ItemRepository extends CommonRepository
             ->groupBy('ri.id')
             ->setMaxResults($max)
             ->setParameter('contactId', $contactId);
+
         return $qb->execute()->fetchAll();
     }
 
@@ -59,8 +60,8 @@ class ItemRepository extends CommonRepository
             ->orderBy('ri.date_modified', 'ASC')
             ->setMaxResults($inputDAO->getLimit())
             ->setParameter('dateModified', $inputDAO->getStartDateTime()->format('Y-m-d H:i:s'));
-        return $qb->execute()->fetchAll();
 
+        return $qb->execute()->fetchAll();
     }
 
     /**
@@ -80,18 +81,19 @@ class ItemRepository extends CommonRepository
      * @return array
      */
     public function findActiveExcluding($itemIds)
-    {        
+    {
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb->select('id, item_id')
             ->from(MAUTIC_TABLE_PREFIX.'recommender_item', 'i')
             ->andWhere($qb->expr()->eq('i.active', '1'));
-        if (!empty($itemIds)){
-            foreach ($itemIds as &$item){
+        if (!empty($itemIds)) {
+            foreach ($itemIds as &$item) {
                 $item = $qb->expr()->literal($item);
             }
             $qb->andWhere($qb->expr()->notIn('i.item_id', $itemIds));
         }
-        return $qb->execute()->fetchAll();           
+
+        return $qb->execute()->fetchAll();
     }
 
     /**
@@ -100,7 +102,7 @@ class ItemRepository extends CommonRepository
     public function getEventNamesAsChoices()
     {
         $events = $this->findAllArray();
+
         return array_combine(array_column($events, 'id'), array_column($events, 'itemId'));
     }
-
 }

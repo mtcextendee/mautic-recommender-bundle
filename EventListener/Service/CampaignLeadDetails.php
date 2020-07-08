@@ -24,11 +24,10 @@ class CampaignLeadDetails
     /**
      * SecondsFromAddedToCampaign constructor.
      *
-     * @param CampaignModel          $campaignModel
+     * @param CampaignModel $campaignModel
      */
     public function __construct(CampaignModel $campaignModel)
     {
-
         $this->campaignModel = $campaignModel;
     }
 
@@ -42,7 +41,7 @@ class CampaignLeadDetails
         }
 
         $leadsCampaignDetail = end($leadsCampaignDetail[$leadId]);
+
         return (new \DateTime('now'))->getTimestamp() - $leadsCampaignDetail['dateAdded']->getTimestamp();
     }
-
 }

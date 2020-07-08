@@ -58,7 +58,7 @@ class RecommenderGenerator
     /** @var array $items */
     private $items = [];
 
-    /** @var array  */
+    /** @var array */
     private $cache = [];
 
     /**
@@ -88,11 +88,11 @@ class RecommenderGenerator
     ) {
         $this->recommenderApi    = $recommenderApi;
         $this->recommenderModel  = $recommenderModel;
-        $this->leadModel      = $leadModel;
-        $this->twig           = $twig;
-        $this->apiCommands    = $apiCommands;
-        $this->templateHelper = $templatingHelper;
-        $this->dispatcher = $dispatcher;
+        $this->leadModel         = $leadModel;
+        $this->twig              = $twig;
+        $this->apiCommands       = $apiCommands;
+        $this->templateHelper    = $templatingHelper;
+        $this->dispatcher        = $dispatcher;
     }
 
     /**
@@ -109,20 +109,21 @@ class RecommenderGenerator
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS, $resultEvent);
         }
         $this->items =  $resultEvent->getItems();
+
         return $this->items;
 
-            /*switch ($recommenderToken->getType()) {
-                case "RecommendItemsToUser":
-                    $this->apiCommands->callCommand(
-                        'RecommendItemsToUser',
-                        $recommenderToken->getOptions(['userId', 'limit'])
-                    );
-                    $items = $this->apiCommands->getCommandOutput();
-                    break;
-            }
-            $this->items = $items['recomms'];
-            $this->cache[$hash] = $this->items;
-            return $this->items;*///
+        /*switch ($recommenderToken->getType()) {
+            case "RecommendItemsToUser":
+                $this->apiCommands->callCommand(
+                    'RecommendItemsToUser',
+                    $recommenderToken->getOptions(['userId', 'limit'])
+                );
+                $items = $this->apiCommands->getCommandOutput();
+                break;
+        }
+        $this->items = $items['recomms'];
+        $this->cache[$hash] = $this->items;
+        return $this->items;*/
 
         //$options['filter']           = $recommender->getFilter();
         //$options['booster']          = $recommender->getBoost();
@@ -165,7 +166,7 @@ class RecommenderGenerator
             return;
         }
         $recommenderTemplate = $recommenderToken->getRecommender()->getTemplate();
-        $this->items = $this->getResultByToken($recommenderToken);
+        $this->items         = $this->getResultByToken($recommenderToken);
 
         if (empty($this->items)) {
             return;
@@ -175,27 +176,26 @@ class RecommenderGenerator
                 'MauticRecommenderBundle:Builder/'.$view.':generator-header.html.php',
                 [
                     'recommender' => $recommenderTemplate,
-                    'settings'=>$recommenderToken->getSettings()
+                    'settings'    => $recommenderToken->getSettings(),
                 ]
             );
             $footerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/'.$view.':generator-footer.html.php',
                 [
                     'recommender' => $recommenderTemplate,
-                    'settings'=>$recommenderToken->getSettings()
+                    'settings'    => $recommenderToken->getSettings(),
                 ]
             );
             $bodyTemplateCore   = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/'.$view.':generator-body.html.php',
                 [
                     'recommender' => $recommenderTemplate,
-                    'settings'=>$recommenderToken->getSettings()
+                    'settings'    => $recommenderToken->getSettings(),
                 ]
             );
             $headerTemplate = $this->twig->createTemplate($headerTemplateCore);
             $footerTemplate = $this->twig->createTemplate($footerTemplateCore);
             $bodyTemplate   = $this->twig->createTemplate($bodyTemplateCore);
-
         } else {
             $headerTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['header']);
             $footerTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['footer']);
@@ -206,7 +206,6 @@ class RecommenderGenerator
     }
 
     /**
-     *
      * @return string
      */
     private function getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate)
@@ -216,10 +215,10 @@ class RecommenderGenerator
             $item['index'] = $i;
             $output .= $bodyTemplate->render($item);
         }
-        $output.= $footerTemplate->render($this->getFirstItem());
+        $output .= $footerTemplate->render($this->getFirstItem());
+
         return $output;
     }
-
 
     /**
      * @return mixed
@@ -251,6 +250,7 @@ class RecommenderGenerator
             }
             $item['keys'] = $keys;
         }
+
         return $this->items;
     }
 
@@ -263,7 +263,7 @@ class RecommenderGenerator
     }
 
     /**
-     * Return new token keys with comma separated item IDs
+     * Return new token keys with comma separated item IDs.
      *
      * @param string $separator
      *
@@ -275,14 +275,14 @@ class RecommenderGenerator
     }
 
     /**
-     * Get first item
+     * Get first item.
      *
      * @return array
      */
     public function getFirstItem()
     {
         $items = $this->getItems();
+
         return current($items);
     }
 }
-

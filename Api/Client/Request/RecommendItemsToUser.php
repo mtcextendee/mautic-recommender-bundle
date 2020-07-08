@@ -23,16 +23,15 @@ class RecommendItemsToUser extends AbstractRequest
     {
         $results = $this->getModel()->getRepository()->getContactsItemsByPoints($this->getOptions()['userId'], $this->getOptions()['limit']);
         foreach ($results as &$result) {
-            $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);;
-            $properties = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
+            $properties           = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);
+            $properties           = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
             $translatedProperties = [];
             foreach ($properties as $property=>$value) {
                 $translatedProperties[InputHelper::alphanum(InputHelper::transliterate($property))] = $value;
             }
             $result = array_merge($result, $translatedProperties);
         }
+
         return $results;
     }
-
 }
-

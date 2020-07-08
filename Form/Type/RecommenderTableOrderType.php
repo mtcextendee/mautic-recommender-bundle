@@ -13,13 +13,12 @@ namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-
 
 class RecommenderTableOrderType extends AbstractType
 {
@@ -35,7 +34,6 @@ class RecommenderTableOrderType extends AbstractType
      */
     public function __construct(TranslatorInterface $translator)
     {
-
         $this->translator = $translator;
     }
 
@@ -45,17 +43,15 @@ class RecommenderTableOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         //$options['fields']['weight']
         // Build a list of columns
 
-        $column = $options['data']['column'] ?? null;        
-
+        $column = $options['data']['column'] ?? null;
 
         $fields = $options['fields'];
         unset($fields['mautic.lead.recommender_item'], $fields['mautic.lead.recommender_item_property_value']);
         $builder->add('column', 'choice', [
-            'choices' => $fields,
+            'choices'     => $fields,
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.report.label.filtercolumn',
@@ -84,77 +80,70 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
-        
-        
         $builder->add('function', 'choice', [
-            'choices'     => $this->getAvabilableFunctionChoices($column??null),
+            'choices'     => $this->getAvabilableFunctionChoices($column ?? null),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
-            'label_attr'  => ['class' => 'control-label'],            
+            'label_attr'  => ['class' => 'control-label'],
             'empty_value' => false,
             'required'    => true,
             'attr'        => [
                 'class' => 'form-control not-chosen',
             ],
         ]);
-        
-        
-
 
         $builder->get('column')->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) {
+            function (FormEvent $event) {
                 $form = $event->getForm();
                 $column = $event->getData();
-                
 
-                    $this->setupAvailableFunctionChoices(
+                $this->setupAvailableFunctionChoices(
                         $form->getParent(),
                         $column
                     );
-                }
+            }
             );
-        
-
-        
     }
 
-    public function getAvabilableFunctionChoices($column=null){
+    public function getAvabilableFunctionChoices($column=null)
+    {
         $choices = [
             ''       => $this->translator->trans('mautic.core.none'),
-            'COUNT' => $this->translator->trans('mautic.report.report.label.aggregators.count'),
-            'AVG'   => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
-            'SUM'   => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
-            'MIN'   => $this->translator->trans('mautic.report.report.label.aggregators.min'),
-            'MAX'   => $this->translator->trans('mautic.report.report.label.aggregators.max'),
+            'COUNT'  => $this->translator->trans('mautic.report.report.label.aggregators.count'),
+            'AVG'    => $this->translator->trans('mautic.report.report.label.aggregators.avg'),
+            'SUM'    => $this->translator->trans('mautic.report.report.label.aggregators.sum'),
+            'MIN'    => $this->translator->trans('mautic.report.report.label.aggregators.min'),
+            'MAX'    => $this->translator->trans('mautic.report.report.label.aggregators.max'),
         ];
 
-        switch ($column){
-            case "weight":
-            case "date_added":
-                unset($choices['']);           
+        switch ($column) {
+            case 'weight':
+            case 'date_added':
+                unset($choices['']);
             break;
         }
 
-        if (mb_ereg("date_added_\d+", $column)){
+        if (mb_ereg("date_added_\d+", $column)) {
             unset($choices['']);
         }
-        if (mb_ereg("event_\d+", $column)){
+        if (mb_ereg("event_\d+", $column)) {
             unset($choices['']);
-        }        
+        }
 
         return $choices;
     }
 
     public function setupAvailableFunctionChoices(FormInterface $form, ?string $column)
     {
-        if (null === $column) {            
+        if (null === $column) {
             return;
         }
         $choices = $this->getAvabilableFunctionChoices($column);
         if (null === $choices) {
             $form->remove('function');
+
             return;
         }
 
@@ -164,7 +153,7 @@ class RecommenderTableOrderType extends AbstractType
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
-            'label_attr'  => ['class' => 'control-label'],            
+            'label_attr'  => ['class' => 'control-label'],
             'empty_value' => false,
             'required'    => true,
             'attr'        => [
@@ -172,7 +161,6 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
     }
-
 
     /**
      * @param OptionsResolver $resolver

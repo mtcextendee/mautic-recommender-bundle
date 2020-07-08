@@ -28,7 +28,6 @@ class RecommenderEventType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder->add(
             'name',
             TextType::class,
@@ -44,8 +43,8 @@ class RecommenderEventType extends AbstractType
                         [
                             'message' => 'mautic.core.value.required',
                         ]
-                    )
-                ]
+                    ),
+                ],
             ]
         );
 
@@ -78,17 +77,15 @@ class RecommenderEventType extends AbstractType
             'type',
             ChoiceType::class,
             [
-                'choices' => EventTypeEnum::getChoices(),
-                'expanded' => false,
-                'multiple' => false,
-                'label' => 'mautic.recommender.form.event.type',
-                'label_attr' => ['class' => ''],
+                'choices'     => EventTypeEnum::getChoices(),
+                'expanded'    => false,
+                'multiple'    => false,
+                'label'       => 'mautic.recommender.form.event.type',
+                'label_attr'  => ['class' => ''],
                 'empty_value' => '',
-                'required' => true,
+                'required'    => true,
             ]
         );
-
-
 
         $builder->add(
             'buttons',

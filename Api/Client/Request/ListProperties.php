@@ -21,7 +21,7 @@ class ListProperties extends AbstractRequest
     }
 
     /**
-     * Just return new entity
+     * Just return new entity.
      *
      * @return Property
      */
@@ -37,7 +37,4 @@ class ListProperties extends AbstractRequest
     {
         return $this->getModel()->getPropertyRepository();
     }
-
-
 }
-

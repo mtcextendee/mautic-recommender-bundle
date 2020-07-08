@@ -16,29 +16,26 @@ use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 
 class AddItem extends AbstractRequest
 {
-
     public function find()
     {
         return $this->getRepo()->findOneBy(['itemId' => $this->getOptions()['item_id']]);
     }
 
     /**
-     * Just return new entity
+     * Just return new entity.
      *
      * @return Item
      */
     public function newEntity()
-   {
-       return new Item();
-   }
+    {
+        return new Item();
+    }
 
     /**
      * @return \MauticPlugin\MauticRecommenderBundle\Entity\ItemRepository
      */
     public function getRepo()
-   {
-       return $this->getModel()->getRepository();
-   }
-
+    {
+        return $this->getModel()->getRepository();
+    }
 }
-

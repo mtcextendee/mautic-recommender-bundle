@@ -12,13 +12,12 @@
 namespace MauticPlugin\MauticRecommenderBundle\Model;
 
 use Mautic\CoreBundle\Model\AbstractCommonModel;
-use Mautic\LeadBundle\Tracker\ContactTracker;
 use Mautic\LeadBundle\Entity\Lead;
+use Mautic\LeadBundle\Tracker\ContactTracker;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 
 class RecommenderClientModel extends AbstractCommonModel
 {
-
     /**
      * @var ContactTracker
      */
@@ -99,5 +98,4 @@ class RecommenderClientModel extends AbstractCommonModel
     {
         return $this->contactTracker->getContact();
     }
-
 }

@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator;
 
-
 use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
 use Mautic\LeadBundle\Segment\ContactSegmentFilterOperator;
 use Mautic\LeadBundle\Segment\Decorator\CustomMappedDecorator;
@@ -42,7 +41,6 @@ class Decorator extends CustomMappedDecorator
      */
     public function getParameterValue(ContactSegmentFilterCrate $contactSegmentFilterCrate)
     {
-
         if ($contactSegmentFilterCrate->isDateType()) {
             return $contactSegmentFilterCrate->getFilter();
         }

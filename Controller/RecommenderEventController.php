@@ -11,12 +11,11 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
-use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
+use Mautic\CoreBundle\Exception as MauticException;
 
 class RecommenderEventController extends AbstractStandardFormController
 {
-
     /**
      * {@inheritdoc}
      */

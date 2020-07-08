@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class FilterChoiceFormEvent extends CommonEvent
 {
-    /** @var array  */
+    /** @var array */
     protected $choices;
 
     /**
@@ -47,5 +47,4 @@ class FilterChoiceFormEvent extends CommonEvent
     {
         return $this->choices[$alias];
     }
-
 }

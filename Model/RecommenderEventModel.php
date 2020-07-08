@@ -22,7 +22,6 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class RecommenderEventModel extends FormModel implements AjaxLookupModelInterface
 {
-
     /**
      * Retrieve the permissions base.
      *

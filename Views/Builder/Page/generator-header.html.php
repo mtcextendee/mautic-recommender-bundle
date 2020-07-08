@@ -10,10 +10,10 @@
  */
 
 $class = 'recommender-template-'.$recommender->getId();
-if(!isset($preview)) {
+if (!isset($preview)) {
     $preview = false;
 }
-if(!isset($settings)) {
+if (!isset($settings)) {
     $settings = [];
 }
 ?>
@@ -22,8 +22,8 @@ echo $view->render(
     'MauticRecommenderBundle:Builder\Page:generator-css.html.php',
     [
         'recommender' => $recommender,
-        'settings' => $settings,
-        'preview' => $preview
+        'settings'    => $settings,
+        'preview'     => $preview,
     ]
 );
 ?>
@@ -32,13 +32,13 @@ echo $view->render(
 
     <?php
     if (isset($recommender->getProperties()['header'])) {
-
-    if ($preview) {
-        echo html_entity_decode($recommender->getProperties()['header']);
-        ?>
-    <?php } else {
-        echo $recommender->getProperties()['header']; ?>
-    <?php }
+        if ($preview) {
+            echo html_entity_decode($recommender->getProperties()['header']); ?>
+    <?php
+        } else {
+            echo $recommender->getProperties()['header']; ?>
+    <?php
+        }
     }
     ?>
     <div class="recommender-row">

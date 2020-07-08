@@ -11,8 +11,8 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
-use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
+use Mautic\CoreBundle\Exception as MauticException;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Service\ContactSearch;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
@@ -135,7 +135,6 @@ class RecommenderController extends AbstractStandardFormController
         );
     }
 
-
     /**
      * @param $objectId
      *
@@ -169,14 +168,14 @@ class RecommenderController extends AbstractStandardFormController
     {
         /** @var RecommenderTokenReplacer $recommenderTokenReplacer */
         $recommenderTokenReplacer    = $this->get('mautic.recommender.service.replacer');
-        $viewParameters = [];
+        $viewParameters              = [];
         switch ($action) {
             case 'edit':
                 /** @var ContactSearch $contactSearch */
                 $featureSettings = $this->get('mautic.helper.integration')->getIntegrationObject(
                     'Recommender'
                 )->getIntegrationSettings()->getFeatureSettings();
-                if (!empty($featureSettings['show_recommender_testbench'])){              
+                if (!empty($featureSettings['show_recommender_testbench'])) {
                     $viewParameters['tester'] = $this->get('mautic.recommender.contact.search')->renderForm($args['objectId'], $this);
                 }
                 break;
@@ -192,10 +191,10 @@ class RecommenderController extends AbstractStandardFormController
     public function sendAction()
     {
         /** @var Logger $logger */
-        $logger = $this->get('monolog.logger.mautic');
+        $logger      = $this->get('monolog.logger.mautic');
         $recommender = $this->request->get('eventDetail');
         $eventDetail = json_decode(base64_decode($recommender), true);
-        $params = $this->request->get('params');
+        $params      = $this->request->get('params');
 
         /** @var Processor $eventProcessor */
         $eventProcessor = $this->get('mautic.recommender.events.processor');
@@ -205,6 +204,7 @@ class RecommenderController extends AbstractStandardFormController
 
         try {
             $eventProcessor->process($eventDetail);
+
             return new JsonResponse(
                 [
                     'success' => 1,
@@ -213,18 +213,18 @@ class RecommenderController extends AbstractStandardFormController
         } catch (\Exception $e) {
             $logger->log('error', $e->getMessage().' with params '.$params);
             $error = $e->getMessage();
+
             return new JsonResponse(
                 [
                     'success' => 0,
-                    'error' => $error
+                    'error'   => $error,
                 ]
             );
         }
-
     }
 
     public function exampleAction($objectId)
     {
         return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
-    }    
+    }
 }

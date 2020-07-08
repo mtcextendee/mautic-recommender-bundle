@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class  ListEventsType extends AbstractType
+class ListEventsType extends AbstractType
 {
     /**
      * @var RecommenderEventModel
@@ -57,11 +57,11 @@ class  ListEventsType extends AbstractType
                 foreach ($events as $event) {
                     $choices[$event->getId()] = $event->getName();
                 }
+
                 return $choices;
             },
             'attr'        => [
                 'class' => 'form-control',
-
             ],
             'label'       => '',
             'expanded'    => false,

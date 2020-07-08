@@ -5,13 +5,13 @@ namespace MauticPlugin\MauticRecommenderBundle\Integration;
 use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\ListTemplateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 class RecommenderIntegration extends AbstractIntegration
 {
-    CONST NAME = 'Recommender';
+    const NAME = 'Recommender';
 
     /**
      * RecommenderIntegration constructor.
@@ -88,8 +88,6 @@ class RecommenderIntegration extends AbstractIntegration
     public function appendToForm(&$builder, $data, $formArea)
     {
         if ($formArea == 'features') {
-
-
             $builder->add(
                 'currency',
                 TextType::class,
@@ -109,7 +107,7 @@ class RecommenderIntegration extends AbstractIntegration
                     'label' => 'mautic.plugin.recommender.form.testbench',
                     'attr'  => [
                         'tooltip' => 'mautic.plugin.recommender.form.testbench.tooltip',
-                    ]                    
+                    ],
                 ]
             );
             $builder->add(
@@ -165,7 +163,6 @@ class RecommenderIntegration extends AbstractIntegration
                     ],
                 ]
             );
-
         }
     }
 
@@ -179,9 +176,9 @@ class RecommenderIntegration extends AbstractIntegration
     public function getFormNotes($section)
     {
         if ('features' === $section) {
-           return ['mautic.plugin.recommender.features.notes', 'warning'];
+            return ['mautic.plugin.recommender.features.notes', 'warning'];
         }
 
-        return parent::getFormNotes($section);        
+        return parent::getFormNotes($section);
     }
 }

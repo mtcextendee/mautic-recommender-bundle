@@ -16,14 +16,15 @@
         <div class="panel-body box-layout">
             <div class="col-xs-12 va-m">
                 <div class="row">
-                    <?php foreach ($tags as $utm => $value) { ?>
+                    <?php foreach ($tags as $utm => $value) {
+    ?>
                         <div class="col-xs-12 col-sm-3">
 
                             <span class="label" style="background-color:#787a7a"><?php echo $utm; ?></span>
                             &nbsp;<small><?php echo $value; ?></small>
                         </div>
                         <?php
-                    }
+}
                     ?>
                 </div>
                 <hr>
@@ -145,9 +146,11 @@
     var dateFrom = '<?php echo (new \Mautic\CoreBundle\Helper\DateTimeHelper($dateFrom))->toLocalString('Y-m-d'); ?>';
     var dateTo = '<?php echo (new \Mautic\CoreBundle\Helper\DateTimeHelper($dateTo))->toLocalString('Y-m-d'); ?>';
     var metricsGraph = 'ga:sessions';
-    <?php if (!empty($metrics['ecommerce'])) { ?>
+    <?php if (!empty($metrics['ecommerce'])) {
+                ?>
     metricsGraph = metricsGraph+',ga:transactions';
-    <?php } ?>
+    <?php
+            } ?>
     if (typeof analyticsReady == 'undefined') {
         var analyticsReady = false;
     }

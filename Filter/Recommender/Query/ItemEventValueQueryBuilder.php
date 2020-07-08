@@ -43,7 +43,7 @@ class ItemEventValueQueryBuilder extends RecommenderFilterQueryBuilder
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
-        $filterOperator = $filter->getOperator();
+        $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
             $parameters = [];
@@ -54,8 +54,8 @@ class ItemEventValueQueryBuilder extends RecommenderFilterQueryBuilder
             $parameters = $this->generateRandomParameterName();
         }
         $filterParametersHolder = $filter->getParameterHolder($parameters);
-        $tableAlias = $this->generateRandomParameterName();
-        $tableAlias2 = $this->generateRandomParameterName();
+        $tableAlias             = $this->generateRandomParameterName();
+        $tableAlias2            = $this->generateRandomParameterName();
 
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
@@ -131,6 +131,7 @@ class ItemEventValueQueryBuilder extends RecommenderFilterQueryBuilder
 
         //$queryBuilder->setParametersPairs($parameters, $filterParameters);
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
+
         return $queryBuilder;
     }
 }

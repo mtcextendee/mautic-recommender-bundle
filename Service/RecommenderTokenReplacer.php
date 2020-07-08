@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Service;
 
-
 class RecommenderTokenReplacer
 {
     /**
@@ -77,6 +76,7 @@ class RecommenderTokenReplacer
         foreach ($replacedTokens as $token=>$tokenContent) {
             $content = str_replace($token, $tokenContent, $content);
         }
+
         return $content;
     }
 
@@ -85,34 +85,32 @@ class RecommenderTokenReplacer
      */
     public function getReplacedContent($view = 'Page')
     {
-        $content = $this->getRecommenderToken()->getContent();
+        $content        = $this->getRecommenderToken()->getContent();
         $replacedTokens = $this->getReplacedTokensFromContent($content, $view);
-        foreach ($replacedTokens as $token=>$replace) {
+        foreach ($replacedTokens as $token=> $replace) {
             $content = str_replace($token, $replace, $content);
         }
 
         return $content;
     }
 
-
-
     public function getReplacedTokensFromContent($content, $view = 'Page')
     {
         $tokens = $this->recommenderTokenFinder->findTokens($content);
         if (!empty($tokens)) {
-            /** @var RecommenderToken $token **/
+            /** @var RecommenderToken $token * */
             foreach ($tokens as $key => $token) {
                 $tokenContent = $this->recommenderGenerator->getContentByToken($token, $view);
                 if (!empty($tokenContent)) {
                     $this->replacedTokens[$key] = $tokenContent;
-                }else{
+                } else {
                     $this->replacedTokens[$key] = '';
                 }
             }
         }
+
         return $this->replacedTokens;
     }
-
 
     public function replaceTagsFromContent($content, RecommenderToken $recommenderToken)
     {
@@ -121,7 +119,6 @@ class RecommenderTokenReplacer
 
         return $content;
     }
-
 
     /**
      * @return boolean
@@ -142,6 +139,4 @@ class RecommenderTokenReplacer
     {
         return $this->replacedTokens;
     }
-
 }
-

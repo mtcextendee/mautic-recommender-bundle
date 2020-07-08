@@ -10,10 +10,10 @@
  */
 
 $class = 'recommender-template-'.$recommender->getId();
-if(!isset($preview)) {
+if (!isset($preview)) {
     $preview = false;
 }
-if(!isset($settings)) {
+if (!isset($settings)) {
     $settings = [];
 }
 ?>
@@ -22,11 +22,12 @@ if(!isset($settings)) {
     <tr>
         <td align="center" valign="top">
             <?php if ($preview) {
-                echo html_entity_decode($recommender->getProperties()['header']);
-                ?>
-            <?php } else {
-                echo $recommender->getProperties()['header']; ?>
-            <?php } ?>
+    echo html_entity_decode($recommender->getProperties()['header']); ?>
+            <?php
+} else {
+        echo $recommender->getProperties()['header']; ?>
+            <?php
+    } ?>
         </td>
     </tr>
     <tr>

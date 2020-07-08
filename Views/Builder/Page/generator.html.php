@@ -13,24 +13,23 @@ if (!isset($preview)) {
     $preview = false;
 }
 
-
 echo $view->render(
     'MauticRecommenderBundle:Builder\Page:generator-header.html.php',
     [
         'recommender' => $recommender,
-        'settings' => $settings,
-        'preview' => $preview
+        'settings'    => $settings,
+        'preview'     => $preview,
     ]
 );
 ?>
-<?php for ($i = 0; $i < $recommender->getNumberOfItems(); $i++): ?>
+<?php for ($i = 0; $i < $recommender->getNumberOfItems(); ++$i): ?>
     <?php
     echo $view->render(
         'MauticRecommenderBundle:Builder\Page:generator-body.html.php',
         [
             'recommender' => $recommender,
-            'settings' => $settings,
-            'preview' => $preview
+            'settings'    => $settings,
+            'preview'     => $preview,
         ]
     );
     ?>
@@ -40,8 +39,8 @@ echo $view->render(
     'MauticRecommenderBundle:Builder\Page:generator-footer.html.php',
     [
         'recommender' => $recommender,
-        'settings' => $settings,
-        'preview' => $preview
+        'settings'    => $settings,
+        'preview'     => $preview,
     ]
 );
 ?>

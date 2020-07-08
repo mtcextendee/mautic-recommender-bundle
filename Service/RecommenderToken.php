@@ -22,7 +22,6 @@ use MauticPlugin\MauticRecommenderBundle\Model\TemplateModel;
 
 class RecommenderToken
 {
-
     private $id;
 
     private $userId;
@@ -49,7 +48,6 @@ class RecommenderToken
      */
     private $integrationHelper;
 
-
     /**
      * RecommenderToken constructor.
      *
@@ -59,8 +57,8 @@ class RecommenderToken
      */
     public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel, IntegrationHelper $integrationHelper)
     {
-        $this->leadModel     = $leadModel;
-        $this->recommenderModel = $recommenderModel;
+        $this->leadModel         = $leadModel;
+        $this->recommenderModel  = $recommenderModel;
         $this->integrationHelper = $integrationHelper;
     }
 
@@ -94,7 +92,6 @@ class RecommenderToken
         $this->id = $id;
     }
 
-
     /**
      * @return int
      */
@@ -119,7 +116,6 @@ class RecommenderToken
         $this->content = $content;
     }
 
-
     /**
      * @return int|mixed
      */
@@ -136,8 +132,8 @@ class RecommenderToken
         if ($this->id && (!$this->recommender || ($this->recommender && $this->recommender->getId() != $this->id))) {
             $this->recommender = $this->recommenderModel->getEntity($this->id);
         }
-        return $this->recommender;
 
+        return $this->recommender;
     }
 
     /**
@@ -149,7 +145,7 @@ class RecommenderToken
     }
 
     /**
-     * Get settings from plugins
+     * Get settings from plugins.
      *
      * @return array
      */
@@ -158,4 +154,3 @@ class RecommenderToken
         return $this->integrationHelper->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
     }
 }
-

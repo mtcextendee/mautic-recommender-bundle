@@ -22,7 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ListTemplatesType extends AbstractType
 {
-
     /**
      * @var TemplateModel
      */
@@ -35,7 +34,6 @@ class ListTemplatesType extends AbstractType
      */
     public function __construct(TemplateModel $templateModel)
     {
-
         $this->templateModel = $templateModel;
     }
 
@@ -60,11 +58,11 @@ class ListTemplatesType extends AbstractType
                 foreach ($events as $event) {
                     $choices[$event->getId()] = $event->getName();
                 }
+
                 return $choices;
             },
             'attr'        => [
                 'class' => 'form-control',
-
             ],
             'label'       => '',
             'expanded'    => false,

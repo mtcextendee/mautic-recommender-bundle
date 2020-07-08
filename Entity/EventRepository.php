@@ -15,8 +15,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
 
 /**
- * Class EventRepository
- * @package MauticPlugin\MauticRecommenderBundle\Entity
+ * Class EventRepository.
  */
 class EventRepository extends CommonRepository
 {
@@ -34,6 +33,7 @@ class EventRepository extends CommonRepository
     public function getEventNamesAsChoices()
     {
         $events = $this->findAllArray();
+
         return array_combine(array_column($events, 'id'), array_column($events, 'name'));
     }
 }

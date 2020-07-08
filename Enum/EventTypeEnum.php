@@ -58,6 +58,5 @@ class EventTypeEnum extends AbstractType
     public static function getChoice($type = null)
     {
         return ArrayHelper::getValue($type, self::getChoices());
-
     }
 }

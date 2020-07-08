@@ -13,14 +13,12 @@ namespace MauticPlugin\MauticRecommenderBundle\Entity;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Mautic\CoreBundle\Entity\CommonRepository;
-use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
-
 use Mautic\LeadBundle\Entity\Lead;
 use Mautic\LeadBundle\Entity\TimelineTrait;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 /**
- * Class EventLogRepository
- * @package MauticPlugin\MauticRecommenderBundle\Entity
+ * Class EventLogRepository.
  */
 class EventLogRepository extends CommonRepository
 {
@@ -45,14 +43,15 @@ class EventLogRepository extends CommonRepository
         $qb->select('el.lead_id')
             ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el')
             ->groupBy('el.lead_id')
-            ->orderBy('COUNT(el.id)',' desc')
+            ->orderBy('COUNT(el.id)', ' desc')
             ->setMaxResults($limit);
+
         return $qb->execute()->fetchAll();
     }
 
-     /**
-     * @param Lead         $contact     
-     * @param array        $options
+    /**
+     * @param Lead  $contact
+     * @param array $options
      *
      * @return array
      */
@@ -62,17 +61,15 @@ class EventLogRepository extends CommonRepository
         $qb    = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select($alias.'.*')
             ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', $alias);
-            
-            
 
         if ($contact) {
             $qb->andWhere($alias.'.lead_id = :lead')
                 ->setParameter('lead', $contact->getId());
         }
-        
+
         if (!empty($options['search'])) {
-            $qb->innerJoin($alias, 'recommender_event', 're', 're.id = '.$alias.'.event_id' );
-            $qb->innerJoin($alias, 'recommender_item', 'ri', 'ri.id = '.$alias.'.item_id' );
+            $qb->innerJoin($alias, 'recommender_event', 're', 're.id = '.$alias.'.event_id');
+            $qb->innerJoin($alias, 'recommender_item', 'ri', 'ri.id = '.$alias.'.item_id');
             $qb->leftJoin('ri', 'recommender_item_property_value', 'ripv', 'ri.id = ripv.item_id');
             $qb->andWhere(
                 $qb->expr()->orX(

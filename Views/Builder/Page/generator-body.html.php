@@ -9,10 +9,10 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-if(!isset($preview)) {
+if (!isset($preview)) {
     $preview = false;
 }
-if(!isset($settings)) {
+if (!isset($settings)) {
     $settings = [];
 }
 ?>
@@ -21,11 +21,15 @@ if(!isset($settings)) {
         <?php if (!empty($recommender->getProperties()['itemUrl'])): ?>
             <a  href="<?php echo $recommender->getProperties()['itemUrl']; ?>">
         <?php endif; ?>
-        <?php if (isset($preview) && $preview){ ?>
+        <?php if (isset($preview) && $preview) {
+    ?>
             <img class="recommender-image" src="http://via.placeholder.com/350x250?text=Example" alt="">
-        <?php }else{ ?>
+        <?php
+} else {
+        ?>
             <img class="recommender-image" src="<?php echo $recommender->getProperties()['itemImage']; ?>" alt="">
-        <?php } ?>
+        <?php
+    } ?>
         <?php if (!empty($recommender->getProperties()['itemUrl'])): ?>
             </a>
         <?php endif; ?>

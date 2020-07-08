@@ -15,5 +15,4 @@ use MauticPlugin\MauticRecommenderBundle\Exception\RecomenderException;
 
 class ItemIdNotFoundException extends RecomenderException
 {
-
 }

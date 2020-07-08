@@ -30,11 +30,10 @@ class ContactSearchType extends AbstractType
                 'label_attr'  => ['class' => 'control-label'],
                 'multiple'    => false,
                 'attr'        => [
-                    'class' => 'form-control',
+                    'class'    => 'form-control',
                     'onchange' => 'Mautic.reloadExample(this)',
-
                 ],
-                'empty_value'=> '',
+                'empty_value' => '',
                 'constraints' => [
                     new NotBlank(
                         [

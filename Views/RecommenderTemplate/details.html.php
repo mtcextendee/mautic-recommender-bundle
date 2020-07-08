@@ -16,7 +16,6 @@ if (!$isEmbedded) {
 }
 $view['slots']->set('headerTitle', $entity->getName());
 
-
 $customButtons = [];
 if (!$isEmbedded) {
     $view['slots']->set(
@@ -24,15 +23,15 @@ if (!$isEmbedded) {
         $view->render(
             'MauticCoreBundle:Helper:page_actions.html.php',
             [
-                'item' => $entity,
-                'customButtons' => (isset($customButtons)) ? $customButtons : [],
+                'item'            => $entity,
+                'customButtons'   => (isset($customButtons)) ? $customButtons : [],
                 'templateButtons' => [
                     'edit' => $view['security']->hasEntityAccess(
                         $permissions['recommender:recommender:editown'],
                         $permissions['recommender:recommender:editother'],
                         $entity->getCreatedBy()
                     ),
-                    'clone' => $permissions['recommender:recommender:create'],
+                    'clone'  => $permissions['recommender:recommender:create'],
                     'delete' => $view['security']->hasEntityAccess(
                         $permissions['recommender:recommender:deleteown'],
                         $permissions['recommender:recommender:deleteother'],

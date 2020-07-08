@@ -13,13 +13,13 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\BuilderTokenHelper;
+use Mautic\LeadBundle\LeadEvent;
 use Mautic\LeadBundle\Tracker\ContactTracker;
 use Mautic\PageBundle\Event as Events;
 use Mautic\PageBundle\PageEvents;
-use Mautic\LeadBundle\LeadEvent;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 /**
  * Class PageSubscriber.
@@ -50,11 +50,11 @@ class PageSubscriber extends CommonSubscriber
     public function __construct(
         RecommenderTokenReplacer $recommenderTokenReplacer,
         ContactTracker $contactTracker,
-        IntegrationHelper $integrationHelper        
+        IntegrationHelper $integrationHelper
     ) {
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
-        $this->contactTracker = $contactTracker;
-        $this->integrationHelper = $integrationHelper;    
+        $this->contactTracker           = $contactTracker;
+        $this->integrationHelper        = $integrationHelper;
     }
 
     /**
@@ -95,7 +95,7 @@ class PageSubscriber extends CommonSubscriber
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
-        
+
         $lead    = $this->contactTracker->getContact();
         $leadId  = ($lead) ? $lead->getId() : null;
         if ($leadId && $event->getPage()) {

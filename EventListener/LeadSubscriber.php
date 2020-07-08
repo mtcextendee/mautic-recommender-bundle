@@ -23,7 +23,7 @@ use MauticPlugin\MauticRecommenderBundle\Entity\EventLogRepository;
  */
 class LeadSubscriber extends CommonSubscriber
 {
-     /**
+    /**
      * @var integrationHelper
      */
     protected $integrationHelper;
@@ -35,8 +35,8 @@ class LeadSubscriber extends CommonSubscriber
      * @param PageModel $pageModel
      */
     public function __construct(IntegrationHelper $integrationHelper)
-    {        
-        $this->integrationHelper      = $integrationHelper;           
+    {
+        $this->integrationHelper      = $integrationHelper;
     }
 
     /**
@@ -56,9 +56,8 @@ class LeadSubscriber extends CommonSubscriber
      */
     public function onTimelineGenerate(LeadTimelineEvent $event)
     {
-
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration){
+        if (!$integration) {
             return;
         }
         $integrationSettings = $integration->getIntegrationSettings();
@@ -69,7 +68,7 @@ class LeadSubscriber extends CommonSubscriber
         // Set available event types
         $eventTypeKey  = 'recommender.event';
         $eventTypeName = $this->translator->trans('mautic.plugin.recommender.event.timeline_event');
-        $event->addEventType($eventTypeKey, $eventTypeName);        
+        $event->addEventType($eventTypeKey, $eventTypeName);
 
         if (!$event->isApplicable($eventTypeKey)) {
             return;
@@ -89,11 +88,11 @@ class LeadSubscriber extends CommonSubscriber
                 $eventLogEntity   = $eventLogRepository->getEntity($row['id']);
                 $event->addEvent(
                     [
-                        'event'      => $eventTypeKey,
-                        'eventId'    => $eventTypeKey.$row['id'],
-                        'eventLabel' => $this->getLabel($eventLogEntity),
-                        'eventType' => $eventTypeName,
-                        'timestamp' => $row['date_added'],                   
+                        'event'           => $eventTypeKey,
+                        'eventId'         => $eventTypeKey.$row['id'],
+                        'eventLabel'      => $this->getLabel($eventLogEntity),
+                        'eventType'       => $eventTypeName,
+                        'timestamp'       => $row['date_added'],
                         'icon'            => 'fa-shopping-bag',
                         'contactId'       => $row['lead_id'],
                     ]
@@ -107,12 +106,13 @@ class LeadSubscriber extends CommonSubscriber
      *
      * @return string
      */
-    private function getLabel(EventLog $eventLogEntity){
+    private function getLabel(EventLog $eventLogEntity)
+    {
         return $this->translator->trans(
             'mautic.plugin.recommender.event.timeline_event.label',
             [
                 '%event_name%' => $eventLogEntity->getEvent() ? $eventLogEntity->getEvent()->getName() : 'deleted',
-                '%item_id%' => $eventLogEntity->getItem() ? $eventLogEntity->getItem()->getId() : 'deleted'
+                '%item_id%'    => $eventLogEntity->getItem() ? $eventLogEntity->getItem()->getId() : 'deleted',
             ]
         );
     }

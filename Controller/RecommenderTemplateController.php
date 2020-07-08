@@ -11,14 +11,13 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
-use Mautic\CoreBundle\Exception as MauticException;
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
+use Mautic\CoreBundle\Exception as MauticException;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RecommenderTemplateController extends AbstractStandardFormController
 {
-
     /**
      * {@inheritdoc}
      */
@@ -117,7 +116,6 @@ class RecommenderTemplateController extends AbstractStandardFormController
         return parent::getUpdateSelectParams($updateSelect, $entity, $nameMethod, '');
     }
 
-
     /**
      * @param $objectId
      *
@@ -188,7 +186,6 @@ class RecommenderTemplateController extends AbstractStandardFormController
                     'Recommender'
                 )->getIntegrationSettings()->getFeatureSettings();
                 break;
-
         }
         $args['viewParameters'] = array_merge($args['viewParameters'], $viewParameters);
 
@@ -238,7 +235,7 @@ class RecommenderTemplateController extends AbstractStandardFormController
             }
         }
 
-        $response = ['success' => !(bool) $error,];
+        $response = ['success' => !(bool) $error];
         if (!$error) {
             $apiCommands->callCommand($eventLabel, $eventDetail);
         } else {

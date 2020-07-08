@@ -20,12 +20,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
- * Class RecommenderTemplate
- * @package MauticPlugin\MauticRecommenderBundle\Entity
+ * Class RecommenderTemplate.
  */
 class RecommenderTemplate extends FormEntity
 {
-
     /**
      * @var int
      */
@@ -35,7 +33,6 @@ class RecommenderTemplate extends FormEntity
      * @var string
      */
     private $name;
-
 
     /**
      * @var \DateTime
@@ -51,7 +48,7 @@ class RecommenderTemplate extends FormEntity
      */
     private $numberOfItems = 9;
 
-    /** @var  string */
+    /** @var string */
     private $templateMode;
 
     /**
@@ -146,7 +143,6 @@ class RecommenderTemplate extends FormEntity
             ->build();
     }
 
-
     /**
      * @return int
      */
@@ -175,7 +171,6 @@ class RecommenderTemplate extends FormEntity
 
         return $this;
     }
-
 
     /**
      * @return \DateTime
@@ -219,7 +214,6 @@ class RecommenderTemplate extends FormEntity
         return $this;
     }
 
-
     /**
      * @return int
      */
@@ -236,7 +230,6 @@ class RecommenderTemplate extends FormEntity
         $this->isChanged('numberOfItems', $numberOfItems);
         $this->numberOfItems = $numberOfItems;
     }
-
 
     /**
      * @return mixed

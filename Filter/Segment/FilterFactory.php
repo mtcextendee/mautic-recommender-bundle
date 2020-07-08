@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment;
 
-
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
 use Mautic\LeadBundle\Segment\Query\Filter\FilterQueryBuilderInterface;
@@ -33,7 +32,6 @@ class FilterFactory
      */
     private $schemaCache;
 
-
     /**
      * SegmentFilterFactory constructor.
      *
@@ -43,7 +41,6 @@ class FilterFactory
      */
     public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache)
     {
-
         $this->container   = $container;
         $this->schemaCache = $schemaCache;
     }

@@ -72,7 +72,6 @@ class ApiCommands
         EventDispatcherInterface $dispatcher,
         EntityManagerInterface $entityManager
     ) {
-
         $this->recommenderApi         = $recommenderApi;
         $this->logger                 = $logger;
         $this->translator             = $translator;
@@ -96,7 +95,6 @@ class ApiCommands
     public function getResults(RecommenderToken $recommenderToken)
     {
         return $this->recommenderApi->getClient()->display($recommenderToken);
-
     }
 
     public function ImportUser($lead)
@@ -109,7 +107,7 @@ class ApiCommands
      */
     public function ImportItems($items, $batchSize = 50, $timeout = '-1 day', Output $output)
     {
-        $clearBatch = 10;       
+        $clearBatch = 10;
         do {
             $i        = 1;
             $progress = ProgressBarHelper::init($output, $batchSize);
@@ -138,13 +136,13 @@ class ApiCommands
                 $progress->finish();
                 $output->writeln('');
                 $output->writeln($error->getMessage());
+
                 return;
             }
         } while ($batchSize > 0);
 
         $output->writeln('');
         $output->writeln('Imported '.$i.' items');
-
     }
 
     /**
@@ -152,22 +150,21 @@ class ApiCommands
      * @param int $batchSize
      */
     public function deactivateMissingItems($items, Output $output)
-    {        
+    {
         $itemsInJson = [];
         foreach ($items as $key => $item) {
-            $itemsInJson[] = $item['itemId'];            
+            $itemsInJson[] = $item['itemId'];
         }
 
-        $itemRepository = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
+        $itemRepository             = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
         $activeItemsMissingFromJson = $itemRepository->findActiveExcluding($itemsInJson);
 
         $i        = 0;
         $progress = ProgressBarHelper::init($output, count($activeItemsMissingFromJson));
         $progress->start();
 
-
-        foreach ($activeItemsMissingFromJson as $key => $item){
-            $i++;
+        foreach ($activeItemsMissingFromJson as $key => $item) {
+            ++$i;
 
             $itemEntity = $itemRepository->findOneBy(['itemId' => $item['item_id']]);
             $itemEntity->setActive(false);
@@ -181,4 +178,3 @@ class ApiCommands
         $output->writeln('Deactivated '.$i.' items that were missing from the json');
     }
 }
-

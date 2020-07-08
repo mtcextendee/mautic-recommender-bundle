@@ -25,18 +25,17 @@ class RecommenderTagsReplacer
      */
     private $recommenderTokenReplacer;
 
-
     /**
      * RecommenderTagsReplacer constructor.
      *
      * @param RecommenderTokenReplacer $recommenderTokenReplacer
      * @param RecommenderToken         $recommenderToken
-     * @param array                 $options
+     * @param array                    $options
      */
     public function __construct(RecommenderTokenReplacer $recommenderTokenReplacer, RecommenderToken $recommenderToken, $options = [])
     {
-        $this->recommenderToken = $recommenderToken;
-        $this->options = $options;
+        $this->recommenderToken         = $recommenderToken;
+        $this->options                  = $options;
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
     }
 
@@ -49,6 +48,4 @@ class RecommenderTagsReplacer
     {
         return $this->recommenderTokenReplacer->replaceTagsFromContent($content, $this->recommenderToken, $this->options);
     }
-
 }
-

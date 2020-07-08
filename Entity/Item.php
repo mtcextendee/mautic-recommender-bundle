@@ -157,7 +157,7 @@ class Item
     }
 
     /**
-     * @param boolean $active
+     * @param bool $active
      *
      * @return Item
      */

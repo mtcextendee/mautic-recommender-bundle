@@ -16,14 +16,13 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\DynamicContentBundle\DynamicContentEvents;
 use Mautic\DynamicContentBundle\Model\DynamicContentModel;
 use Mautic\NotificationBundle\NotificationEvents;
+use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticFocusBundle\FocusEvents;
 use MauticPlugin\MauticFocusBundle\Model\FocusModel;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
-use Mautic\PluginBundle\Helper\IntegrationHelper;
 
 class TokenReplacementSubscriber extends CommonSubscriber
 {
-
     /**
      * @var RecommenderTokenReplacer
      */
@@ -57,8 +56,8 @@ class TokenReplacementSubscriber extends CommonSubscriber
     ) {
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
         $this->dynamicContentModel      = $dynamicContentModel;
-        $this->focusModel = $focusModel;
-        $this->integrationHelper = $integrationHelper;    
+        $this->focusModel               = $focusModel;
+        $this->integrationHelper        = $integrationHelper;
     }
 
     /**
@@ -68,8 +67,8 @@ class TokenReplacementSubscriber extends CommonSubscriber
     {
         return [
             DynamicContentEvents::TOKEN_REPLACEMENT       => ['onDynamicContentTokenReplacement', 200],
-            FocusEvents::TOKEN_REPLACEMENT => ['onFocusTokenReplacement', 200],
-            NotificationEvents::TOKEN_REPLACEMENT=> ['onNotificationTokenReplacement', 200],
+            FocusEvents::TOKEN_REPLACEMENT                => ['onFocusTokenReplacement', 200],
+            NotificationEvents::TOKEN_REPLACEMENT         => ['onNotificationTokenReplacement', 200],
         ];
     }
 
@@ -81,7 +80,7 @@ class TokenReplacementSubscriber extends CommonSubscriber
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
-        }        
+        }
 
         $clickthrough = $event->getClickthrough();
         $leadId       = $clickthrough['lead'];
@@ -98,7 +97,7 @@ class TokenReplacementSubscriber extends CommonSubscriber
         if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
             return;
         }
-        
+
         $clickthrough = $event->getClickthrough();
         if (empty($clickthrough['focus_id']) || empty($clickthrough['lead'])) {
             return;
