@@ -83,10 +83,10 @@ class RecommenderTokenReplacer
     /**
      * @return mixed|string
      */
-    public function getReplacedContent()
+    public function getReplacedContent($view = 'Page')
     {
         $content = $this->getRecommenderToken()->getContent();
-        $replacedTokens = $this->getReplacedTokensFromContent($content);
+        $replacedTokens = $this->getReplacedTokensFromContent($content, $view);
         foreach ($replacedTokens as $token=>$replace) {
             $content = str_replace($token, $replace, $content);
         }
@@ -96,13 +96,13 @@ class RecommenderTokenReplacer
 
 
 
-    public function getReplacedTokensFromContent($content)
+    public function getReplacedTokensFromContent($content, $view = 'Page')
     {
         $tokens = $this->recommenderTokenFinder->findTokens($content);
         if (!empty($tokens)) {
             /** @var RecommenderToken $token **/
             foreach ($tokens as $key => $token) {
-                $tokenContent = $this->recommenderGenerator->getContentByToken($token);
+                $tokenContent = $this->recommenderGenerator->getContentByToken($token, $view);
                 if (!empty($tokenContent)) {
                     $this->replacedTokens[$key] = $tokenContent;
                 }else{

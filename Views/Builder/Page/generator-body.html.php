@@ -16,7 +16,7 @@ if(!isset($settings)) {
     $settings = [];
 }
 ?>
-<div class="recommender-col">
+<div class="recommender-col recommender-item_{{ index }}">
     <?php if (!empty($recommender->getProperties()['itemImage'])): ?>
         <?php if (!empty($recommender->getProperties()['itemUrl'])): ?>
             <a  href="<?php echo $recommender->getProperties()['itemUrl']; ?>">
