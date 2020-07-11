@@ -51,7 +51,7 @@ class PushTestDataToRecommenderCommand extends ContainerAwareCommand
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
         $items       = \JsonMachine\JsonMachine::fromFile(__DIR__.'/data/items.json');
-        $apiCommands->ImportItems($items, 1000, RecommenderIntegration::IMPORT_TIMEOUT, $output);
+        $apiCommands->importItems($items, 1000, RecommenderIntegration::IMPORT_TIMEOUT, $output);
 
         // then import events
         $items = \JsonMachine\JsonMachine::fromFile(__DIR__.'/data/events.json');

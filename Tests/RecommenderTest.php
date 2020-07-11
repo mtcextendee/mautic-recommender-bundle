@@ -56,10 +56,10 @@ class RecommendereTest extends AbstractMauticTestCase
         $this->assertNotNull($lead);
         $this->assertNotNull($lead->getId());
 
-        $this->apiCommand->ImportItems($this->getItems()[0]);
+        $this->apiCommand->importItems($this->getItems()[0]);
         $this->assertForSingleApiCall();
 
-        $this->apiCommand->ImportItems($this->getItems());
+        $this->apiCommand->importItems($this->getItems());
         $this->assertForMultipleApiCall();
 
         $this->apiCommand->callCommand(

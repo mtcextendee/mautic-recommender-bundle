@@ -106,7 +106,7 @@ class ApiCommands
      * @param     $items
      * @param int $batchSize
      */
-    public function ImportItems($items, $batchSize = 50, $timeout = RecommenderIntegration::IMPORT_TIMEOUT, Output $output)
+    public function importItems($items, $batchSize = 50, $timeout = RecommenderIntegration::IMPORT_TIMEOUT, Output $output)
     {
         $clearBatch = 10;
         do {
@@ -114,7 +114,6 @@ class ApiCommands
             $progress = ProgressBarHelper::init($output, $batchSize);
             $progress->start();
             try {
-                $counter = 0;
                 foreach ($items as $key => $item) {
                     $i += $this->recommenderApi->getClient()->send(
                         'ImportItems',
@@ -132,8 +131,12 @@ class ApiCommands
                         break;
                     }
                 }
+
+                if ($i < $batchSize) {
+                    $batchSize = 0;
+                }
+
             } catch (\Exception $error) {
-                $batchSize = 0;
                 $progress->finish();
                 $output->writeln('');
                 $output->writeln($error->getMessage());
@@ -156,7 +159,6 @@ class ApiCommands
         foreach ($items as $key => $item) {
             $itemsInJson[] = $item['itemId'];
         }
-
         $itemRepository             = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
         $activeItemsMissingFromJson = $itemRepository->findActiveExcluding($itemsInJson);
 

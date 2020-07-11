@@ -187,7 +187,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
 
         switch ($type) {
             case 'items':
-                $apiCommands->ImportItems($items, $batchLimit, $timeout, $output);
+                $apiCommands->importItems($items, $batchLimit, $timeout, $output);
                 $items = \JsonMachine\JsonMachine::fromFile($file);
                 $apiCommands->deactivateMissingItems($items, $output);
                 break;
