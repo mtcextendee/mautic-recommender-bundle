@@ -97,6 +97,7 @@ class RecommenderIntegration extends AbstractIntegration
                     'attr'       => [
                         'class'        => 'form-control',
                     ],
+                    'required' => false,
                 ]
             );
 
@@ -108,6 +109,7 @@ class RecommenderIntegration extends AbstractIntegration
                     'attr'  => [
                         'tooltip' => 'mautic.plugin.recommender.form.testbench.tooltip',
                     ],
+                    'required' => false,
                 ]
             );
             $builder->add(
@@ -120,6 +122,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.recommender.form.items_import_url.tooltip',
                     ],
+                    'required' => false
                 ]
             );
 
@@ -133,6 +136,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.recommender.form.events_import_url.tooltip',
                     ],
+                    'required' => false
                 ]
             );
 
@@ -147,6 +151,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'tooltip'      => 'mautic.plugin.recommender.form.batch_limit.tooltip',
                         'placeholder'  => '100',
                     ],
+                    'required' => false
                 ]
             );
 
@@ -161,6 +166,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'tooltip'      => 'mautic.plugin.recommender.form.timeout.tooltip',
                         'placeholder'  => '-1 day',
                     ],
+                    'required' => false
                 ]
             );
         }
