@@ -16,6 +16,7 @@ use Mautic\CoreBundle\Helper\ProgressBarHelper;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
 use MauticPlugin\MauticRecommenderBundle\Entity\Item;
 use MauticPlugin\MauticRecommenderBundle\Entity\Property;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenFinder;
 use Psr\Log\LoggerInterface;
@@ -105,7 +106,7 @@ class ApiCommands
      * @param     $items
      * @param int $batchSize
      */
-    public function ImportItems($items, $batchSize = 50, $timeout = '-1 day', Output $output)
+    public function ImportItems($items, $batchSize = 50, $timeout = RecommenderIntegration::IMPORT_TIMEOUT, Output $output)
     {
         $clearBatch = 10;
         do {

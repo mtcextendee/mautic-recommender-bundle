@@ -9,6 +9,7 @@ use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiUserItemsInteractions;
 use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -50,7 +51,7 @@ class PushTestDataToRecommenderCommand extends ContainerAwareCommand
         /** @var ApiCommands $apiCommands */
         $apiCommands = $this->getContainer()->get('mautic.recommender.service.api.commands');
         $items       = \JsonMachine\JsonMachine::fromFile(__DIR__.'/data/items.json');
-        $apiCommands->ImportItems($items, 1000, '-1 day', $output);
+        $apiCommands->ImportItems($items, 1000, RecommenderIntegration::IMPORT_TIMEOUT, $output);
 
         // then import events
         $items = \JsonMachine\JsonMachine::fromFile(__DIR__.'/data/events.json');

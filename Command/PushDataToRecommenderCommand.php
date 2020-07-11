@@ -8,6 +8,7 @@ use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiUserItemsInteractions;
 use MauticPlugin\MauticRecommenderBundle\Events\Processor;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,14 +52,17 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '--batch-limit',
             '-l',
             InputOption::VALUE_OPTIONAL,
-            'Set batch size of contacts to process per round. Defaults to 100.'
+            sprintf(
+                "Set batch size of contacts to process per round. Defaults to %s.",
+                RecommenderIntegration::IMPORT_BATCH
+            )
         );
 
         $this->addOption(
             '--timeout',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Set delay to ignore item to update. Default -1 day.'
+            sprintf("Set delay to ignore item to update. Default %s.", RecommenderIntegration::IMPORT_TIMEOUT)
         );
 
         parent::configure();
@@ -148,16 +152,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 );
             }
 
-            if (!file_exists($file)) {
-                return $output->writeln(
-                    sprintf(
-                        '<error>ERROR:</error> <info>'.$translator->trans(
-                            'mautic.plugin.recommender.command.file.fail',
-                            ['%file' => $file]
-                        )
-                    )
-                );
-            }
             $items = \JsonMachine\JsonMachine::fromFile($file);
 
             if (empty($items) || ![$items]) {
@@ -177,7 +171,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         } elseif (!empty($featureSettings['batch_limit']) && intval($featureSettings['batch_limit'])) {
             $batchLimit = intval($featureSettings['batch_limit']);
         } else {
-            $batchLimit = 100;
+            $batchLimit = RecommenderIntegration::IMPORT_BATCH;
         }
 
         if (!empty($input->getOption('timeout'))) {
@@ -185,7 +179,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
         } elseif (!empty($featureSettings['timeout'])) {
             $timeout = $featureSettings['timeout'];
         } else {
-            $timeout = '-1 day';
+            $timeout = RecommenderIntegration::IMPORT_TIMEOUT;
         }
 
         /** @var ApiCommands $apiCommands */
