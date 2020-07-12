@@ -135,7 +135,7 @@ class Choices
                         $choices[$table][$key]['label'] = $this->translator->trans('mautic.plugin.recommender.form.item').' '.$this->translator->trans($field['name']);
                         break;
                     case 'recommender_item_property_value':
-                        $choices[$table][$key]['label'] =  $this->translator->trans($field['name']);
+                        $choices[$table][$key]['label'] =  $this->translator->trans('mautic.plugin.recommender.form.item'). ' '. $this->translator->trans($field['name']);
                         break;
                     default:
                         $choices[$table][$key]['label'] = $this->translator->trans('mautic.plugin.recommender.form.event').' '.$this->translator->trans($field['name']);

@@ -109,38 +109,7 @@ class RecommenderGenerator
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS, $resultEvent);
         }
         $this->items =  $resultEvent->getItems();
-
         return $this->items;
-
-        /*switch ($recommenderToken->getType()) {
-            case "RecommendItemsToUser":
-                $this->apiCommands->callCommand(
-                    'RecommendItemsToUser',
-                    $recommenderToken->getOptions(['userId', 'limit'])
-                );
-                $items = $this->apiCommands->getCommandOutput();
-                break;
-        }
-        $this->items = $items['recomms'];
-        $this->cache[$hash] = $this->items;
-        return $this->items;*/
-
-        //$options['filter']           = $recommender->getFilter();
-        //$options['booster']          = $recommender->getBoost();
-        /*$options['returnProperties'] = true;
-        $recommenderToken->setAddOptions($options);
-            switch ($recommenderToken->getType()) {
-                case "RecommendItemsToUser":
-                    $this->apiCommands->callCommand(
-                        'RecommendItemsToUser',
-                        $recommenderToken->getOptions(['userId', 'limit'])
-                    );
-                    $items = $this->apiCommands->getCommandOutput();
-                    break;
-            }
-            $this->items = $items['recomms'];
-            $this->cache[$hash] = $this->items;
-            return $this->items;*/
     }
 
     /**
