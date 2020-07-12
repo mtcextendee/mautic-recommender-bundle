@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLogValue;
+use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 
 class AddItemValues extends AbstractRequest
 {
@@ -25,11 +26,14 @@ class AddItemValues extends AbstractRequest
             /** @var AddProperty $addProperty */
             $addProperty = $this->getClient()->send(
                 'AddProperty',
-                ['name' => $key, 'type' => $this->getPropertyType($option)]
+                ['name' => $key]
             );
+            /** @var Property $property */
             $property    = $addProperty->addIfNotExist();
             if (!$property->getId()) {
-                $addProperty->save();
+                print_r($option);
+                $property->setType($this->getPropertyType($option));
+                $addProperty->getRepo()->saveEntity($property);
             }
             $addItemValue = $this->getClient()->send(
                 'AddItemValue',

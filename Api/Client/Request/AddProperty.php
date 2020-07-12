@@ -17,7 +17,7 @@ class AddProperty extends AbstractRequest
 {
     public function find()
     {
-        return $this->getRepo()->findOneBy(['name' => $this->getOptions()['name'], 'type' => $this->getOptions()['type']]);
+        return $this->getRepo()->findOneBy(['name' => $this->getOptions()['name']]);
     }
 
     /**
