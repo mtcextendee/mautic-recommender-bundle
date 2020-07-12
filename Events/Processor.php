@@ -110,8 +110,7 @@ class Processor
         // Just provider from console
         if (defined('IN_MAUTIC_CONSOLE') || defined('IN_MAUTIC_API')) {
             if (isset($eventDetail['contactEmail'])) {
-                $contact = $this->leadModel->getRepository()->getContactsByEmail($eventDetail['contactEmail']);
-                $contact = current($contact);
+                $contact = $this->leadModel->checkForDuplicateContact(['email'=>$eventDetail['contactEmail']]);
                 if (!$contact instanceof Lead) {
                     throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
                 }
