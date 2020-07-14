@@ -23,6 +23,7 @@ class EventTypeEnum extends AbstractType
     const DETAIL_VIEW    = 'detail_view';
 
     const CART_ADDITIONS = 'cart_additions';
+    const CART_REMOVE = 'cart_remove';
 
     const PURCHASE       = 'purchase';
 
@@ -34,6 +35,7 @@ class EventTypeEnum extends AbstractType
         return [
             self::DETAIL_VIEW,
             self::CART_ADDITIONS,
+            self::CART_REMOVE,
             self::PURCHASE,
         ];
     }
@@ -46,6 +48,7 @@ class EventTypeEnum extends AbstractType
         return [
             self::DETAIL_VIEW    => 'mautic.recommender.event.type.detail_view',
             self::CART_ADDITIONS => 'mautic.recommender.event.type.cart_additions',
+            self::CART_REMOVE => 'mautic.recommender.event.type.cart_remove',
             self::PURCHASE       => 'mautic.recommender.event.type.purchase',
         ];
     }
