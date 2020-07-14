@@ -106,19 +106,6 @@ class FiltersFilterSubscriber extends CommonSubscriber
     }
 
     /**
-     * @param LeadListFilteringEvent $event
-     */
-    public function onListFiltersFiltering(LeadListFilteringEvent $event)
-    {
-        $qb     = $event->getQueryBuilder();
-        $filter = $event->getDetails();
-        if (false !== strpos($filter['object'], 'recommender')) {
-            $this->filterFactory->applySegmentQuery($filter, $qb, 'mautic.recommender.filter.recommender.dictionary');
-            $event->setFilteringStatus(true);
-        }
-    }
-
-    /**
      * @return RecommenderClientModel
      */
     private function getModel()

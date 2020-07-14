@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class Choices
 {
-    const ALLOWED_TABLES = ['recommender_event_log', 'recommender_event_log_property_value', 'recommender_item', 'recommender_item_property_value'];
+    const ALLOWED_TABLES = ['recommenders', 'recommender_event_log', 'recommender_event_log_property_value', 'recommender_item', 'recommender_item_property_value'];
 
     /**
      * @var Fields
@@ -131,6 +131,9 @@ class Choices
                 ];
 
                 switch ($table) {
+                    case 'recommenders':
+                        $choices[$table][$key]['label'] = $this->translator->trans($field['name']);
+                        break;
                     case 'recommender_item':
                         $choices[$table][$key]['label'] = $this->translator->trans('mautic.plugin.recommender.form.item').' '.$this->translator->trans($field['name']);
                         break;

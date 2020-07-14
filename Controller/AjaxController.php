@@ -61,13 +61,16 @@ class AjaxController extends CommonAjaxController
         //$tableOrderForm = $this->get();
         $fields = $this->get('mautic.recommender.filter.fields.recommender')->getSelectOptions();
 
-        $form = $this->get('form.factory')->createNamedBuilder('recommender', 'form', null, ['auto_initialize'=>false])->add(
+        $form = $this->get('form.factory')->createNamedBuilder(
+            'recommender',
+            'form',
+            null,
+            ['auto_initialize' => false]
+        )->add(
             'tableOrder',
             RecommenderTableOrderType::class,
             ['data' => ['column' => $column], 'fields' => $fields]
         )->getForm();
-
-        //return $this->get('mautic.recommender.contact.search')->delegateForm($objectId, $this);
 
         $data['content'] = $this->get('mautic.helper.templating')->getTemplating()->render(
             'MauticRecommenderBundle:Recommender:form.function.html.php',

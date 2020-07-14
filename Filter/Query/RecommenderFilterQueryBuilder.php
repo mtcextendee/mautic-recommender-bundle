@@ -43,6 +43,7 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
     {
         switch ($type) {
             case 'select':
+            case 'multiselect':
                 return 'string';
             break;
             case 'bool':
