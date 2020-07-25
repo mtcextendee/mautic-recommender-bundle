@@ -3,10 +3,10 @@
 use Doctrine\ORM\EntityRepository;
 
 return [
-    'name'        => 'RecommenderTemplate',
+    'name'        => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration::DISPLAY_NAME,
     'description' => 'Recomendations engine',
-    'author'      => 'kuzmany.biz',
-    'version'     => '0.0.1',
+    'author'      => 'webmecanik.com',
+    'version'     => '1.0.0',
     'services'    => [
         'events'       => [
             /* Recommender filters  */
@@ -297,6 +297,10 @@ return [
             ],
             'mautic.recommender.query.builder.recommender.event.date_added'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\ItemEventDateQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.recommender.abandoned_cart'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\AbandonedCartQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
             /* segment filter dictionary */
