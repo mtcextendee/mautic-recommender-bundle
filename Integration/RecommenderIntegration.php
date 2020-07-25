@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 class RecommenderIntegration extends AbstractIntegration
 {
     const NAME = 'Recommender';
+    const DISPLAY_NAME = 'Recomendations';
     const IMPORT_TIMEOUT = '-1 day';
     const IMPORT_BATCH = 100;
 
@@ -31,6 +32,11 @@ class RecommenderIntegration extends AbstractIntegration
     public function getName()
     {
         return self::NAME;
+    }
+
+    public function getDisplayName()
+    {
+        return self::DISPLAY_NAME;
     }
 
     public function getIcon()
