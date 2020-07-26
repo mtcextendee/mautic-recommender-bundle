@@ -15,6 +15,7 @@ use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\CoreBundle\Security\Permissions\CorePermissions;
 use Mautic\LeadBundle\Entity\Lead;
 use Mautic\LeadBundle\Model\LeadModel;
+use Mautic\LeadBundle\Tracker\ContactTracker;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderEventModel;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -52,6 +53,11 @@ class Processor
     private $leadModel;
 
     /**
+     * @var ContactTracker
+     */
+    private $contactTracker;
+
+    /**
      * Processor constructor.
      *
      * @param CoreParametersHelper  $coreParametersHelper
@@ -60,6 +66,7 @@ class Processor
      * @param RecommenderEventModel $eventModel
      * @param TranslatorInterface   $translator
      * @param LeadModel             $leadModel
+     * @param ContactTracker        $contactTracker
      */
     public function __construct(
         CoreParametersHelper $coreParametersHelper,
@@ -67,7 +74,8 @@ class Processor
         ApiCommands $apiCommands,
         RecommenderEventModel $eventModel,
         TranslatorInterface $translator,
-        LeadModel $leadModel
+        LeadModel $leadModel,
+        ContactTracker $contactTracker
     ) {
         $this->coreParametersHelper = $coreParametersHelper;
         $this->security             = $security;
@@ -75,6 +83,7 @@ class Processor
         $this->eventModel           = $eventModel;
         $this->translator           = $translator;
         $this->leadModel            = $leadModel;
+        $this->contactTracker = $contactTracker;
     }
 
     /**
@@ -108,7 +117,7 @@ class Processor
             );
         }
         // Just provider from console
-        if (defined('IN_MAUTIC_CONSOLE') || defined('IN_MAUTIC_API')) {
+        $inConsole = defined('IN_MAUTIC_CONSOLE') || defined('IN_MAUTIC_API');
             if (isset($eventDetail['contactEmail'])) {
                 $contact = $this->leadModel->checkForDuplicateContact(['email'=>$eventDetail['contactEmail']]);
                 if (!$contact instanceof Lead) {
@@ -118,10 +127,16 @@ class Processor
                 $this->leadModel->setSystemCurrentLead($contact);
             } elseif (isset($eventDetail['contactId'])) {
                 $this->leadModel->setSystemCurrentLead($this->leadModel->getEntity($eventDetail['contactId']));
-            } else {
+            } elseif (!$inConsole) {
+                if ($contact = $this->contactTracker->getContact()) {
+                    $eventDetail['contactId'] = $contact->getId();
+                }else{
+                    throw new \Exception('Tracked contact doesn\'t exist');
+                }
+            } elseif ($inConsole) {
+
                 throw new \Exception('One of parameters contactId/contactEmail is required');
             }
-        }
 
         $this->apiCommands->callCommand($eventLabel, $eventDetail);
 

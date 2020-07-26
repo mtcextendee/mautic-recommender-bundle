@@ -200,6 +200,7 @@ return [
                     'mautic.recommender.model.event',
                     'translator',
                     'mautic.lead.model.lead',
+                    'mautic.tracker.contact'
                 ],
             ],
 

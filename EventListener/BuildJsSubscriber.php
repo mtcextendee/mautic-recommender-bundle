@@ -112,8 +112,10 @@ class BuildJsSubscriber extends CommonSubscriber
         }
     }
     
-    // Process events right after mtc.js loaded
-    MauticJS.recommenderEvent();
+    MauticJS.onFirstEventDelivery(function() {
+         // Process events right after mtc.js loaded
+        MauticJS.recommenderEvent();
+    });
 
     // Process events after new are added
     document.addEventListener('eventAddedToMauticQueue', function(e) {
