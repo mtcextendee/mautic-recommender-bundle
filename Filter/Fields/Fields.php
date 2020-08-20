@@ -68,15 +68,15 @@ class Fields
     {
         // Load fields from recommender_event_log db table
         if ($table == 'recommenders' && !isset($this->fields[$table])) {
-
+          /*  $items = $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
+                3 // @todo Add product name detection
+            );
             $this->fields['recommenders']['items'] =
                 [
                     'name'       => 'recommender.form.selected_items',
                     'properties' => [
                         'type' => 'multiselect',
-                        'list' => $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
-                            9 // @todo Add product name detection
-                        ),
+                        'list' => $items,
                     ],
                     'decorator'  => [
                         'recommender' => [
@@ -84,21 +84,22 @@ class Fields
                             'foreign_table'=> 'recommender_event_log_property_value'
                         ],
                     ],
-                ];
+                ];*/
 
-            $this->fields['recommenders']['best_selling'] =
+            /*$this->fields['recommenders']['best_selling'] =
                 [
                     'name'       => 'recommender.form.best_selling',
                     'properties' => [
                         'type' => 'datetime',
                     ],
+                    'operators'=> ['include'=> ['gt']],
                     'decorator'  => [
                         'recommender' => [
                             'type' => AbandonedCartQueryBuilder::getServiceId(),
                             'foreign_table'=> 'recommender_event_log_property_value'
                         ],
                     ],
-                ];
+                ];*/
 
             $this->fields['recommenders']['abandoned_cart'] =
                 [
@@ -106,6 +107,7 @@ class Fields
                     'properties' => [
                         'type' => 'datetime',
                     ],
+                    'operators'=> ['include'=> ['gt']],
                     'decorator'  => [
                         'recommender' => [
                             'type' => AbandonedCartQueryBuilder::getServiceId(),

@@ -152,6 +152,13 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 );
             }
 
+            if (!empty($input->getOption('batch-limit')) && intval($input->getOption('batch-limit'))) {
+                $batchLimit = intval($input->getOption('batch-limit'));
+            } elseif (!empty($featureSettings['batch_limit']) && intval($featureSettings['batch_limit'])) {
+                $batchLimit = intval($featureSettings['batch_limit']);
+            } else {
+                $batchLimit = RecommenderIntegration::IMPORT_BATCH;
+            }
 
             $data = $this->getContentFromUrl($file);
 
@@ -169,13 +176,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             }
         }
 
-        if (!empty($input->getOption('batch-limit')) && intval($input->getOption('batch-limit'))) {
-            $batchLimit = intval($input->getOption('batch-limit'));
-        } elseif (!empty($featureSettings['batch_limit']) && intval($featureSettings['batch_limit'])) {
-            $batchLimit = intval($featureSettings['batch_limit']);
-        } else {
-            $batchLimit = RecommenderIntegration::IMPORT_BATCH;
-        }
 
         if (!empty($input->getOption('timeout'))) {
             $timeout = $input->getOption('timeout');

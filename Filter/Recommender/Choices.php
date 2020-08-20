@@ -126,10 +126,10 @@ class Choices
                 $choices[$table][$key] = [
                     'properties' => $properties,
                     'operators'  => $this->listModel->getOperatorsForFieldType(
-                        $properties['type']
+                        isset($field['operators']) ? $field['operators'] : $properties['type']
                     ),
                 ];
-
+                
                 switch ($table) {
                     case 'recommenders':
                         $choices[$table][$key]['label'] = $this->translator->trans($field['name']);

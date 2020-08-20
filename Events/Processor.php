@@ -126,7 +126,11 @@ class Processor
                 unset($eventDetail['contactEmail']);
                 $this->leadModel->setSystemCurrentLead($contact);
             } elseif (isset($eventDetail['contactId'])) {
-                $this->leadModel->setSystemCurrentLead($this->leadModel->getEntity($eventDetail['contactId']));
+                if ($contact = $this->leadModel->getEntity($eventDetail['contactId'])) {
+                    $this->leadModel->setSystemCurrentLead($contact);
+                }else{
+                    throw new \Exception('Tracked contact doesn\'t exist');
+                }
             } elseif (!$inConsole) {
                 if ($contact = $this->contactTracker->getContact()) {
                     $eventDetail['contactId'] = $contact->getId();

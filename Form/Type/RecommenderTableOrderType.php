@@ -49,7 +49,7 @@ class RecommenderTableOrderType extends AbstractType
         $column = $options['data']['column'] ?? null;
 
         $fields = $options['fields'];
-        unset($fields['mautic.lead.recommender_item'], $fields['mautic.lead.recommender_item_property_value']);
+        unset($fields['mautic.lead.recommenders'], $fields['mautic.lead.recommender_item'], $fields['mautic.lead.recommender_item_property_value']);
         $builder->add('column', 'choice', [
             'choices'     => $fields,
             'expanded'    => false,

@@ -48,7 +48,11 @@ class ItemPropertyValueRepository extends CommonRepository
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb->select('v.item_id, v.value')
             ->from(MAUTIC_TABLE_PREFIX.'recommender_item_property_value', 'v');
-        $qb->where($qb->expr()->eq('v.property_id', $propertyId));
+        $qb->leftJoin('v', MAUTIC_TABLE_PREFIX.'recommender_item', 'i', 'i.id = v.item_id');
+        $qb->andWhere($qb->expr()->eq('v.property_id', $propertyId));
+        $qb->andWhere($qb->expr()->eq('i.active', 1));
+        $qb->setMaxResults(1000);
+
         if ($values = $qb->execute()->fetchAll()) {
             return array_combine(array_column($values, 'item_id'), array_column($values, 'value'));
         }

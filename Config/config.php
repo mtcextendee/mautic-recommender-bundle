@@ -212,14 +212,6 @@ return [
                     'mautic.lead.model.lead_segment_schema_cache',
                 ],
             ],
-            'mautic.recommender.filter.fields.segment'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\Choices::class,
-                'arguments' => [
-                    'mautic.recommender.filter.fields',
-                    'mautic.lead.model.list',
-                    'translator',
-                ],
-            ],
             'mautic.recommender.filter.fields'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Fields\Fields::class,
                 'arguments' => [
@@ -328,6 +320,10 @@ return [
             ],
             'mautic.recommender.query.builder.item'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Query\ItemFilterQueryBuilder::class,
+                'arguments' => ['mautic.lead.model.random_parameter_name'],
+            ],
+            'mautic.recommender.query.builder.abandoned_cart'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentAbandonedCartQueryBuilder::class,
                 'arguments' => ['mautic.lead.model.random_parameter_name'],
             ],
             'mautic.recommender.filter.recommender'  => [

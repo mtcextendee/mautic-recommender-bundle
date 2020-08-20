@@ -16,8 +16,6 @@ use Mautic\LeadBundle\Segment\ContactSegmentFilterCrate;
 use Mautic\LeadBundle\Segment\Query\Filter\FilterQueryBuilderInterface;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
 use Mautic\LeadBundle\Segment\TableSchemaColumnsCache;
-use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
-use MauticPlugin\MauticRecommenderBundle\Filter\Segment\EventListener\Choices;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FilterFactory
@@ -37,7 +35,6 @@ class FilterFactory
      *
      * @param ContainerInterface      $container
      * @param TableSchemaColumnsCache $schemaCache
-     * @param Choices                 $segmentChoices
      */
     public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache)
     {

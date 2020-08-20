@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   2018 Mautic Contributors. All rights reserved
+ * @copyright   2020 Mautic Contributors. All rights reserved
  * @author      Mautic, Inc.
  *
  * @link        https://mautic.org
@@ -8,20 +8,20 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
-namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
+namespace MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
-use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\AbandonedCartQueryBuilder;
 
-class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
+class SegmentAbandonedCartQueryBuilder extends AbandonedCartQueryBuilder
 {
     /**
      * @return string
      */
     public function getIdentificator()
     {
-        return 'id';
+        return 'lead_id';
     }
 
     /**
@@ -29,7 +29,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
      */
     public static function getServiceId()
     {
-        return 'mautic.recommender.query.builder.recommender.abandoned_cart';
+        return 'mautic.recommender.query.builder.abandoned_cart';
     }
 
 
@@ -81,10 +81,8 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
         $subQueryBuilder->andWhere($expression);
 
         $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
-
         //$queryBuilder->setParametersPairs($parameters, $filterParameters);
         $this->setParameters($queryBuilder, $parameters, $filterParameters, $filter);
-
         return $queryBuilder;
     }
 }
