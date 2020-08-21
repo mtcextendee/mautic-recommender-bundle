@@ -22,6 +22,7 @@ use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -301,14 +302,14 @@ class RecommenderType extends AbstractType
 
         $builder->add(
             'filterTarget',
-            'choice',
+            ChoiceType::class,
             [
                 'choices'     => [
                     'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
                     'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
                     'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
-                    'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
-                    'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
+                    //'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
+                    //'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
                 ],
                 'choice_attr' => function ($choice, $key, $value) {
                     return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$value}.tooltip"];
@@ -316,7 +317,7 @@ class RecommenderType extends AbstractType
                 'expanded'    => true,
                 'multiple'    => false,
                 'label'       => 'mautic.plugin.recommender.form.filter_target',
-                'label_attr'  => ['class' => ''],
+                'label_attr' => ['class' => 'control-label'],
                 //'empty_value' => 'reflective',
                 'required'    => true,
                 'constraints' => [

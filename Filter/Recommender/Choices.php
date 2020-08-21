@@ -129,7 +129,7 @@ class Choices
                         isset($field['operators']) ? $field['operators'] : $properties['type']
                     ),
                 ];
-                
+
                 switch ($table) {
                     case 'recommenders':
                         $choices[$table][$key]['label'] = $this->translator->trans($field['name']);

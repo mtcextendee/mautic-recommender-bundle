@@ -97,6 +97,7 @@ endif;
 if (!empty($recommender->getProperties()['itemNameStyle'])):
     $style['recommender-name'][] =  $recommender->getProperties()['itemNameStyle'];
 endif;
+$style['recommender-name'][] = 'font-weight:'.!empty($recommender->getProperties()['itemNameBold']) ? 'bold' : 'normal';
 $style['recommender-name'][] = '';
 $style['recommender-name']   = implode('; ', $style['recommender-name']);
 
@@ -114,9 +115,9 @@ endif;
 if (!empty($recommender->getProperties()['itemPriceSize'])):
     $style['recommender-price'][] =  'font-size:'.$recommender->getProperties()['itemPriceSize'];
 endif;
-if (!empty($recommender->getProperties()['itemPriceBold'])):
-    $style['recommender-price'][] =  'font-weight:bold';
-endif;
+
+$style['recommender-price'][] = 'font-weight:'.!empty($recommender->getProperties()['itemPriceBold']) ? 'bold' : 'normal';
+
 if (!empty($recommender->getProperties()['itemPriceStyle'])):
     $style['recommender-price'][] =  $recommender->getProperties()['itemPriceStyle'];
 endif;

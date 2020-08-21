@@ -121,7 +121,7 @@ class RecommenderTableOrderType extends AbstractType
         switch ($column) {
             case 'weight':
             case 'date_added':
-                unset($choices['']);
+                //unset($choices['']);
             break;
         }
 

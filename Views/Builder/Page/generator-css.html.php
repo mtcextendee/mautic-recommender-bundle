@@ -64,6 +64,7 @@ $class = 'recommender-template-'.$recommender->getId();
     <?php if (!empty($recommender->getProperties()['itemNameSize'])):    echo 'font-size:'.$recommender->getProperties()['itemNameSize']; endif; ?>;
     <?php if (!empty($recommender->getProperties()['itemNamePadding'])):    echo 'padding:'.$recommender->getProperties()['itemNamePadding']; endif; ?>;
     <?php if (!empty($recommender->getProperties()['itemNameStyle'])):    echo $recommender->getProperties()['itemNameStyle']; endif; ?>;
+    <?php if (!empty($recommender->getProperties()['itemNameBold'])):    echo 'font-weight:bold'; else: echo 'font-weight:normal'; endif; ?>;
     }
 
     .<?php echo $class ?> .recommender-price-case {
@@ -73,7 +74,7 @@ $class = 'recommender-template-'.$recommender->getId();
     .<?php echo $class ?> .recommender-price {
     <?php if (!empty($recommender->getProperties()['itemPriceColor'])):    echo 'color:#'.$recommender->getProperties()['itemPriceColor']; endif; ?>;
     <?php if (!empty($recommender->getProperties()['itemPriceSize'])):    echo 'font-size:'.$recommender->getProperties()['itemPriceSize']; endif; ?>;
-    <?php if (!empty($recommender->getProperties()['itemPriceBold'])):    echo 'font-weight:bold'; endif; ?>;
+    <?php if (!empty($recommender->getProperties()['itemPriceBold'])):    echo 'font-weight:bold'; else: echo 'font-weight:normal'; endif; ?>;
     <?php if (!empty($recommender->getProperties()['itemPriceStyle'])):    echo $recommender->getProperties()['itemPriceStyle']; endif; ?>;
 
     }

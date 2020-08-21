@@ -11,11 +11,11 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
+use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Range;
 
 /**
  * Class RecommenderPropertiesType.
@@ -219,15 +219,14 @@ class RecommenderPropertiesType extends AbstractType
                 'required'   => false,
             ]
         );
-
         $builder->add(
             'itemNameBold',
-            'yesno_button_group',
+            YesNoButtonGroupType::class,
             [
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemNameBold']) ?: false,
+                'data' => isset($options['data']['itemNameBold']) ? (bool) $options['data']['itemNameBold'] : false,
             ]
         );
 
@@ -285,12 +284,12 @@ class RecommenderPropertiesType extends AbstractType
 
         $builder->add(
             'itemShortDescriptionBold',
-            'yesno_button_group',
+            YesNoButtonGroupType::class,
             [
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemShortDescriptionBold']) ?: false,
+                'data'        => isset($options['data']['itemShortDescriptionBold']) ? (bool)$options['data']['itemShortDescriptionBold'] : false,
             ]
         );
 
@@ -416,12 +415,12 @@ class RecommenderPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionBold',
-            'yesno_button_group',
+            YesNoButtonGroupType::class,
             [
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemActionBold']) ?: false,
+                'data'        => isset($options['data']['itemActionBold']) ? (bool) $options['data']['itemActionBold']: false,
             ]
         );
 
@@ -493,12 +492,12 @@ class RecommenderPropertiesType extends AbstractType
 
         $builder->add(
             'itemPriceBold',
-            'yesno_button_group',
+            YesNoButtonGroupType::class,
             [
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemPriceBold']) ?: false,
+                'data'        => isset($options['data']['itemPriceBold']) ? (bool) $options['data']['itemPriceBold']: false,
             ]
         );
 
@@ -570,12 +569,12 @@ class RecommenderPropertiesType extends AbstractType
 
         $builder->add(
             'itemOldPriceBold',
-            'yesno_button_group',
+            YesNoButtonGroupType::class,
             [
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemOldPriceBold']) ?: false,
+                'data'        => isset($options['data']['itemOldPriceBold']) ? (bool) $options['data']['itemOldPriceBold']: false,
             ]
         );
 

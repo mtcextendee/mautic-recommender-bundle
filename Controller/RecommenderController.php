@@ -119,8 +119,10 @@ class RecommenderController extends AbstractStandardFormController
     public function viewAction($objectId)
     {
         //set the page we came from
-        $page      = $this->get('session')->get('mautic.recommender.page', 1);
-        $returnUrl = $this->generateUrl('mautic_recommender_index', ['page' => $page]);
+        $returnUrl = $this->generateUrl(
+            'mautic_recommender_action',
+            ['objectId' => $objectId, 'objectAction' => 'edit']
+        );
 
         return $this->postActionRedirect(
             [

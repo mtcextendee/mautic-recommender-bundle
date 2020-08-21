@@ -53,6 +53,7 @@ return [
                     'mautic.dynamicContent.model.dynamicContent',
                     'mautic.focus.model.focus',
                     'mautic.helper.integration',
+                    'mautic.tracker.contact'
                 ],
             ],
             'mautic.recommender.lead.timeline.subscriber'  => [
