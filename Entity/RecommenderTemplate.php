@@ -59,7 +59,19 @@ class RecommenderTemplate extends FormEntity
     /**
      * @var
      */
-    private $properties = [];
+    private $properties = [
+        'columns'         => 3,
+        'numberOfItems'   => 4,
+        'colPadding'      => '10px',
+        'itemName'        => '{{ product }}',
+        'itemNamePadding' => '10px 0px',
+        'itemImage'       => '{{ image }}',
+        'itemImageStyle'  => 'max-height:150px;',
+        'itemPrice'       => '{{ price }}',
+        'itemPriceSize'   => '18px',
+        'itemPricePading' => '10px 0px',
+        'itemUrl'         => '{{ url }}',
+    ];
 
     /**
      * RecommenderTemplate constructor.
