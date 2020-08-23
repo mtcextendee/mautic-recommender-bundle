@@ -23,6 +23,7 @@ use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -238,7 +239,7 @@ class RecommenderType extends AbstractType
         }
         $builder->add(
             'filter',
-            'choice',
+            ChoiceType::class,
             [
                 'choices'     => $choices,
                 'expanded'    => false,
@@ -262,7 +263,7 @@ class RecommenderType extends AbstractType
         $builder->add(
             $builder->create(
                 'filters',
-                'collection',
+                CollectionType::class,
                 [
                     'type'           => FilterType::class,
                     'options'        => [
@@ -299,6 +300,7 @@ class RecommenderType extends AbstractType
                 'fields' => $this->choices->getSelectOptions(),
             ]
         );
+
 
         $builder->add(
             'filterTarget',

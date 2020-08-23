@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Api\Client\Request;
 
-use Mautic\CampaignBundle\Model\EventModel;
 use MauticPlugin\MauticRecommenderBundle\Api\Client\Client;
 use MauticPlugin\MauticRecommenderBundle\Api\Client\Options;
 use MauticPlugin\MauticRecommenderBundle\Model\EventLogModel;
@@ -55,7 +54,7 @@ abstract class AbstractRequest
     {
         $this->client          = $client;
         $this->options         = $this->client->getOptions();
-        $this->optionsResolver =  $this->client->getOptionsResolver();
+        $this->optionsResolver = $this->client->getOptionsResolver();
         $this->model           = $this->client->getClientModel();
         $this->accessor        = new PropertyAccessor();
     }

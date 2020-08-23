@@ -12,10 +12,32 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query;
 
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\QueryBuilder;
+use Mautic\LeadBundle\Segment\RandomParameterName;
 use MauticPlugin\MauticRecommenderBundle\Filter\Query\RecommenderFilterQueryBuilder;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 
 class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
 {
+    /** @var RandomParameterName */
+    protected $parameterNameGenerator;
+
+    /**
+     * @var RecommenderClientModel
+     */
+    protected $clientModel;
+
+    /**
+     * BaseFilterQueryBuilder constructor.
+     *
+     * @param RandomParameterName    $randomParameterNameService
+     * @param RecommenderClientModel $clientModel
+     */
+    public function __construct(RandomParameterName $randomParameterNameService, RecommenderClientModel  $clientModel)
+    {
+        $this->parameterNameGenerator = $randomParameterNameService;
+        $this->clientModel = $clientModel;
+    }
+
     /**
      * @return string
      */
@@ -36,6 +58,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
+
         $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
@@ -49,6 +72,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
         $filterParametersHolder = $filter->getParameterHolder($parameters);
         $tableAlias             = $this->generateRandomParameterName();
         $tableAlias2            = $this->generateRandomParameterName();
+        $tableAlias3            = $this->generateRandomParameterName();
 
         $leftJoinCondition = sprintf(
             "%s.lead_id = %s.lead_id AND %s.event_id IN (3,4) AND %s.id > %s.id AND %s.item_id = %s.item_id",
@@ -69,6 +93,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
             )
             ->andWhere($tableAlias.'.event_id = 2')
             ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.id');
+
 
         if (!is_null($filter->getWhere())) {
             $subQueryBuilder->andWhere(str_replace(str_replace(MAUTIC_TABLE_PREFIX, '', $filter->getTable()).'.', $tableAlias.'.', $filter->getWhere()));

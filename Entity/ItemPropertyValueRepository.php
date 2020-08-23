@@ -39,11 +39,15 @@ class ItemPropertyValueRepository extends CommonRepository
 
 
     /**
-     * @param int $propertyId
+     * @param int  $propertyId
+     *
+     * @param int  $limit
+     *
+     * @param null $filter
      *
      * @return array
      */
-    public function getValuesForProperty(int $propertyId)
+    public function getValuesForProperty(int $propertyId, int $limit = 1000, $filter = null)
     {
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
         $qb->select('v.item_id, v.value')
@@ -51,13 +55,14 @@ class ItemPropertyValueRepository extends CommonRepository
         $qb->leftJoin('v', MAUTIC_TABLE_PREFIX.'recommender_item', 'i', 'i.id = v.item_id');
         $qb->andWhere($qb->expr()->eq('v.property_id', $propertyId));
         $qb->andWhere($qb->expr()->eq('i.active', 1));
-        $qb->setMaxResults(1000);
 
-        if ($values = $qb->execute()->fetchAll()) {
-            return array_combine(array_column($values, 'item_id'), array_column($values, 'value'));
+        if ($filter) {
+            $qb->andWhere($qb->expr()->like('v.value', ':filter'))
+            ->setParameter('filter', '%'.$filter.'%');
         }
+        $qb->setMaxResults($limit);
 
-        return [];
+        return  $qb->execute()->fetchAll();
     }
 
     /**

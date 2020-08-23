@@ -16,8 +16,10 @@ use Mautic\CoreBundle\Helper\ArrayHelper;
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
+use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 use MauticPlugin\MauticRecommenderBundle\Integration\DTO\RecombeeSettings;
 use MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 
 class RecommenderSettings
 {
@@ -32,20 +34,20 @@ class RecommenderSettings
     private $coreParametersHelper;
 
     /**
-     * @var RecombeeSettings
-     */
-    private $recombeeSettings;
-
-    /**
      * @var array
      */
     private $settings;
 
     /**
+     * @var RecommenderClientModel
+     */
+    private $clientModel;
+
+    /**
      * EcrSettings constructor.
      *
-     * @param IntegrationHelper    $integrationHelper
-     * @param CoreParametersHelper $coreParametersHelper
+     * @param IntegrationHelper      $integrationHelper
+     * @param CoreParametersHelper   $coreParametersHelper
      */
     public function __construct(IntegrationHelper $integrationHelper, CoreParametersHelper $coreParametersHelper)
     {

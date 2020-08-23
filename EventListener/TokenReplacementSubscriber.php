@@ -115,7 +115,7 @@ class TokenReplacementSubscriber extends CommonSubscriber
             return;
         }
 
-        if (empty($clickthrough['lead'])) {
+        if (!empty($clickthrough['lead'])) {
             $leadId       = $clickthrough['lead'];
         } elseif ($contact = $this->contactTracker->getContact()) {
             $leadId = $contact->getId();

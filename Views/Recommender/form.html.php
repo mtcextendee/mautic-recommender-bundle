@@ -106,6 +106,7 @@ $templates = [
         <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.order_by'); ?></strong></h4>
         <br>
         <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
+        <?php echo $view['form']->row($form['tableOrder']->children['items']); ?>
         <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
         <div class="order-function-choice">
             <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>

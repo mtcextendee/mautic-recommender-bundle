@@ -295,7 +295,10 @@ return [
             ],
             'mautic.recommender.query.builder.recommender.abandoned_cart'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\AbandonedCartQueryBuilder::class,
-                'arguments' => ['mautic.lead.model.random_parameter_name'],
+                'arguments' => [
+                    'mautic.lead.model.random_parameter_name',
+                    'mautic.recommender.model.client'
+                ],
             ],
             /* segment filter dictionary */
             'mautic.recommender.query.builder.segment.item'  => [
@@ -325,7 +328,10 @@ return [
             ],
             'mautic.recommender.query.builder.abandoned_cart'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentAbandonedCartQueryBuilder::class,
-                'arguments' => ['mautic.lead.model.random_parameter_name'],
+                'arguments' => [
+                    'mautic.lead.model.random_parameter_name',
+                    'mautic.recommender.model.client'
+                ],
             ],
             'mautic.recommender.filter.recommender'  => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\RecommenderQueryBuilder::class,

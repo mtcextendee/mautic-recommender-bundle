@@ -64,6 +64,7 @@ class Event
 
         $builder->createField('type', Type::STRING)
             ->columnName('type')
+            ->length(20)
             ->nullable()
             ->build();
     }

@@ -14,15 +14,10 @@ namespace MauticPlugin\MauticRecommenderBundle\Enum;
 use Mautic\CoreBundle\Helper\ArrayHelper;
 use Symfony\Component\Form\AbstractType;
 
-class EventTypeEnum
+class PropertyTypeEnum extends AbstractType
 {
-    const DETAIL_VIEW    = 'detail_view';
-
-    const CART_ADDITIONS = 'cart_additions';
-
-    const CART_REMOVE    = 'cart_remove';
-
-    const PURCHASE       = 'purchase';
+    const PRICE    = 'price';
+    const NAME    = 'product';
 
     /**
      * @return array
@@ -45,7 +40,7 @@ class EventTypeEnum
         return [
             self::DETAIL_VIEW    => 'mautic.recommender.event.type.detail_view',
             self::CART_ADDITIONS => 'mautic.recommender.event.type.cart_additions',
-            self::CART_REMOVE    => 'mautic.recommender.event.type.cart_remove',
+            self::CART_REMOVE => 'mautic.recommender.event.type.cart_remove',
             self::PURCHASE       => 'mautic.recommender.event.type.purchase',
         ];
     }

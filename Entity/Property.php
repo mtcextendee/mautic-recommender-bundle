@@ -48,6 +48,11 @@ class Property
      */
     protected $dateAdded;
 
+    /**
+     * @var string
+     */
+    protected $propertyType;
+
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
@@ -67,6 +72,12 @@ class Property
             ->addNamedField('type', 'string', 'type')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
         $builder->addNullableField('segmentFilter', Type::BOOLEAN, 'segment_filter');
+
+        $builder->createField('propertyType', Type::STRING)
+            ->columnName('property_type')
+            ->length(20)
+            ->nullable()
+            ->build();
     }
 
     /**
@@ -83,6 +94,7 @@ class Property
                     'name',
                     'type',
                     'dateAdded',
+                    'propertyType',
                 ]
             )
             ->build();
@@ -202,5 +214,25 @@ class Property
     public function isSegmentFilter()
     {
         return $this->segmentFilter;
+    }
+
+    /**
+     * @param string $propertyType
+     *
+     * @return Property
+     */
+    public function setPropertyType($propertyType)
+    {
+        $this->propertyType = $propertyType;
+
+        return $this;
+}
+
+    /**
+     * @return string
+     */
+    public function getPropertyType()
+    {
+        return $this->propertyType;
     }
 }

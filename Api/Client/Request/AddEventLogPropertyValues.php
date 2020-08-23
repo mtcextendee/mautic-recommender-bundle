@@ -20,6 +20,7 @@ class AddEventLogPropertyValues extends AbstractRequest
         $options  = $this->getOptions();
         $eventLog = $options['eventLog'];
         unset($options['eventLog']);
+        unset($options['contactId']);
         foreach ($options as $key => $option) {
             /** @var AddProperty $addProperty */
             $addProperty = $this->getClient()->send(

@@ -58,6 +58,7 @@ class Options
                 case 'contactId':
                     if (!isset($entities['userId'])) {
                         $addOptions['lead'] = $this->clientModel->getCurrentContact();
+                        unset($options['contactId']);
                     }
                     break;
             }
