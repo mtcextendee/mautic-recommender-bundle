@@ -54,6 +54,7 @@ class BuildJsSubscriber extends CommonSubscriber
         return [
             CoreEvents::BUILD_MAUTIC_JS => [
                 ['onBuildJsTop', 300],
+                ['onDynamicRecommenderJs', 400],
             ],
         ];
     }
@@ -126,5 +127,55 @@ class BuildJsSubscriber extends CommonSubscriber
         
 JS;
         $event->appendJs($js, 'RecommenderTemplate');
+    }
+
+    /**
+     *
+     * @param BuildJsEvent $event
+     */
+    public function onDynamicRecommenderJs(BuildJsEvent $event)
+    {
+        $recommenderUrl = $this->router->generate('mautic_recommender_dwc', ['objectId' => 'slotNamePlaceholder'], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $js = <<<JS
+        
+MauticJS.replaceRecommender = function (params) {
+    params = params || {};
+
+    var recommenderSlots = document.querySelectorAll('[data-slot="recommender"]');
+    if (recommenderSlots.length) {
+        MauticJS.iterateCollection(recommenderSlots)(function(node, i) {
+            var recommenderId = node.dataset['recommenderId'];
+            if ('undefined' === typeof recommenderId) {
+                node.innerHTML = '';
+                return;
+            }
+            
+            var url = '{$recommenderUrl}'.replace('slotNamePlaceholder', recommenderId);
+            
+           var recommenderFilterTokens = node.dataset['filterTokens'];
+           if ('undefined' !== typeof recommenderFilterTokens) {
+               params['filterTokens'] = btoa(recommenderFilterTokens);
+           }
+
+            MauticJS.makeCORSRequest('GET', url, params, function(response, xhr) {
+                
+                if (response.content) {
+                    var recommenderContent = response.content;
+                    node.innerHTML = recommenderContent;
+                    
+                    if (response.id && response.sid) {
+                        MauticJS.setTrackedContact(response);
+                    }
+               
+                }
+            });
+        });
+    }
+};
+
+MauticJS.beforeFirstEventDelivery(MauticJS.replaceRecommender);
+JS;
+        $event->appendJs($js, 'Mautic Recommender Content');
     }
 }

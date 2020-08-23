@@ -53,11 +53,22 @@ class SegmentDictionary
             foreach ($fields as $key => $field) {
                 switch ($table) {
                     case 'recommenders':
-                        $dictionary[$key] = [
-                            'type'          => SegmentAbandonedCartQueryBuilder::getServiceId(),
-                            'foreign_table' => 'recommender_event_log',
-                            'field'         => $key,
-                        ];
+                        switch ($key) {
+                            case 'abandoned_cart';
+                                $dictionary[$key] = [
+                                    'type'          => SegmentAbandonedCartQueryBuilder::getServiceId(),
+                                    'foreign_table' => 'recommender_event_log',
+                                    'field'         => $key,
+                                ];
+                            break;
+                            case 'total_purchased_price';
+                                $dictionary[$key] = [
+                                    'type'          => SegmentAbandonedCartQueryBuilder::getServiceId(),
+                                    'foreign_table' => 'recommender_event_log',
+                                    'field'         => $key,
+                                ];
+                                break;
+                        }
                         break;
                     case 'recommender_item':
                         $dictionary[$key] = [

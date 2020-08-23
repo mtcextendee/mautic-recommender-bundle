@@ -49,6 +49,11 @@ class RecommenderToken
     private $integrationHelper;
 
     /**
+     * @var array
+     */
+    private $filterTokens = [];
+
+    /**
      * RecommenderToken constructor.
      *
      * @param RecommenderModel  $recommenderModel
@@ -152,5 +157,42 @@ class RecommenderToken
     public function getSettings()
     {
         return $this->integrationHelper->getIntegrationObject('Recommender')->getIntegrationSettings()->getFeatureSettings();
+    }
+
+    /**
+     * @param $token
+     * @param $value
+     */
+    public function addFilterToken($token, $value)
+    {
+        $this->filterTokens[$token] = $value;
+
+        $filters = $this->getRecommender()->getFilters();
+        foreach ($filters as $key => $filter) {
+            if (isset($filter['filter'])) {
+                if (!is_array($filter['filter'])) {
+                    $filters[$key]['filter'] = str_replace($token, $value, $filter['filter']);
+                }
+            }
+        }
+        $this->getRecommender()->setFilters($filters);
+    }
+
+
+
+    /**
+     * @return array
+     */
+    public function getFilterTokens()
+    {
+        return $this->filterTokens;
+    }
+
+    /**
+     * @param array $filterTokens
+     */
+    public function setFilterTokens($filterTokens)
+    {
+        $this->filterTokens = $filterTokens;
     }
 }

@@ -16,6 +16,8 @@ use Mautic\CoreBundle\Controller\AjaxLookupControllerTrait;
 use Mautic\CoreBundle\Helper\InputHelper;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTableOrderType;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderModel;
+use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -55,6 +57,37 @@ class AjaxController extends CommonAjaxController
         }
 
         return $this->sendJsonResponse($data);
+    }
+
+    public function dwcAction(Request $request)
+    {
+        /** @var RecommenderModel $recommenderModel */
+        $recommenderModel = $this->getModel('recommender.recommender');
+        if (!$recommender = $recommenderModel->getEntity($request->get('objectId'))) {
+            return $this->notFound();
+        }
+
+        /** @var RecommenderToken $recommenderToken */
+        $recommenderToken = $this->get('mautic.recommender.service.token');
+        $recommenderToken->setRecommender($recommender);
+        $recommenderToken->setId($request->get('objectId'));
+        if ($request->get('filterTokens')) {
+            $filterTokens = json_decode(base64_decode($request->get('filterTokens')), true);
+            if (is_array($filterTokens)) {
+                foreach ($filterTokens as $token=>$replace) {
+                    $recommenderToken->addFilterToken($token, $replace);
+                }
+            }
+        }
+
+        $recommenderTokenReplace = $this->get('mautic.recommender.service.token.generator');
+
+        return $this->sendJsonResponse(
+            [
+                'success' => 1,
+                'content' => $recommenderTokenReplace->getContentByToken($recommenderToken),
+            ]
+        );
     }
 
     public function listavailablefunctionsAction(Request $request)

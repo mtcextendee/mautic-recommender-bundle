@@ -73,13 +73,15 @@ class Choices
      *
      * @return array
      */
-    public function addChoices()
+    public function addChoices($object = null)
     {
-        $choices = $this->getChoices();
+        $choices = $this->getchoices();
         foreach (self::ALLOWED_TABLES as $table) {
             if (isset($choices[$table])) {
                 foreach ($choices[$table] as $key=>$options) {
-                    $this->fieldChoices[$table][$key] =  $options;
+                    if ($object === null || ($object == 'recommender' && $options['recommender'])) {
+                        $this->fieldChoices[$table][$key] =  $options;
+                    }
                 }
             }
         }
@@ -128,6 +130,7 @@ class Choices
                     'operators'  => $this->listModel->getOperatorsForFieldType(
                         isset($field['operators']) ? $field['operators'] : $properties['type']
                     ),
+                    'recommender'=> isset($field['decorator']['recommender']),
                 ];
 
                 switch ($table) {

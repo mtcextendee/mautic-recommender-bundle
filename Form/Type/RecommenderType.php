@@ -237,6 +237,7 @@ class RecommenderType extends AbstractType
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_FORM_CHOICES_GENERATE, $choiceEvent);
             $choices = $choiceEvent->getChoices('filter');
         }
+
         $builder->add(
             'filter',
             ChoiceType::class,
@@ -258,7 +259,8 @@ class RecommenderType extends AbstractType
             ]
         );
 
-        $this->fieldChoices     = $this->choices->addChoices('recommender_event');
+        $this->fieldChoices     = $this->choices->addChoices('recommender');
+
         $filterModalTransformer = new FieldFilterTransformer($this->translator);
         $builder->add(
             $builder->create(

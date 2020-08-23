@@ -510,6 +510,10 @@ return [
                 'path'       => '/recommender/event/send',
                 'controller' => 'MauticRecommenderBundle:Recommender:send',
             ],
+            'mautic_recommender_dwc' => [
+                'path'       => '/recommender/dwc/{objectId}/{tokenFilters}',
+                'controller' => 'MauticRecommenderBundle:Ajax:dwc',
+            ],
         ],
         'api'    => [
             'mautic_recommender_api' => [

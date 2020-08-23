@@ -116,6 +116,14 @@ class Fields
                     ],
                 ];
 
+          /*  $this->fields['recommenders']['total_purchased_price'] =
+                [
+                    'name'       => 'recommender.form.event.total_purchased_price',
+                    'properties' => [
+                        'type' => 'number',
+                    ],
+                ];*/
+
         } else if ($table == 'recommender_event_log' && !isset($this->fields[$table])) {
             $events                                              = $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices();
             $this->fields['recommender_event_log']['event_id']   =

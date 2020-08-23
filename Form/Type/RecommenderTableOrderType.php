@@ -106,7 +106,7 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
-        $builder->get('column')->addEventListener(
+       /* $builder->get('column')->addEventListener(
             FormEvents::PRE_SET_DATA,
             function (FormEvent $event) {
                 $form = $event->getForm();
@@ -117,7 +117,7 @@ class RecommenderTableOrderType extends AbstractType
                         $column
                     );
             }
-            );
+            );*/
     }
 
     public function getAvabilableFunctionChoices($column=null)

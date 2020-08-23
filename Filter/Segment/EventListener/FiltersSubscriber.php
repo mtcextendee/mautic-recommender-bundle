@@ -108,7 +108,8 @@ class FiltersSubscriber extends CommonSubscriber
         }
 
         if (in_array($this->request->attributes->get('_route'), ['mautic_segment_action', 'mautic_recommender_action'])) {
-            $this->choices->addChoicesToEvent($event, 'recommender_event');
+
+            $this->choices->addChoicesToEvent($event, $this->request->attributes->get('_route'));
         }
     }
 }
