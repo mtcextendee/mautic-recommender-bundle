@@ -36,6 +36,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
     {
         $this->parameterNameGenerator = $randomParameterNameService;
         $this->clientModel = $clientModel;
+        parent::__construct($randomParameterNameService);
     }
 
     /**

@@ -511,7 +511,7 @@ return [
                 'controller' => 'MauticRecommenderBundle:Recommender:send',
             ],
             'mautic_recommender_dwc' => [
-                'path'       => '/recommender/dwc/{objectId}/{tokenFilters}',
+                'path'       => '/recommender/dwc/{objectId}',
                 'controller' => 'MauticRecommenderBundle:Ajax:dwc',
             ],
         ],

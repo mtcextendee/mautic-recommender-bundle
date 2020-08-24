@@ -94,6 +94,11 @@ class FiltersFilterSubscriber extends CommonSubscriber
             foreach ($results as &$result) {
                 $properties           = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);
                 $properties           = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
+                foreach ($properties as $alias=>$property) {
+                    if ($alias === 'price') {
+                        $properties[$alias] = number_format((float) $property, 2);
+                    }
+                }
                 $translatedProperties = [];
                 foreach ($properties as $property=>$value) {
                     $translatedProperties[InputHelper::alphanum(InputHelper::transliterate($property))] = $value;

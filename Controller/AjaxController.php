@@ -37,10 +37,8 @@ class AjaxController extends CommonAjaxController
 
         if (isset($recommender['recommender_templates'])) {
             $recommenderEntity = new RecommenderTemplate();
-            $accessor          = PropertyAccess::createPropertyAccessor();
             $recommenderArrays = InputHelper::_($recommender['recommender_templates']);
             foreach ($recommenderArrays as $key=>$recommenderArray) {
-                //   $accessor->setValue($recommenderEntity, $key, $recommenderArray);
                 $setter = 'set'.ucfirst($key);
                 if (method_exists($recommenderEntity, $setter)) {
                     $recommenderEntity->$setter($recommenderArray);
@@ -81,7 +79,6 @@ class AjaxController extends CommonAjaxController
         }
 
         $recommenderTokenReplace = $this->get('mautic.recommender.service.token.generator');
-
         return $this->sendJsonResponse(
             [
                 'success' => 1,
