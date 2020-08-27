@@ -39,17 +39,35 @@ $templates = [
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-4"><?php echo $view['form']->row($form['template']); ?></div>
-                    <br>
+                    <div class="col-md-8">
+                        <br>
+                        <label class="control-label">&nbsp;</label>
                         <?php echo $view['form']->row($form['newRecommenderButton']); ?>
                         <?php echo $view['form']->row($form['editRecommenderButton']); ?>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-md-3">
-                <?php echo $view['form']->row($form['filter']); ?>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-3">
+                        <?php echo $view['form']->row($form['filterTarget']); ?>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="control-label">&nbsp;</label>
+                                <?php echo $view['form']->row($form['properties']->children['items']); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="control-label"><?php echo $view['translator']->trans('mautic.plugin.recommender.form.type.filters'); ?></label>
             </div>
+
             <div class="row">
-                <div data-show-on="{&quot;recommender_filter&quot;:&quot;filters&quot;}"
+                <div
                      id="<?php echo $form->vars['id'] ?>" class="col-xs-12 dwc-filter available-filters"
                      data-prototype="<?php echo $view->escape(
                          $view['form']->widget($form['filters']->vars['prototype'])
@@ -94,8 +112,7 @@ $templates = [
                     <div class="col-md-9 selected-filters"
                          id="recommender_filters">
                          <div class="row">
-                            <?php echo $view['form']->row($form['filterTarget']); ?>
-                            <?php echo $view['form']->widget($form['filters']); ?>                            
+                            <?php echo $view['form']->widget($form['filters']); ?>
                         </div>
                     </div>
                 </div>
@@ -103,16 +120,18 @@ $templates = [
         </div>
     </div>
     <div class="col-md-3  height-auto bdr-l">
-        <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.order_by'); ?></strong></h4>
-        <br>
-        <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
+
         <div class="hide">
-            <?php echo $view['form']->row($form['tableOrder']->children['items']); ?>
+            <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.order_by'); ?></strong>
+            </h4>
+            <br>
+            <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
+            <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
+            <div class="order-function-choice">
+                <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
+            </div>
         </div>
-        <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
-        <div class="order-function-choice">
-            <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
-        </div>
+
     </div>
 </div>
 

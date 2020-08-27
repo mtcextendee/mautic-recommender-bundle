@@ -16,11 +16,14 @@ use Doctrine\DBAL\Connections\MasterSlaveConnection;
 use Doctrine\ORM\EntityManager;
 use Mautic\LeadBundle\Segment\RandomParameterName;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
+use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
 use MauticPlugin\MauticRecommenderBundle\Filter\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\RecommenderOrderBy;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
+use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class RecommenderQueryBuilder
 {
@@ -46,26 +49,34 @@ class RecommenderQueryBuilder
     private $recommenderOrderBy;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
      * ContactSegmentQueryBuilder constructor.
      *
-     * @param EntityManager       $entityManager
-     * @param RandomParameterName $randomParameterName
-     * @param FilterFactory       $filterFactory
-     * @param Decorator           $decorator
-     * @param RecommenderOrderBy  $recommenderOrderBy
+     * @param EntityManager            $entityManager
+     * @param RandomParameterName      $randomParameterName
+     * @param FilterFactory            $filterFactory
+     * @param Decorator                $decorator
+     * @param RecommenderOrderBy       $recommenderOrderBy
+     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
         RandomParameterName $randomParameterName,
         FilterFactory $filterFactory,
         Decorator $decorator,
-        RecommenderOrderBy $recommenderOrderBy
+        RecommenderOrderBy $recommenderOrderBy,
+        EventDispatcherInterface $dispatcher
     ) {
         $this->entityManager       = $entityManager;
         $this->randomParameterName = $randomParameterName;
         $this->filterFactory       = $filterFactory;
         $this->decorator           = $decorator;
         $this->recommenderOrderBy  = $recommenderOrderBy;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -83,69 +94,12 @@ class RecommenderQueryBuilder
         }
 
         $queryBuilder = new QueryBuilder($connection);
-
         $queryBuilder->select('l.item_id as id')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'l');
-        if ($recommenderToken->getUserId()) {
-            switch ($recommenderToken->getRecommender()->getFilterTarget()) {
-                case 'inclusive':
-                    break;
-                case 'exclusive':
-                    $queryBuilder->andWhere($queryBuilder->expr()->neq('l.lead_id', ':leadId'))
-                        ->setParameter('leadId', $recommenderToken->getUserId());
-                    break;
-                case 'proximity5':
-                case 'proximity10':
-                        $precision = mb_eregi_replace('.*(\d+)$', '\\1', $recommenderToken->getRecommender()->getFilterTarget());
-                        if (empty($precision)) {
-                            $precision = 5;
-                        }
-
-                        $itemQB = new QueryBuilder($connection);
-                        $itemQB->select('l.item_id, SUM(re.weight) sum_weight, MAX(l.date_added) last_event')
-                               ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'l')
-                               ->leftJoin('l', MAUTIC_TABLE_PREFIX.'recommender_event', 're', 're.id = l.event_id')
-                               ->andWhere($itemQB->expr()->eq('l.lead_id', ':leadId'))
-                               ->andWhere($itemQB->expr()->gt('l.date_added', ':dateAdded'))
-                               ->groupBy('l.item_id')
-                               ->addOrderBy('sum_weight', 'DESC')
-                               ->addOrderBy('last_event', 'DESC')
-                               ->setParameter('leadId', $recommenderToken->getUserId())
-                               ->setParameter('dateAdded', date('Y-m-d H:i:s', strtotime("-{$precision} weeks")))
-                               ->setMaxResults($precision);
-
-                        $itemResult = $itemQB->execute()->fetchAll(\PDO::FETCH_COLUMN);
-
-                        if (!empty($itemResult)) {
-                            $contactQB = new QueryBuilder($connection);
-
-                            $contactQB->select('l.lead_id, SUM(re.weight) sum_weight, MAX(l.date_added) last_event')
-                               ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'l')
-                               ->leftJoin('l', MAUTIC_TABLE_PREFIX.'recommender_event', 're', 're.id = l.event_id')
-                               ->andWhere($contactQB->expr()->in('l.item_id', $itemResult))
-                               ->andWhere($contactQB->expr()->gt('l.date_added', ':dateAdded'))
-                               ->groupBy('l.lead_id')
-                               ->addOrderBy('sum_weight', 'DESC')
-                               ->addOrderBy('last_event', 'DESC')
-                               ->setParameter('dateAdded', date('Y-m-d H:i:s', strtotime("-{$precision} weeks")))
-                               ->setMaxResults($precision);
-
-                            $contactResult = $contactQB->execute()->fetchAll(\PDO::FETCH_COLUMN);
-
-                            if (!empty($contactResult)) {
-                                $queryBuilder->andWhere($queryBuilder->expr()->in('l.lead_id', $contactResult));
-                            }
-                        }
-                    break;
-                case 'reflective':
-                default:
-                    $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', ':leadId'))
-                        ->setParameter('leadId', $recommenderToken->getUserId());
-                    break;
-            }
-        }
-
-        //Filter recommendations to active items
         $queryBuilder->innerJoin('l', MAUTIC_TABLE_PREFIX.'recommender_item', 'ri', "ri.id = l.item_id AND ri.active='1'");
+        if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY)) {
+            $recommenderQuieryBuildEvent = new RecommenderQueryBuildEvent($queryBuilder, $recommenderToken);
+            $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY, $recommenderQuieryBuildEvent);
+        }
 
         $recombeeFilters = $recommenderToken->getRecommender()->getFilters();
         foreach ($recombeeFilters as $filter) {
@@ -166,8 +120,8 @@ class RecommenderQueryBuilder
      */
     private function setOrderBy(QueryBuilder $queryBuilder, Recommender $recommender)
     {
+        return;
         $tableorder = $recommender->getTableOrder();
-
         if (empty($tableorder['column'])) {
             return;
         }

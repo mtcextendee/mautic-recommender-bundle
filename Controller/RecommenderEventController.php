@@ -13,6 +13,9 @@ namespace MauticPlugin\MauticRecommenderBundle\Controller;
 
 use Mautic\CoreBundle\Controller\AbstractStandardFormController;
 use Mautic\CoreBundle\Exception as MauticException;
+use MauticPlugin\MauticRecommenderBundle\Entity\Event;
+use MauticPlugin\MauticRecommenderBundle\Service\ContactSearch;
+use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 
 class RecommenderEventController extends AbstractStandardFormController
 {
@@ -143,4 +146,32 @@ class RecommenderEventController extends AbstractStandardFormController
     {
         return 'weight';
     }
+
+
+    /**
+     * @param $args
+     * @param $action
+     *
+     * @return mixed
+     */
+    protected function getViewArguments(array $args, $action)
+    {
+        /** @var RecommenderTokenReplacer $recommenderTokenReplacer */
+        $viewParameters              = [];
+        switch ($action) {
+            case 'index':
+                /** @var Event $event */
+                $recommenderEventModel = $this->get('mautic.recommender.model.event');
+                foreach ($args['viewParameters']['items'] as $event) {
+                    $event->setNumberOfLogs($recommenderEventModel->getRepository()->getEventsCount($event->getId()));
+                }
+                break;
+        }
+        $args['viewParameters'] = array_merge($args['viewParameters'], $viewParameters);
+
+        return $args;
+    }
+
 }
+
+

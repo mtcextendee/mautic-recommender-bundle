@@ -32,7 +32,7 @@ class Recommender
     protected $name;
 
     /** @var array */
-    protected $properties;
+    protected $properties = [];
 
     /**
      * @var string
@@ -75,9 +75,8 @@ class Recommender
             ->setCustomRepositoryClass(RecommenderRepository::class)
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
-            ->addNamedField('filter', Type::STRING, 'filter')
+            ->addNamedField('filter', Type::STRING, 'filter', true)
             ->addNamedField('filterTarget', Type::STRING, 'filter_target')
-            ->addNullableField('properties', 'json_array')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
         $builder->createField('numberOfItems', Type::INTEGER)
@@ -87,6 +86,11 @@ class Recommender
 
         $builder->createField('tableOrder', Type::TARRAY)
             ->columnName('table_order')
+            ->nullable()
+            ->build();
+
+        $builder->createField('properties', Type::TARRAY)
+            ->columnName('properties')
             ->nullable()
             ->build();
 

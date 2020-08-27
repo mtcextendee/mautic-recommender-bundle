@@ -110,7 +110,7 @@ class RecommenderTemplatesType extends AbstractType
 
         $builder->add(
             'properties',
-            RecommenderPropertiesType::class,
+            RecommenderTemplatesPropertiesType::class,
             [
                 'label'      => false,
                 'attr'       => [

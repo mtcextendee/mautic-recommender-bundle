@@ -44,6 +44,11 @@ class Event
      */
     protected $dateAdded;
 
+    /**
+     * @var int
+     */
+    protected $numberOfLogs;
+
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
@@ -200,5 +205,26 @@ class Event
 
     public function getTypeTranslations()
     {
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfLogs()
+    {
+        return $this->numberOfLogs;
+    }
+
+
+    /**
+     * @param $numberOfLogs
+     *
+     * @return $this
+     */
+    public function setNumberOfLogs($numberOfLogs)
+    {
+        $this->numberOfLogs = $numberOfLogs;
+
+        return $this;
     }
 }

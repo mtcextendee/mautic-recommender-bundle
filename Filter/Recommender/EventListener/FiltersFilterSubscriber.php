@@ -15,9 +15,7 @@ use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\InputHelper;
 use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
-use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
-use MauticPlugin\MauticRecommenderBundle\EventListener\Service\CampaignLeadDetails;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\RecommenderQueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
@@ -50,8 +48,11 @@ class FiltersFilterSubscriber extends CommonSubscriber
      * @param RecommenderClientModel  $clientModel
      * @param RecommenderQueryBuilder $recommenderQueryBuilder
      */
-    public function __construct(RecommenderClientModel $clientModel, RecommenderQueryBuilder $recommenderQueryBuilder, FilterFactory $filterFactory)
-    {
+    public function __construct(
+        RecommenderClientModel $clientModel,
+        RecommenderQueryBuilder $recommenderQueryBuilder,
+        FilterFactory $filterFactory
+    ) {
         $this->clientModel             = $clientModel;
         $this->recommenderQueryBuilder = $recommenderQueryBuilder;
         $this->filterFactory           = $filterFactory;
@@ -87,24 +88,23 @@ class FiltersFilterSubscriber extends CommonSubscriber
     {
         /** @var RecommenderToken $recommenderToken */
         $recommenderToken = $event->getRecommenderToken();
-        if ($recommenderToken->getRecommender()->getFilter() == self::TYPE) {
-            $qb = $this->recommenderQueryBuilder->assembleContactQueryBuilder($recommenderToken);
-            SqlQuery::debugQuery($qb);
-            $results = $qb->execute()->fetchAll();
-            foreach ($results as &$result) {
-                $properties           = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);
-                $properties           = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
-                foreach ($properties as $alias=>$property) {
-                    if ($alias === 'price') {
-                        $properties[$alias] = number_format((float) $property, 2);
-                    }
+        $qb               = $this->recommenderQueryBuilder->assembleContactQueryBuilder($recommenderToken);
+        SqlQuery::debugQuery($qb);
+        $results = $qb->execute()->fetchAll();
+        $results = array_slice($results, 0, $recommenderToken->getRecommender()->getNumberOfItems());
+        foreach ($results as &$result) {
+            $properties = $this->getModel()->getItemPropertyValueRepository()->getValues($result['id']);
+            $properties = array_combine(array_column($properties, 'name'), array_column($properties, 'value'));
+            foreach ($properties as $alias => $property) {
+                if ($alias === 'price') {
+                    $properties[$alias] = number_format((float) $property, 2);
                 }
-                $translatedProperties = [];
-                foreach ($properties as $property=>$value) {
-                    $translatedProperties[InputHelper::alphanum(InputHelper::transliterate($property))] = $value;
-                }
-                $result = array_merge($result, $translatedProperties);
             }
+            $translatedProperties = [];
+            foreach ($properties as $property => $value) {
+                $translatedProperties[InputHelper::alphanum(InputHelper::transliterate($property))] = $value;
+            }
+            $result = array_merge($result, $translatedProperties);
 
             $event->setItems($results);
         }

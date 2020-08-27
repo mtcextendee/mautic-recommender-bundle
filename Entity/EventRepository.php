@@ -36,4 +36,22 @@ class EventRepository extends CommonRepository
 
         return array_combine(array_column($events, 'id'), array_column($events, 'name'));
     }
+
+    /**
+     * @param null $eventId
+     *
+     * @return bool|string
+     */
+    public function getEventsCount($eventId = null)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('COUNT(el.event_id)')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el');
+
+        if ($eventId) {
+            $qb->andWhere($qb->expr()->eq('el.event_id', ':event_id'))
+                ->setParameter('event_id', $eventId);
+        }
+        return $qb->execute()->fetchColumn(0);
+    }
 }

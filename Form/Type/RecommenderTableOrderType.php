@@ -43,22 +43,6 @@ class RecommenderTableOrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
-        $builder->add(
-            'items',
-            ItemListType::class,
-            [
-                'label'      => 'recommender.form.selected_items',
-                'label_attr' => ['class' => 'control-label'],
-                'multiple'   => true,
-                'required'   => false,
-                'mapped'     => false,
-            ]
-        );
-
-        //$options['fields']['weight']
-        // Build a list of columns
-
         $column = $options['data']['column'] ?? null;
 
         $fields = $options['fields'];

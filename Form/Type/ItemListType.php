@@ -36,7 +36,7 @@ class ItemListType extends AbstractType
                     return [
                         'type'   => 'recommender',
                         'filter' => '$data',
-                        'limit'  => 0,
+                        'limit'  => 100,
                         'start'  => 0,
                         'type' => 'recommender.client'
                     ];
@@ -44,6 +44,7 @@ class ItemListType extends AbstractType
                 'multiple'            => true,
                 'main_entity'         => null,
             ]
+
         );
     }
 

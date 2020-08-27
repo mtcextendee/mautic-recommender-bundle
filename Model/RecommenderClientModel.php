@@ -117,10 +117,12 @@ class RecommenderClientModel extends AbstractCommonModel  implements AjaxLookupM
                     $items = $this->getItemPropertyValueRepository()->getValuesForProperty(
                         $property->getId(),
                         100,
-                        $filter
+                        !is_array($filter) ? $filter : ''
                     );
                     foreach ($items as $item) {
-                        $results[] = ['label' => $item['value'], 'value' => $item['item_id']];
+                        $results[$item['item_id']] = $item['value'];
+
+                            //['label' => $item['value'], 'value' => $item['item_id']];
                     }
                 }
                 break;

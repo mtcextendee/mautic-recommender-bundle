@@ -12,9 +12,8 @@
 namespace MauticPlugin\MauticRecommenderBundle\Enum;
 
 use Mautic\CoreBundle\Helper\ArrayHelper;
-use Symfony\Component\Form\AbstractType;
 
-class PropertyTypeEnum extends AbstractType
+class PropertyTypeEnum
 {
     const PRICE    = 'price';
     const NAME    = 'product';

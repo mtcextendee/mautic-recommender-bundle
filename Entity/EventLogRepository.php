@@ -32,6 +32,7 @@ class EventLogRepository extends CommonRepository
         return 'el';
     }
 
+
     /**
      * @param int $limit
      *

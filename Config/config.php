@@ -9,6 +9,7 @@ return [
     'version'     => '1.0.0',
     'services'    => [
         'events'       => [
+
             /* Recommender filters  */
             'mautic.recommender.filter.filters'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\FiltersFilterSubscriber::class,
@@ -71,10 +72,23 @@ return [
                 ],
             ],
             'mautic.recommender.maintenance.subscriber' => [
-                'class'     => 'MauticPlugin\MauticRecommenderBundle\EventListener\MaintenanceSubscriber',
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\MaintenanceSubscriber::class,
                 'arguments' => [
                     'doctrine.dbal.default_connection',
                 ],
+            ],
+
+            'mautic.recommender.query.selected_items.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQuerySelectedItemsSubscriber::class,
+            ],
+            'mautic.recommender.query.best_sellers.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryBestSellersSubscriber::class,
+            ],
+            'mautic.recommender.query.popular_products.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryPopularProductsSubscriber::class,
+            ],
+            'mautic.recommender.query.abandoned_cart.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryAbandonedCartSubscriber::class,
             ],
         ],
         'models'       => [
@@ -129,7 +143,7 @@ return [
                 'alias' => 'recommender_template',
             ],
             'mautic.form.type.recommender.recommender_properties' => [
-                'class' => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderPropertiesType::class,
+                'class' => MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTemplatesPropertiesType::class,
                 'alias' => 'recommender_properties',
             ],
             'mautic.form.type.recommender.tags'         => [
@@ -341,6 +355,7 @@ return [
                     'mautic.recommender.filter.factory',
                     'mautic.recommender.recommender.decoration',
                     'mautic.recommender.filter.recommender.orderby',
+                    'event_dispatcher'
                 ],
             ],
             'mautic.recommender.filter.fields.recommender'  => [

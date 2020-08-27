@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Mautic\CoreBundle\Form\DataTransformer\IdToEntityModelTransformer;
 use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
 use Mautic\LeadBundle\Model\ListModel;
+use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
@@ -238,27 +239,6 @@ class RecommenderType extends AbstractType
             $choices = $choiceEvent->getChoices('filter');
         }
 
-        $builder->add(
-            'filter',
-            ChoiceType::class,
-            [
-                'choices'     => $choices,
-                'expanded'    => false,
-                'multiple'    => false,
-                'label'       => 'mautic.plugin.recommender.form.recommendations.type',
-                'label_attr'  => ['class' => ''],
-                'empty_value' => '',
-                'required'    => true,
-                'constraints' => [
-                    new NotBlank(
-                        [
-                            'message' => 'mautic.core.value.required',
-                        ]
-                    ),
-                ],
-            ]
-        );
-
         $this->fieldChoices     = $this->choices->addChoices('recommender');
 
         $filterModalTransformer = new FieldFilterTransformer($this->translator);
@@ -275,13 +255,6 @@ class RecommenderType extends AbstractType
                     'mapped'         => true,
                     'allow_add'      => true,
                     'allow_delete'   => true,
-                    'constraints'    => [
-                        new NotBlank(
-                            [
-                                'message' => $this->translator->trans('mautic.plugin.recommender.form.filter.empty'),
-                            ]
-                        ),
-                    ],
                 ]
             )
                 ->addModelTransformer($filterModalTransformer)
@@ -303,26 +276,38 @@ class RecommenderType extends AbstractType
             ]
         );
 
+        $builder->add(
+            'properties',
+            RecommenderPropertiesType::class,
+            [
+                'label' => 'recommender.properties',
+                'data'  => $options['data']->getProperties(),
+            ]
+        );
+
 
         $builder->add(
             'filterTarget',
             ChoiceType::class,
             [
                 'choices'     => [
-                    'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
+                    FiltersEnum::SELECTED_ITEMS  => 'recommender.form.selected_items',
+                    FiltersEnum::BEST_SELLERS  => 'recommender.form.best_sellers',
+                    FiltersEnum::POPULAR_PRODUCTS  => 'recommender.form.popular_products',
+                    FiltersEnum::ABANDONED_CART  => 'recommender.form.event.abandoned_cart',
+                    //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
                    // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
-                    'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
+                    //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
                     //'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
                     //'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
                 ],
                 'choice_attr' => function ($choice, $key, $value) {
-                    return ['tooltip' => "mautic.plugin.recommender.form.filter_target.{$value}.tooltip"];
+                    return ['tooltip' => "recommender.form.{$value}.tooltip"];
                 },
-                'expanded'    => true,
+                'expanded'    => false,
                 'multiple'    => false,
-                'label'       => 'mautic.plugin.recommender.form.filter_target',
+                'label'       => 'recommender.recommendations.type',
                 'label_attr' => ['class' => 'control-label'],
-                //'empty_value' => 'reflective',
                 'required'    => true,
                 'constraints' => [
                     new NotBlank(

@@ -64,6 +64,15 @@ if ($tmpl == 'index') {
                 echo $view->render(
                     'MauticCoreBundle:Helper:tableheader.html.php',
                     [
+                        'text'       => 'mautic.plugin.recommender.form.event.logs',
+                        'class'      => 'col-msg-name',
+                        'default'    => true,
+                    ]
+                );
+
+                echo $view->render(
+                    'MauticCoreBundle:Helper:tableheader.html.php',
+                    [
                         'sessionVar' => 'recommender',
                         'orderBy'    => 'e.id',
                         'text'       => 'mautic.core.id',
@@ -115,6 +124,9 @@ if ($tmpl == 'index') {
                     </td>
                     <td>
                         <?php echo $item->getWeight(); ?>
+                    </td>
+                    <td>
+                        <?php echo $item->getNumberOfLogs(); ?>
                     </td>
                     <td class="visible-md visible-lg"><?php echo $item->getId(); ?></td>
                 </tr>
