@@ -34,15 +34,13 @@ class ItemPropertyValueRepository extends CommonRepository
             ->from(MAUTIC_TABLE_PREFIX.'recommender_item_property_value', 'v');
         $qb->join('v', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'v.property_id = p.id');
         $qb->where($qb->expr()->eq('p.segment_filter', true));
+
         return $qb->execute()->fetchAll();
     }
 
-
     /**
      * @param int  $propertyId
-     *
      * @param int  $limit
-     *
      * @param null $filter
      *
      * @return array
@@ -79,6 +77,7 @@ class ItemPropertyValueRepository extends CommonRepository
             ->join('pv', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'pv.property_id = p.id')
             ->where($qb->expr()->eq('i.id', ':itemId'))
             ->setParameter('itemId', $itemId);
+
         return $qb->execute()->fetchAll();
     }
 }

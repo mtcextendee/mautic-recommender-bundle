@@ -83,7 +83,7 @@ class Processor
         $this->eventModel           = $eventModel;
         $this->translator           = $translator;
         $this->leadModel            = $leadModel;
-        $this->contactTracker = $contactTracker;
+        $this->contactTracker       = $contactTracker;
     }
 
     /**
@@ -118,29 +118,28 @@ class Processor
         }
         // Just provider from console
         $inConsole = defined('IN_MAUTIC_CONSOLE') || defined('IN_MAUTIC_API');
-            if (isset($eventDetail['contactEmail'])) {
-                $contact = $this->leadModel->checkForDuplicateContact(['email'=>$eventDetail['contactEmail']]);
-                if (!$contact instanceof Lead) {
-                    throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
-                }
-                unset($eventDetail['contactEmail']);
-                $this->leadModel->setSystemCurrentLead($contact);
-            } elseif (isset($eventDetail['contactId'])) {
-                if ($contact = $this->leadModel->getEntity($eventDetail['contactId'])) {
-                    $this->leadModel->setSystemCurrentLead($contact);
-                }else{
-                    throw new \Exception('Tracked contact doesn\'t exist');
-                }
-            } elseif (!$inConsole) {
-                if ($contact = $this->contactTracker->getContact()) {
-                    $eventDetail['contactId'] = $contact->getId();
-                }else{
-                    throw new \Exception('Tracked contact doesn\'t exist');
-                }
-            } elseif ($inConsole) {
-
-                throw new \Exception('One of parameters contactId/contactEmail is required');
+        if (isset($eventDetail['contactEmail'])) {
+            $contact = $this->leadModel->checkForDuplicateContact(['email'=>$eventDetail['contactEmail']]);
+            if (!$contact instanceof Lead) {
+                throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
             }
+            unset($eventDetail['contactEmail']);
+            $this->leadModel->setSystemCurrentLead($contact);
+        } elseif (isset($eventDetail['contactId'])) {
+            if ($contact = $this->leadModel->getEntity($eventDetail['contactId'])) {
+                $this->leadModel->setSystemCurrentLead($contact);
+            } else {
+                throw new \Exception('Tracked contact doesn\'t exist');
+            }
+        } elseif (!$inConsole) {
+            if ($contact = $this->contactTracker->getContact()) {
+                $eventDetail['contactId'] = $contact->getId();
+            } else {
+                throw new \Exception('Tracked contact doesn\'t exist');
+            }
+        } elseif ($inConsole) {
+            throw new \Exception('One of parameters contactId/contactEmail is required');
+        }
 
         $this->apiCommands->callCommand($eventLabel, $eventDetail);
 

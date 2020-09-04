@@ -147,7 +147,6 @@ class RecommenderEventController extends AbstractStandardFormController
         return 'weight';
     }
 
-
     /**
      * @param $args
      * @param $action
@@ -171,7 +170,4 @@ class RecommenderEventController extends AbstractStandardFormController
 
         return $args;
     }
-
 }
-
-

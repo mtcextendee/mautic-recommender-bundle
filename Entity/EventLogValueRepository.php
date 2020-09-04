@@ -33,6 +33,7 @@ class EventLogValueRepository extends CommonRepository
             ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log_property_value', 'v');
         $qb->join('v', MAUTIC_TABLE_PREFIX.'recommender_property', 'p', 'v.property_id = p.id');
         $qb->where($qb->expr()->eq('p.segment_filter', true));
+
         return $qb->execute()->fetchAll();
     }
 

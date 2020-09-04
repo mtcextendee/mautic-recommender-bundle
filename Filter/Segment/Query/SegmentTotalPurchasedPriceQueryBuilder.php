@@ -34,11 +34,9 @@ class SegmentTotalPurchasedPriceQueryBuilder extends RecommenderFilterQueryBuild
         return 'mautic.recommender.query.builder.total_purchased_price';
     }
 
-
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
-
         $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
@@ -54,7 +52,7 @@ class SegmentTotalPurchasedPriceQueryBuilder extends RecommenderFilterQueryBuild
         $tableAlias2            = $this->generateRandomParameterName();
 
         $leftJoinCondition = sprintf(
-            "%s.lead_id = %s.lead_id AND %s.event_id IN (3,4) AND %s.id > %s.id AND %s.item_id = %s.item_id",
+            '%s.lead_id = %s.lead_id AND %s.event_id IN (3,4) AND %s.id > %s.id AND %s.item_id = %s.item_id',
             $tableAlias2,
             $tableAlias,
             $tableAlias2,
@@ -72,7 +70,6 @@ class SegmentTotalPurchasedPriceQueryBuilder extends RecommenderFilterQueryBuild
             )
             ->andWhere($tableAlias.'.event_id = 2')
             ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.id');
-
 
         if (!is_null($filter->getWhere())) {
             $subQueryBuilder->andWhere(str_replace(str_replace(MAUTIC_TABLE_PREFIX, '', $filter->getTable()).'.', $tableAlias.'.', $filter->getWhere()));

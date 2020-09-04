@@ -90,18 +90,18 @@ class RecommenderTableOrderType extends AbstractType
             ],
         ]);
 
-       /* $builder->get('column')->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
-                $form = $event->getForm();
-                $column = $event->getData();
+        /* $builder->get('column')->addEventListener(
+             FormEvents::PRE_SET_DATA,
+             function (FormEvent $event) {
+                 $form = $event->getForm();
+                 $column = $event->getData();
 
-                $this->setupAvailableFunctionChoices(
-                        $form->getParent(),
-                        $column
-                    );
-            }
-            );*/
+                 $this->setupAvailableFunctionChoices(
+                         $form->getParent(),
+                         $column
+                     );
+             }
+             );*/
     }
 
     public function getAvabilableFunctionChoices($column=null)

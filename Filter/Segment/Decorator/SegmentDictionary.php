@@ -53,14 +53,14 @@ class SegmentDictionary
                 switch ($table) {
                     case 'recommenders':
                         switch ($key) {
-                            case 'abandoned_cart';
+                            case 'abandoned_cart':
                                 $dictionary[$key] = [
                                     'type'          => SegmentAbandonedCartQueryBuilder::getServiceId(),
                                     'foreign_table' => 'recommender_event_log',
                                     'field'         => $key,
                                 ];
                             break;
-                            case 'total_purchased_price';
+                            case 'total_purchased_price':
                                 $dictionary[$key] = [
                                     'type'          => SegmentAbandonedCartQueryBuilder::getServiceId(),
                                     'foreign_table' => 'recommender_event_log',

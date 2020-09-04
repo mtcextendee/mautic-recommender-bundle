@@ -167,6 +167,7 @@ class RecommenderModel extends FormModel implements AjaxLookupModelInterface
 
                 break;
         }
+
         return $results;
     }
 }

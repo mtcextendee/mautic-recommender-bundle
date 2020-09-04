@@ -289,7 +289,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemShortDescriptionBold']) ? (bool)$options['data']['itemShortDescriptionBold'] : false,
+                'data'        => isset($options['data']['itemShortDescriptionBold']) ? (bool) $options['data']['itemShortDescriptionBold'] : false,
             ]
         );
 
@@ -420,7 +420,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemActionBold']) ? (bool) $options['data']['itemActionBold']: false,
+                'data'        => isset($options['data']['itemActionBold']) ? (bool) $options['data']['itemActionBold'] : false,
             ]
         );
 
@@ -497,7 +497,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemPriceBold']) ? (bool) $options['data']['itemPriceBold']: false,
+                'data'        => isset($options['data']['itemPriceBold']) ? (bool) $options['data']['itemPriceBold'] : false,
             ]
         );
 
@@ -574,7 +574,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
                 'label' => 'mautic.plugin.recommender.bold',
                 'attr'  => [
                 ],
-                'data'        => isset($options['data']['itemOldPriceBold']) ? (bool) $options['data']['itemOldPriceBold']: false,
+                'data'        => isset($options['data']['itemOldPriceBold']) ? (bool) $options['data']['itemOldPriceBold'] : false,
             ]
         );
 

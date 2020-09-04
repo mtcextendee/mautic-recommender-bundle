@@ -34,7 +34,12 @@
         <div class="col-xs-4"><?php echo $view['form']->form($form); ?></div>
         <div class="col-xs-12">        
             <div class="collapse" id="recommender-sql-query">
-                <textarea style="width:100%" rows="5" readonly><?php echo $sqlQuery; ?></textarea>
+                <textarea style="width:100%" rows="5" readonly>
+                    <?php foreach ($sqlQuery as $query) {
+            echo $query.'
+                        ';
+        } ?>
+                </textarea>
             </div>
             <!-- lead detail collapseable toggler -->
             <div class="hr-expand nm">

@@ -285,16 +285,15 @@ class RecommenderType extends AbstractType
             ]
         );
 
-
         $builder->add(
             'filterTarget',
             ChoiceType::class,
             [
                 'choices'     => [
-                    FiltersEnum::SELECTED_ITEMS  => 'recommender.form.selected_items',
-                    FiltersEnum::BEST_SELLERS  => 'recommender.form.best_sellers',
+                    FiltersEnum::SELECTED_ITEMS    => 'recommender.form.selected_items',
+                    FiltersEnum::BEST_SELLERS      => 'recommender.form.best_sellers',
                     FiltersEnum::POPULAR_PRODUCTS  => 'recommender.form.popular_products',
-                    FiltersEnum::ABANDONED_CART  => 'recommender.form.event.abandoned_cart',
+                    FiltersEnum::ABANDONED_CART    => 'recommender.form.event.abandoned_cart',
                     //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
                    // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
                     //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
@@ -307,7 +306,7 @@ class RecommenderType extends AbstractType
                 'expanded'    => false,
                 'multiple'    => false,
                 'label'       => 'recommender.recommendations.type',
-                'label_attr' => ['class' => 'control-label'],
+                'label_attr'  => ['class' => 'control-label'],
                 'required'    => true,
                 'constraints' => [
                     new NotBlank(

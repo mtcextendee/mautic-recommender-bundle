@@ -35,7 +35,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
     public function __construct(RandomParameterName $randomParameterNameService, RecommenderClientModel  $clientModel)
     {
         $this->parameterNameGenerator = $randomParameterNameService;
-        $this->clientModel = $clientModel;
+        $this->clientModel            = $clientModel;
         parent::__construct($randomParameterNameService);
     }
 
@@ -55,11 +55,9 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
         return 'mautic.recommender.query.builder.recommender.abandoned_cart';
     }
 
-
     /** {@inheritdoc} */
     public function applyQuery(QueryBuilder $queryBuilder, ContactSegmentFilter $filter)
     {
-
         $filterOperator   = $filter->getOperator();
         $filterParameters = $filter->getParameterValue();
         if (is_array($filterParameters)) {
@@ -73,10 +71,9 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
         $filterParametersHolder = $filter->getParameterHolder($parameters);
         $tableAlias             = $this->generateRandomParameterName();
         $tableAlias2            = $this->generateRandomParameterName();
-        $tableAlias3            = $this->generateRandomParameterName();
 
         $leftJoinCondition = sprintf(
-            "%s.lead_id = %s.lead_id AND %s.event_id IN (3,4) AND %s.id > %s.id AND %s.item_id = %s.item_id",
+            '%s.lead_id = %s.lead_id AND %s.event_id IN (3,4) AND %s.id > %s.id AND %s.item_id = %s.item_id',
             $tableAlias2,
             $tableAlias,
             $tableAlias2,
@@ -85,6 +82,8 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
             $tableAlias2,
             $tableAlias
         );
+
+        $leftJoinCondition = $tableAlias2.'.lead_id = '.$tableAlias.'.lead_id  AND '.$tableAlias2.'.id > '.$tableAlias.'.id AND '.$tableAlias2.'.item_id = '.$tableAlias.'.item_id AND (('.$tableAlias.'.item_id = '.$tableAlias2.'.item_id AND  '.$tableAlias2.'.event_id  = 3) OR  '.$tableAlias2.'.event_id = 4)';
 
         $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
         $subQueryBuilder
@@ -95,7 +94,6 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
             ->andWhere($tableAlias.'.event_id = 2')
             ->andWhere($tableAlias.'.'.$this->getIdentificator().' = l.id');
 
-
         if (!is_null($filter->getWhere())) {
             $subQueryBuilder->andWhere(str_replace(str_replace(MAUTIC_TABLE_PREFIX, '', $filter->getTable()).'.', $tableAlias.'.', $filter->getWhere()));
         }
@@ -105,6 +103,7 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
             $filterParametersHolder
         );
         $subQueryBuilder->andWhere($expression);
+        $subQueryBuilder->andWhere($tableAlias2.'.id IS NULL');
 
         $queryBuilder->addLogic($queryBuilder->expr()->exists($subQueryBuilder->getSQL()), $filter->getGlue());
 

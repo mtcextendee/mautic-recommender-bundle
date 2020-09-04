@@ -34,10 +34,10 @@ class RecommenderQueryBuildEvent extends CommonEvent
      * @param RecommenderToken $recommenderToken
      */
     public function __construct(QueryBuilder $queryBuilder, RecommenderToken  $recommenderToken)
-   {
-       $this->queryBuilder = $queryBuilder;
-       $this->recommenderToken = $recommenderToken;
-   }
+    {
+        $this->queryBuilder     = $queryBuilder;
+        $this->recommenderToken = $recommenderToken;
+    }
 
     /**
      * @return QueryBuilder

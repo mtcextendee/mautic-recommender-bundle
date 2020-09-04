@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Mautic\CoreBundle\Form\DataTransformer\ArrayStringTransformer;
+use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -26,6 +27,17 @@ class RecommenderPropertiesType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add(
+            'includeDisabledItems',
+            YesNoButtonGroupType::class,
+            [
+                'label' => 'recommender.form.include.disabled.items',
+                'attr'  => [
+                ],
+                'data' => isset($options['data']['includeDisabledItems']) ? (bool) $options['data']['includeDisabledItems'] : false,
+            ]
+        );
+
         $builder->add(
             $builder->create(
                 'items',

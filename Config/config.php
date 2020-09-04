@@ -9,7 +9,6 @@ return [
     'version'     => '1.0.0',
     'services'    => [
         'events'       => [
-
             /* Recommender filters  */
             'mautic.recommender.filter.filters'  => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener\FiltersFilterSubscriber::class,
@@ -54,7 +53,7 @@ return [
                     'mautic.dynamicContent.model.dynamicContent',
                     'mautic.focus.model.focus',
                     'mautic.helper.integration',
-                    'mautic.tracker.contact'
+                    'mautic.tracker.contact',
                 ],
             ],
             'mautic.recommender.lead.timeline.subscriber'  => [
@@ -90,6 +89,12 @@ return [
             'mautic.recommender.query.abandoned_cart.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryAbandonedCartSubscriber::class,
             ],
+            'mautic.recommender.query.context.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryContextSubscriber::class,
+                'arguments' => [
+                    'mautic.recommender.filter.token.context',
+                ],
+            ],
         ],
         'models'       => [
             'mautic.recommender.model.recommender' => [
@@ -104,6 +109,9 @@ return [
             'mautic.recommender.model.client' => [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel::class,
                 'arguments' => ['mautic.tracker.contact'],
+            ],
+            'mautic.recommender.model.property' => [
+                'class' => \MauticPlugin\MauticRecommenderBundle\Model\RecommenderPropertyModel::class,
             ],
         ],
         'forms'        => [
@@ -175,6 +183,15 @@ return [
             ],
         ],
         'other'        => [
+            'mautic.recommender.filter.token.context' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Token\ContextToken::class,
+                'arguments' => [
+                    'mautic.lead.model.random_parameter_name',
+                    'mautic.recommender.model.property',
+                    'mautic.recommender.model.event',
+                ],
+            ],
+
             'mautic.recommender.logger' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger::class,
                 'arguments' => [
@@ -186,6 +203,8 @@ return [
                 'arguments' => [
                     'mautic.helper.integration',
                     'mautic.helper.core_parameters',
+                    'mautic.recommender.model.event',
+                    'mautic.recommender.model.property',
                 ],
                 'methodCalls' => [
                     'initiateDebugLogger' => ['mautic.recommender.logger'],
@@ -215,7 +234,7 @@ return [
                     'mautic.recommender.model.event',
                     'translator',
                     'mautic.lead.model.lead',
-                    'mautic.tracker.contact'
+                    'mautic.tracker.contact',
                 ],
             ],
 
@@ -311,7 +330,7 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Query\AbandonedCartQueryBuilder::class,
                 'arguments' => [
                     'mautic.lead.model.random_parameter_name',
-                    'mautic.recommender.model.client'
+                    'mautic.recommender.model.client',
                 ],
             ],
             /* segment filter dictionary */
@@ -344,7 +363,7 @@ return [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Filter\Segment\Query\SegmentAbandonedCartQueryBuilder::class,
                 'arguments' => [
                     'mautic.lead.model.random_parameter_name',
-                    'mautic.recommender.model.client'
+                    'mautic.recommender.model.client',
                 ],
             ],
             'mautic.recommender.filter.recommender'  => [
@@ -355,7 +374,7 @@ return [
                     'mautic.recommender.filter.factory',
                     'mautic.recommender.recommender.decoration',
                     'mautic.recommender.filter.recommender.orderby',
-                    'event_dispatcher'
+                    'event_dispatcher',
                 ],
             ],
             'mautic.recommender.filter.fields.recommender'  => [

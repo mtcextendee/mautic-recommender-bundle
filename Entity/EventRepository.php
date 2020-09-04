@@ -52,6 +52,7 @@ class EventRepository extends CommonRepository
             $qb->andWhere($qb->expr()->eq('el.event_id', ':event_id'))
                 ->setParameter('event_id', $eventId);
         }
+
         return $qb->execute()->fetchColumn(0);
     }
 }

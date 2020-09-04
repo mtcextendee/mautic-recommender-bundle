@@ -11,9 +11,8 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Enum;
 
-class PropertyTypeEnum
+class TablesEnum
 {
-    const PRICE       = 'price';
-    const NAME        = 'product';
-    const CATEGORY    = 'category';
+    const RECOMMENDER_PROPERTY            = 'recommender_property';
+    const RECOMMENDER_ITEM_PROPERTY_VALUE = 'recommender_item_property_value';
 }

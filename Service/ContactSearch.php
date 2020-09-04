@@ -50,6 +50,11 @@ class ContactSearch
     /** @var RecommenderTokenReplacer|object */
     private $recommenderTokenReplacer;
 
+    /**
+     * @var RecommenderGenerator|object|Container
+     */
+    private $recommenderGenerator;
+
     public function __construct(
         Container $container
     ) {
@@ -59,6 +64,7 @@ class ContactSearch
         $this->cookies                  = $this->request->cookies;
         $this->cookieHelper             = $this->container->get('mautic.helper.cookie');
         $this->recommenderTokenReplacer = $this->container->get('mautic.recommender.service.replacer');
+        $this->recommenderGenerator     = $this->container->get('mautic.recommender.service.token.generator');
     }
 
     /**
@@ -153,8 +159,9 @@ class ContactSearch
     {
         $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($this->getContact());
         $this->recommenderTokenReplacer->getRecommenderToken()->setContent('{recommender='.$this->objectId.'}');
+        $this->recommenderTokenReplacer->getRecommenderToken()->setId($this->objectId);
 
-        $content = $this->recommenderTokenReplacer->getReplacedContent();
+        $content = $this->recommenderGenerator->getContentByToken($this->recommenderTokenReplacer->getRecommenderToken());
 
         $this->cookieHelper->setCookie(
             $this->getCookieVar(),

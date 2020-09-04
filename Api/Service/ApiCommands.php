@@ -135,7 +135,6 @@ class ApiCommands
                 if ($i < $batchSize) {
                     $batchSize = 0;
                 }
-
             } catch (\Exception $error) {
                 $progress->finish();
                 $output->writeln('');

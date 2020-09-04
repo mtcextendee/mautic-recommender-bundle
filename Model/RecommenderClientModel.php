@@ -17,7 +17,7 @@ use Mautic\LeadBundle\Entity\Lead;
 use Mautic\LeadBundle\Tracker\ContactTracker;
 use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 
-class RecommenderClientModel extends AbstractCommonModel  implements AjaxLookupModelInterface
+class RecommenderClientModel extends AbstractCommonModel implements AjaxLookupModelInterface
 {
     /**
      * @var ContactTracker
@@ -122,7 +122,7 @@ class RecommenderClientModel extends AbstractCommonModel  implements AjaxLookupM
                     foreach ($items as $item) {
                         $results[$item['item_id']] = $item['value'];
 
-                            //['label' => $item['value'], 'value' => $item['item_id']];
+                        //['label' => $item['value'], 'value' => $item['item_id']];
                     }
                 }
                 break;

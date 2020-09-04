@@ -29,5 +29,4 @@ class SegmentAbandonedCartQueryBuilder extends AbandonedCartQueryBuilder
     {
         return 'mautic.recommender.query.builder.abandoned_cart';
     }
-
 }

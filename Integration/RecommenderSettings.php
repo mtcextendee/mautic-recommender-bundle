@@ -17,9 +17,12 @@ use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
 use MauticPlugin\MauticRecommenderBundle\Entity\Property;
+use MauticPlugin\MauticRecommenderBundle\Enum\PropertyTypeEnum;
 use MauticPlugin\MauticRecommenderBundle\Integration\DTO\RecombeeSettings;
 use MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderEventModel;
+use MauticPlugin\MauticRecommenderBundle\Model\RecommenderPropertyModel;
 
 class RecommenderSettings
 {
@@ -39,21 +42,30 @@ class RecommenderSettings
     private $settings;
 
     /**
-     * @var RecommenderClientModel
+     * @var RecommenderEventModel
      */
-    private $clientModel;
+    private $eventModel;
+
+    /**
+     * @var RecommenderPropertyModel
+     */
+    private $propertyModel;
 
     /**
      * EcrSettings constructor.
      *
-     * @param IntegrationHelper      $integrationHelper
-     * @param CoreParametersHelper   $coreParametersHelper
+     * @param IntegrationHelper        $integrationHelper
+     * @param CoreParametersHelper     $coreParametersHelper
+     * @param RecommenderEventModel    $eventModel
+     * @param RecommenderPropertyModel $propertyModel
      */
-    public function __construct(IntegrationHelper $integrationHelper, CoreParametersHelper $coreParametersHelper)
+    public function __construct(IntegrationHelper $integrationHelper, CoreParametersHelper $coreParametersHelper, RecommenderEventModel $eventModel, RecommenderPropertyModel $propertyModel)
     {
         $this->integrationHelper    = $integrationHelper;
         $this->coreParametersHelper = $coreParametersHelper;
         $this->settings             = $this->getIntegrationSettings('Recommender');
+        $this->eventModel           = $eventModel;
+        $this->propertyModel        = $propertyModel;
     }
 
     public function isEnabled()
@@ -77,6 +89,26 @@ class RecommenderSettings
         }
 
         return [];
+    }
+
+    /**
+     * @return int|void
+     */
+    public function getPropertyCategoryId()
+    {
+        if ($property = $this->propertyModel->getRepository()->findOneBy(['name' => 'category'])) {
+            return $property->getId();
+        }
+    }
+
+    /**
+     * @return int|void
+     */
+    public function getPropertyPriceId()
+    {
+        if ($property = $this->propertyModel->getRepository()->findOneBy(['name' => PropertyTypeEnum::PRICE])) {
+            return $property->getId();
+        }
     }
 
     /**

@@ -130,7 +130,6 @@ JS;
     }
 
     /**
-     *
      * @param BuildJsEvent $event
      */
     public function onDynamicRecommenderJs(BuildJsEvent $event)

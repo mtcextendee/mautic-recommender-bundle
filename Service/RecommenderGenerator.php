@@ -11,6 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Service;
 
+use Mautic\CoreBundle\Helper\ArrayHelper;
 use Mautic\CoreBundle\Helper\TemplatingHelper;
 use Mautic\LeadBundle\Model\LeadModel;
 use MauticPlugin\MauticRecommenderBundle\Api\RecommenderApi;
@@ -109,6 +110,7 @@ class RecommenderGenerator
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS, $resultEvent);
         }
         $this->items =  $resultEvent->getItems();
+
         return $this->items;
     }
 
@@ -136,7 +138,6 @@ class RecommenderGenerator
         }
         $recommenderTemplate = $recommenderToken->getRecommender()->getTemplate();
         $this->items         = $this->getResultByToken($recommenderToken);
-
         if (empty($this->items)) {
             return;
         }
@@ -166,9 +167,16 @@ class RecommenderGenerator
             $footerTemplate = $this->twig->createTemplate($footerTemplateCore);
             $bodyTemplate   = $this->twig->createTemplate($bodyTemplateCore);
         } else {
-            $headerTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['header']);
-            $footerTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['footer']);
-            $bodyTemplate   = $this->twig->createTemplate($recommenderTemplate->getTemplate()['body']);
+            $headerTemplate = ArrayHelper::getValue('header', $recommenderTemplate->getTemplate());
+            if ($headerTemplate) {
+                $headerTemplate = $this->twig->createTemplate($headerTemplate);
+            }
+            $bodyTemplate = $this->twig->createTemplate($recommenderTemplate->getTemplate()['body']);
+
+            $footerTemplate = ArrayHelper::getValue('footer', $recommenderTemplate->getTemplate());
+            if ($footerTemplate) {
+                $footerTemplate = $this->twig->createTemplate($footerTemplate);
+            }
         }
 
         return $this->getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate);
@@ -179,12 +187,18 @@ class RecommenderGenerator
      */
     private function getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate)
     {
-        $output = $headerTemplate->render($this->getFirstItem());
+        $output = '';
+        if ($headerTemplate) {
+            $output .= $headerTemplate->render($this->getFirstItem());
+        }
         foreach ($this->getItems() as $i => $item) {
             $item['index'] = $i;
             $output .= $bodyTemplate->render($item);
         }
-        $output .= $footerTemplate->render($this->getFirstItem());
+
+        if ($footerTemplate) {
+            $output .= $footerTemplate->render($this->getFirstItem());
+        }
 
         return $output;
     }

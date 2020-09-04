@@ -30,12 +30,12 @@ class RecommenderQueryPopularProductsSubscriber implements EventSubscriberInterf
 
     public function onRecommenderQueryBuild(RecommenderQueryBuildEvent $queryBuildEvent)
     {
-        $recommender = $queryBuildEvent->getRecommenderToken()->getRecommender();
+        $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
         if ($recommender->getFilterTarget() === FiltersEnum::POPULAR_PRODUCTS) {
             $queryBuilder->innerJoin('l', 'recommender_event', 're', 're.id = l.event_id');
-             $queryBuilder->orderBy('SUM(re.weight)', 'DESC');
+            $queryBuilder->orderBy('SUM(re.weight)', 'DESC');
         }
     }
 }

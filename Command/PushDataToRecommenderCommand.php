@@ -53,7 +53,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '-l',
             InputOption::VALUE_OPTIONAL,
             sprintf(
-                "Set batch size of contacts to process per round. Defaults to %s.",
+                'Set batch size of contacts to process per round. Defaults to %s.',
                 RecommenderIntegration::IMPORT_BATCH
             )
         );
@@ -62,7 +62,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             '--timeout',
             null,
             InputOption::VALUE_OPTIONAL,
-            sprintf("Set delay to ignore item to update. Default %s.", RecommenderIntegration::IMPORT_TIMEOUT)
+            sprintf('Set delay to ignore item to update. Default %s.', RecommenderIntegration::IMPORT_TIMEOUT)
         );
 
         parent::configure();
@@ -175,7 +175,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 );
             }
         }
-
 
         if (!empty($input->getOption('timeout'))) {
             $timeout = $input->getOption('timeout');

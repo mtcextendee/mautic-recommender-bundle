@@ -178,8 +178,6 @@ class RecommenderToken
         $this->getRecommender()->setFilters($filters);
     }
 
-
-
     /**
      * @return array
      */

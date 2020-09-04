@@ -226,7 +226,7 @@ class Property
         $this->propertyType = $propertyType;
 
         return $this;
-}
+    }
 
     /**
      * @return string

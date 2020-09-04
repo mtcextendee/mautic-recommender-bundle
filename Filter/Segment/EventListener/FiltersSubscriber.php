@@ -20,6 +20,7 @@ use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
+use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 
 class FiltersSubscriber extends CommonSubscriber
 {
@@ -108,7 +109,6 @@ class FiltersSubscriber extends CommonSubscriber
         }
 
         if (in_array($this->request->attributes->get('_route'), ['mautic_segment_action', 'mautic_recommender_action'])) {
-
             $this->choices->addChoicesToEvent($event, $this->request->attributes->get('_route'));
         }
     }

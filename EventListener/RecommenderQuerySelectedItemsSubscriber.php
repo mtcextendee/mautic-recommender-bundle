@@ -31,7 +31,7 @@ class RecommenderQuerySelectedItemsSubscriber implements EventSubscriberInterfac
 
     public function onRecommenderQueryBuild(RecommenderQueryBuildEvent $queryBuildEvent)
     {
-        $recommender = $queryBuildEvent->getRecommenderToken()->getRecommender();
+        $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
         if ($recommender->getFilterTarget() === FiltersEnum::SELECTED_ITEMS) {

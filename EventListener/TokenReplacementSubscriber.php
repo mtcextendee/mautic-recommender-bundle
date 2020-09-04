@@ -67,7 +67,7 @@ class TokenReplacementSubscriber extends CommonSubscriber
         $this->dynamicContentModel      = $dynamicContentModel;
         $this->focusModel               = $focusModel;
         $this->integrationHelper        = $integrationHelper;
-        $this->contactTracker = $contactTracker;
+        $this->contactTracker           = $contactTracker;
     }
 
     /**
@@ -108,7 +108,6 @@ class TokenReplacementSubscriber extends CommonSubscriber
             return;
         }
 
-
         $clickthrough = $event->getClickthrough();
 
         if (empty($clickthrough['focus_id'])) {
@@ -119,7 +118,7 @@ class TokenReplacementSubscriber extends CommonSubscriber
             $leadId       = $clickthrough['lead'];
         } elseif ($contact = $this->contactTracker->getContact()) {
             $leadId = $contact->getId();
-        }else{
+        } else {
             return;
         }
 

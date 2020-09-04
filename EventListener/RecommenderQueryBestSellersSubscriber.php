@@ -30,7 +30,7 @@ class RecommenderQueryBestSellersSubscriber implements EventSubscriberInterface
 
     public function onRecommenderQueryBuild(RecommenderQueryBuildEvent $queryBuildEvent)
     {
-        $recommender = $queryBuildEvent->getRecommenderToken()->getRecommender();
+        $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
         if ($recommender->getFilterTarget() === FiltersEnum::BEST_SELLERS) {

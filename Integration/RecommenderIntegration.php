@@ -11,10 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 
 class RecommenderIntegration extends AbstractIntegration
 {
-    const NAME = 'Recommender';
-    const DISPLAY_NAME = 'Recomendations';
+    const NAME           = 'Recommender';
+    const DISPLAY_NAME   = 'Recomendations';
     const IMPORT_TIMEOUT = '-1 day';
-    const IMPORT_BATCH = 100;
+    const IMPORT_BATCH   = 100;
 
     /**
      * RecommenderIntegration constructor.
@@ -130,7 +130,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.recommender.form.items_import_url.tooltip',
                     ],
-                    'required' => false
+                    'required' => false,
                 ]
             );
 
@@ -144,7 +144,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'class'        => 'form-control',
                         'tooltip'      => 'mautic.plugin.recommender.form.events_import_url.tooltip',
                     ],
-                    'required' => false
+                    'required' => false,
                 ]
             );
 
@@ -159,7 +159,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'tooltip'      => 'mautic.plugin.recommender.form.batch_limit.tooltip',
                         'placeholder'  => self::IMPORT_BATCH,
                     ],
-                    'required' => false
+                    'required' => false,
                 ]
             );
 
@@ -174,7 +174,7 @@ class RecommenderIntegration extends AbstractIntegration
                         'tooltip'      => 'mautic.plugin.recommender.form.timeout.tooltip',
                         'placeholder'  => self::IMPORT_TIMEOUT,
                     ],
-                    'required' => false
+                    'required' => false,
                 ]
             );
         }

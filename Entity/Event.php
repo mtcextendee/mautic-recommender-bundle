@@ -215,7 +215,6 @@ class Event
         return $this->numberOfLogs;
     }
 
-
     /**
      * @param $numberOfLogs
      *

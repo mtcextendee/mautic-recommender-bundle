@@ -28,13 +28,16 @@ $templates = [
 
 ?>
 <div class="row ">
-    <div class="col-md-9  height-auto">
+    <div class="col-md-12  height-auto">
         <div class="row">
             <div class="col-md-8">
                 <?php echo $view['form']->row($form['name']); ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <?php echo $view['form']->row($form['numberOfItems']); ?>
+            </div>
+            <div class="col-md-2">
+                <?php echo $view['form']->row($form['properties']->children['includeDisabledItems']); ?>
             </div>
             <div class="col-md-12">
                 <div class="row">
@@ -119,9 +122,8 @@ $templates = [
             </div>
         </div>
     </div>
-    <div class="col-md-3  height-auto bdr-l">
+    <div class="col-md-3  height-auto bdr-l hide">
 
-        <div class="hide">
             <h4><strong><?php echo $view['translator']->trans('mautic.plugin.recommender.form.order_by'); ?></strong>
             </h4>
             <br>
@@ -130,7 +132,6 @@ $templates = [
             <div class="order-function-choice">
                 <?php echo $view['form']->row($form['tableOrder']->children['function']); ?>
             </div>
-        </div>
 
     </div>
 </div>

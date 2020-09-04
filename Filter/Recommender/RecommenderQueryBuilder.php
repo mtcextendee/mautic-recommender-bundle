@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connections\MasterSlaveConnection;
 use Doctrine\ORM\EntityManager;
+use Mautic\CoreBundle\Helper\ArrayHelper;
 use Mautic\LeadBundle\Segment\RandomParameterName;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
@@ -76,7 +77,7 @@ class RecommenderQueryBuilder
         $this->filterFactory       = $filterFactory;
         $this->decorator           = $decorator;
         $this->recommenderOrderBy  = $recommenderOrderBy;
-        $this->dispatcher = $dispatcher;
+        $this->dispatcher          = $dispatcher;
     }
 
     /**
@@ -95,7 +96,12 @@ class RecommenderQueryBuilder
 
         $queryBuilder = new QueryBuilder($connection);
         $queryBuilder->select('l.item_id as id')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'l');
-        $queryBuilder->innerJoin('l', MAUTIC_TABLE_PREFIX.'recommender_item', 'ri', "ri.id = l.item_id AND ri.active='1'");
+        $queryBuilder->innerJoin('l', MAUTIC_TABLE_PREFIX.'recommender_item', 'ri', 'ri.id = l.item_id');
+
+        if (!ArrayHelper::getValue('includeDisabledItems', $recommenderToken->getRecommender()->getProperties())) {
+            $queryBuilder->andWhere('ri.active=1');
+        }
+
         if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY)) {
             $recommenderQuieryBuildEvent = new RecommenderQueryBuildEvent($queryBuilder, $recommenderToken);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY, $recommenderQuieryBuildEvent);

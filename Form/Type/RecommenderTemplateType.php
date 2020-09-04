@@ -47,7 +47,7 @@ class RecommenderTemplateType extends AbstractType
                 'required'    => true,
                 'attr'        => [
                     'class' => 'recommender-template',
-                    'rows'  => 6,
+                    'rows'  => 10,
                 ],
             ]
         );

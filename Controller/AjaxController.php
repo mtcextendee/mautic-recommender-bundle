@@ -24,7 +24,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class AjaxController extends CommonAjaxController
 {
     use AjaxLookupControllerTrait;
-    
+
     /**
      * @param Request $request
      *
@@ -79,6 +79,7 @@ class AjaxController extends CommonAjaxController
         }
 
         $recommenderTokenReplace = $this->get('mautic.recommender.service.token.generator');
+
         return $this->sendJsonResponse(
             [
                 'success' => 1,

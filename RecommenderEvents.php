@@ -17,7 +17,6 @@ namespace MauticPlugin\MauticRecommenderBundle;
  */
 final class RecommenderEvents
 {
-
     /**
      * The mautic.recommender_pre_save event is thrown right before a asset is persisted.
      *
@@ -94,9 +93,8 @@ final class RecommenderEvents
     const ON_RECOMMENDER_EVENT_SENT                   = 'mautic.plugin.recommender.before_send_event';
     const LIST_FILTERS_ON_FILTERING                   = 'mautic.plugin.recommender.filters_filtering';
 
-
     /**
-     * The mautic.plugin.recommender.on_recommender_build_query event is fired when the recommender query is build
+     * The mautic.plugin.recommender.on_recommender_build_query event is fired when the recommender query is build.
      *
      * The event listener receives a
      * MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent
