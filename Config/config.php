@@ -615,6 +615,9 @@ return [
             ],
         ],
     ],
+    'categories' => [
+        'plugin:recommender' => 'mautic.recommender',
+    ],
     'parameters'  => [
         'eventLabel'                => 'RecommenderEvent',
         'recommender_ai'            => true,

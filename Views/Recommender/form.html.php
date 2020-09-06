@@ -30,8 +30,11 @@ $templates = [
 <div class="row ">
     <div class="col-md-12  height-auto">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-5">
                 <?php echo $view['form']->row($form['name']); ?>
+            </div>
+            <div class="col-md-3">
+                <?php echo $view['form']->row($form['category']); ?>
             </div>
             <div class="col-md-2">
                 <?php echo $view['form']->row($form['numberOfItems']); ?>

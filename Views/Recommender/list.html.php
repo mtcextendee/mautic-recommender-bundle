@@ -56,6 +56,16 @@ if ($tmpl == 'index') {
                     'MauticCoreBundle:Helper:tableheader.html.php',
                     [
                         'sessionVar' => 'recommender',
+                        'orderBy'    => 'c.title',
+                        'text'       => 'mautic.core.category',
+                        'class'      => 'visible-md visible-lg col-focus-category',
+                    ]
+                );
+
+                echo $view->render(
+                    'MauticCoreBundle:Helper:tableheader.html.php',
+                    [
+                        'sessionVar' => 'recommender',
                         'orderBy'    => 'e.id',
                         'text'       => 'mautic.core.id',
                         'class'      => 'col-msg-id visible-md visible-lg',
@@ -104,6 +114,12 @@ if ($tmpl == 'index') {
                     <td>
                         <?php echo $item->getTemplate()->getName(); ?>
 
+                    </td>
+                    <td class="visible-md visible-lg">
+                        <?php $category = $item->getCategory(); ?>
+                        <?php $catName  = ($category) ? $category->getTitle() : $view['translator']->trans('mautic.core.form.uncategorized'); ?>
+                        <?php $color    = ($category) ? '#'.$category->getColor() : 'inherit'; ?>
+                        <span style="white-space: nowrap;"><span class="label label-default pa-4" style="border: 1px solid #d5d5d5; background: <?php echo $color; ?>;"> </span> <span><?php echo $catName; ?></span></span>
                     </td>
                     <td class="visible-md visible-lg"><?php echo $item->getId(); ?></td>
                 </tr>

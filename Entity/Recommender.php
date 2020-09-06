@@ -60,6 +60,11 @@ class Recommender
      */
     private $numberOfItems = 9;
 
+    /**
+     * @var \Mautic\CategoryBundle\Entity\Category
+     **/
+    private $category;
+
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
@@ -78,6 +83,8 @@ class Recommender
             ->addNamedField('filter', Type::STRING, 'filter', true)
             ->addNamedField('filterTarget', Type::STRING, 'filter_target')
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
+
+        $builder->addCategory();
 
         $builder->createField('numberOfItems', Type::INTEGER)
             ->columnName('number_of_items')
@@ -119,6 +126,7 @@ class Recommender
                     'template',
                     'dateAdded',
                     'numberOfItems',
+                    'category',
                 ]
             )
             ->build();
@@ -316,5 +324,25 @@ class Recommender
     public function getFilterTarget()
     {
         return $this->filterTarget;
+    }
+
+    /**
+     * @return \Mautic\CategoryBundle\Entity\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param \Mautic\CategoryBundle\Entity\Category $category
+     *
+     * @return $this
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
     }
 }

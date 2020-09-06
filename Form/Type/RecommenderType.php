@@ -12,6 +12,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Doctrine\ORM\EntityManager;
+use Mautic\CategoryBundle\Form\Type\CategoryListType;
 use Mautic\CoreBundle\Form\DataTransformer\IdToEntityModelTransformer;
 use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
 use Mautic\LeadBundle\Model\ListModel;
@@ -321,6 +322,14 @@ class RecommenderType extends AbstractType
         $builder->add(
             'buttons',
             'form_buttons'
+        );
+
+        $builder->add(
+            'category',
+            CategoryListType::class,
+            [
+                'bundle' => 'plugin:recommender',
+            ]
         );
     }
 
