@@ -81,7 +81,7 @@ class Recommender
             ->addId()
             ->addNamedField('name', Type::STRING, 'name')
             ->addNamedField('filter', Type::STRING, 'filter', true)
-            ->addNamedField('filterTarget', Type::STRING, 'filter_target')
+            ->addNamedField('filterTarget', Type::STRING, 'filter_target', true)
             ->addNamedField('dateAdded', Type::DATETIME, 'date_added');
 
         $builder->addCategory();

@@ -17,7 +17,7 @@ use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class RecommenderQuerySelectedItemsSubscriber implements EventSubscriberInterface
+class RecommenderQueryRecentlyViewedSubscriber implements EventSubscriberInterface
 {
     /**
      * @return array
@@ -25,7 +25,7 @@ class RecommenderQuerySelectedItemsSubscriber implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return [
-            RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY   => ['onRecommenderQueryBuild', 0],
+            RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY => ['onRecommenderQueryBuild', 0],
         ];
     }
 
@@ -34,11 +34,12 @@ class RecommenderQuerySelectedItemsSubscriber implements EventSubscriberInterfac
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
-        if ($recommender->getFilterTarget() === FiltersEnum::SELECTED_ITEMS) {
-            $items = ArrayHelper::getValue('items', $recommender->getProperties());
-            if (!empty($items)) {
-                $queryBuilder->andWhere($queryBuilder->expr()->in('ri.item_id', $items));
+        if ($recommender->getFilterTarget() === FiltersEnum::RECENTLY_VIEWED) {
+            if ($contactId = $queryBuildEvent->getRecommenderToken()->getUserId()) {
+                $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', (int) $contactId));
             }
+            $queryBuilder->andWhere($queryBuilder->expr()->eq('l.event_id', 1));
+            $queryBuilder->orderBy('l.date_added', 'DESC');
         }
     }
 }

@@ -16,7 +16,6 @@ use Mautic\CoreBundle\Entity\CommonRepository;
 
 class RecommenderRepository extends CommonRepository
 {
-
     /**
      * Get a list of entities.
      *

@@ -103,13 +103,15 @@ if ($tmpl == 'index') {
                         ?>
                     </td>
                     <td>
-                        <a href="<?php echo $view['router']->generate(
+                        <?php
+                        /*<a href="<?php echo $view['router']->generate(
                             'mautic_recommender_action',
                             ['objectAction' => 'view', 'objectId' => $item->getId()]
                         ); ?>" data-toggle="ajax">
-                            <?php echo $item->getName(); ?>
-
                         </a>
+                        */
+                        ?>
+                            <?php echo $item->getName(); ?>
                     </td>
                     <td>
                         <?php echo $item->getTemplate()->getName(); ?>

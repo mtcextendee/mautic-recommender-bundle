@@ -89,6 +89,9 @@ return [
             'mautic.recommender.query.abandoned_cart.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryAbandonedCartSubscriber::class,
             ],
+            'mautic.recommender.query.recently_viewed.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryRecentlyViewedSubscriber::class,
+            ],
             'mautic.recommender.query.context.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryContextSubscriber::class,
                 'arguments' => [
