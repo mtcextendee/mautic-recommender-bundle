@@ -127,7 +127,7 @@ class RecommenderController extends AbstractStandardFormController
         return $this->postActionRedirect(
             [
                 'returnUrl'       => $returnUrl,
-                'viewParameters'  => ['page' => $page],
+                'viewParameters'  => ['page' => 1],
                 'contentTemplate' => 'MauticRecommenderBundle:Recommender:index',
                 'passthroughVars' => [
                     'activeLink'    => '#mautic_recommender_index',

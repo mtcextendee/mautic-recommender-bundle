@@ -17,7 +17,7 @@ use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class RecommenderQueryRecentlyViewedSubscriber implements EventSubscriberInterface
+class RecommenderQueryRecentlyCreatedSubscriber implements EventSubscriberInterface
 {
     /**
      * @return array
@@ -34,11 +34,10 @@ class RecommenderQueryRecentlyViewedSubscriber implements EventSubscriberInterfa
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
-        if ($recommender->getFilterTarget() === FiltersEnum::RECENTLY_VIEWED) {
+        if ($recommender->getFilterTarget() === FiltersEnum::RECENTLY_CREATED) {
             if ($contactId = $queryBuildEvent->getRecommenderToken()->getUserId()) {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', (int) $contactId));
             }
-            $queryBuilder->andWhere($queryBuilder->expr()->eq('l.event_id', 1));
             $queryBuilder->orderBy('l.date_added', 'DESC');
         }
     }

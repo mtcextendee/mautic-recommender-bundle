@@ -38,8 +38,9 @@ class RecommenderTokenFinder
             return;
         }
         foreach ($matches[1] as $key => $match) {
-            $this->recommenderToken->setId($match);
-            $this->recommenderTokens[$matches[0][$key]] = $this->recommenderToken;
+            $token = clone $this->recommenderToken;
+            $token->setId($match);
+            $this->recommenderTokens[$matches[0][$key]] = $token;
         }
 
         return $this->recommenderTokens;

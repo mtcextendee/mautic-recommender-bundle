@@ -19,7 +19,7 @@ class FiltersEnum
 
     const POPULAR_PRODUCTS = 'popular_products';
 
-    const RECENTLY_VIEWED  = 'recently_viewed';
+    const RECENTLY_CREATED = 'recently_created';
 
     const SELECTED_ITEMS   = 'selected_items';
 }
