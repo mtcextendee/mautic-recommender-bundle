@@ -291,11 +291,12 @@ class RecommenderType extends AbstractType
             ChoiceType::class,
             [
                 'choices'     => [
-                    FiltersEnum::SELECTED_ITEMS   => 'recommender.form.selected_items',
-                    FiltersEnum::BEST_SELLERS     => 'recommender.form.best_sellers',
-                    FiltersEnum::POPULAR_PRODUCTS => 'recommender.form.popular_products',
-                    FiltersEnum::ABANDONED_CART   => 'recommender.form.event.abandoned_cart',
-                    FiltersEnum::RECENTLY_CREATED => 'recommender.form.event.recently_created',
+                    FiltersEnum::SELECTED_ITEMS      => 'recommender.form.selected_items',
+                    FiltersEnum::SELECTED_CATEGORIES => 'recommender.form.selected_categories',
+                    FiltersEnum::BEST_SELLERS        => 'recommender.form.best_sellers',
+                    FiltersEnum::POPULAR_PRODUCTS    => 'recommender.form.popular_products',
+                    FiltersEnum::ABANDONED_CART      => 'recommender.form.event.abandoned_cart',
+                    FiltersEnum::RECENTLY_CREATED    => 'recommender.form.event.recently_created',
                     //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
                    // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
                     //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',

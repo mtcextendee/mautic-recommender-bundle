@@ -25,6 +25,12 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
         if (!is_array($parameters)) {
             $type = $this->transformType($type, $filterParameters);
 
+            switch ($filter->getOperator()) {
+                case 'regexp':
+                case 'notRegexp':
+                $filterParameters = str_replace( '\|', '|', preg_quote ($filterParameters));
+                    break;
+            }
             return $queryBuilder->setParameter($parameters, $filterParameters, $type);
         }
         foreach ($parameters as $parameter) {

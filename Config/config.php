@@ -80,6 +80,9 @@ return [
             'mautic.recommender.query.selected_items.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQuerySelectedItemsSubscriber::class,
             ],
+            'mautic.recommender.query.selected_categories.subscriber' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQuerySelectedCategoriesSubscriber::class,
+            ],
             'mautic.recommender.query.best_sellers.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryBestSellersSubscriber::class,
             ],
