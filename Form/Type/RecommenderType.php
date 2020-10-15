@@ -291,12 +291,11 @@ class RecommenderType extends AbstractType
             ChoiceType::class,
             [
                 'choices'     => [
-                    FiltersEnum::SELECTED_ITEMS      => 'recommender.form.selected_items',
-                    FiltersEnum::SELECTED_CATEGORIES => 'recommender.form.selected_categories',
-                    FiltersEnum::BEST_SELLERS        => 'recommender.form.best_sellers',
-                    FiltersEnum::POPULAR_PRODUCTS    => 'recommender.form.popular_products',
-                    FiltersEnum::ABANDONED_CART      => 'recommender.form.event.abandoned_cart',
-                    FiltersEnum::RECENTLY_CREATED    => 'recommender.form.event.recently_created',
+                    FiltersEnum::BEST_SELLERS     => 'recommender.form.best_sellers',
+                    FiltersEnum::POPULAR_PRODUCTS => 'recommender.form.popular_products',
+                    FiltersEnum::ABANDONED_CART   => 'recommender.form.event.abandoned_cart',
+                    FiltersEnum::RECENTLY_CREATED => 'recommender.form.event.recently_created',
+                    //FiltersEnum::CUSTOM           => 'recommender.form.event.custom',
                     //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
                    // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
                     //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
@@ -306,18 +305,14 @@ class RecommenderType extends AbstractType
                 'choice_attr' => function ($choice, $key, $value) {
                     return ['tooltip' => "recommender.form.{$value}.tooltip"];
                 },
+                'attr'=>[
+                    'onchange' => ' Mautic.recommendationsType(this)',
+                ],
                 'expanded'    => false,
                 'multiple'    => false,
                 'label'       => 'recommender.recommendations.type',
                 'label_attr'  => ['class' => 'control-label'],
-                'required'    => true,
-                'constraints' => [
-                    new NotBlank(
-                        [
-                            'message' => 'mautic.core.value.required',
-                        ]
-                    ),
-                ],
+                'required'    => false,
             ]
         );
 

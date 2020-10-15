@@ -149,7 +149,6 @@ class Choices
                 }
             }
         }
-
         return $choices;
     }
 }

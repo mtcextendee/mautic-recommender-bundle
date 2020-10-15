@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Mautic\CoreBundle\Form\DataTransformer\ArrayStringTransformer;
 use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
+use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -43,14 +44,29 @@ class RecommenderPropertiesType extends AbstractType
                 'items',
                 ItemListType::class,
                 [
-                    'label'      => false,
+                    'label'      =>  'recommender.form.items_limitation',
                     'label_attr' => ['class' => 'control-label'],
                     'multiple'   => true,
                     'required'   => false,
                     'attr'       => [
-                        'data-show-on' => '{"recommender_filterTarget":"selected_items"}',
                     ],
                     'data' => array_map('strval', isset($options['data']['items']) ? $options['data']['items'] : []),
+                ]
+            )
+        );
+
+        $builder->add(
+            $builder->create(
+                'categories',
+                ItemCategoriesListType::class,
+                [
+                    'label'      =>  'recommender.form.categories_limitation',
+                    'label_attr' => ['class' => 'control-label'],
+                    'multiple'   => true,
+                    'required'   => false,
+                    'attr'       => [
+                    ],
+                    'data' => array_map('strval', isset($options['data']['categories']) ? $options['data']['categories'] : []),
                 ]
             )
         );

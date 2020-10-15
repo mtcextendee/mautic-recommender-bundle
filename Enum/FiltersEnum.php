@@ -13,15 +13,16 @@ namespace MauticPlugin\MauticRecommenderBundle\Enum;
 
 class FiltersEnum
 {
-    const ABANDONED_CART     = 'abandoned_cart';
+    const ABANDONED_CART      = 'abandoned_cart';
 
-    const BEST_SELLERS       = 'best_sellers';
+    const CUSTOM = 'custom';
 
-    const POPULAR_PRODUCTS   = 'popular_products';
+    const BEST_SELLERS        = 'best_sellers';
 
-    const RECENTLY_CREATED   = 'recently_created';
+    const POPULAR_PRODUCTS    = 'popular_products';
+
+    const RECENTLY_CREATED    = 'recently_created';
 
     const SELECTED_CATEGORIES = 'selected_categories';
 
-    const SELECTED_ITEMS     = 'selected_items';
 }

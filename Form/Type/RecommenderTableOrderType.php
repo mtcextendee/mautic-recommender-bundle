@@ -51,7 +51,7 @@ class RecommenderTableOrderType extends AbstractType
             'choices'     => $fields,
             'expanded'    => false,
             'multiple'    => false,
-            'label'       => 'mautic.report.report.label.filtercolumn',
+            'label'       => 'mautic.plugin.recommender.form.order_by',
             'label_attr'  => ['class' => 'control-label'],
             'empty_value' => false,
             'required'    => false,

@@ -26,7 +26,7 @@ class ItemCategoriesListType extends AbstractType
         $resolver->setDefaults(
             [
                 'label'               => 'recommender.form.categories',
-                'model'               => 'recommender.client',
+                'model'               => 'recommender.categories',
                 'model_lookup_method' => 'getLookupResults',
                 'ajax_lookup_action'  => 'plugin:recommender:getLookupChoiceList',
                 'lookup_arguments'    => function (Options $options) {
@@ -35,7 +35,7 @@ class ItemCategoriesListType extends AbstractType
                         'filter' => '$data',
                         'limit'  => 5,
                         'start'  => 0,
-                        'type'   => 'recommender.client',
+                        'type'   => 'recommender.categories',
                         'options' => [
                             'type'=> 'categories'
                         ]

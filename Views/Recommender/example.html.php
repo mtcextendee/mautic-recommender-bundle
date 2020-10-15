@@ -10,14 +10,12 @@
  */
 ?>
 <?php if ($tmpl == 'index'): ?>
-<hr>
     <h3 class="col-xs-12"><?php echo $view['translator']->trans(
             'mautic.plugin.recommender.form.testing_area'
         ); ?>
     </h3>
-<br style="clear:both">
 <div class="contact-form">
-    <div class="col-xs-4">
+    <div class="col-xs-6">
         <?php echo $view->render(
             'MauticCoreBundle:Helper:search.html.php',
             [

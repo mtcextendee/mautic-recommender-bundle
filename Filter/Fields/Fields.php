@@ -201,13 +201,31 @@ FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.pr
         } elseif ($table == 'recommender_item_property_value' && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
             foreach ($eventProperties as $property) {
-                $property['decorator'] =
+                $property['decorator']                                                    =
                     [
                         'key'         => $property['id'],
                         'recommender' => [
-                            'type'=> ItemValueQueryBuilder::getServiceId(),
+                            'type' => ItemValueQueryBuilder::getServiceId(),
                         ],
                     ];
+                if ($property['id'] == 4) {
+                    $categories = $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
+                        4 // @todo Add product name detection
+                    );
+                    if ($categories) {
+                       $property['properties'] = [
+                            'type' => 'multiselect',
+                            'list' => $categories,
+                        ];
+                       $property['operators'] = [
+                           'include'=> [
+                               '=',
+                               'empty',
+                               'notEmpty'
+                           ]
+                       ];
+                    }
+                }
                 $this->fields['recommender_item_property_value']['item_'.$property['id']] = $property;
             }
         }

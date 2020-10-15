@@ -33,18 +33,29 @@ class RecommenderQuerySelectedCategoriesSubscriber implements EventSubscriberInt
     {
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
-return;
-        if ($recommender->getFilterTarget() === FiltersEnum::SELECTED_CATEGORIES) {
-            $categories = ArrayHelper::getValue('categories', $recommender->getProperties());
-            $tableAlias = '';
 
-            $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
-            $subQueryBuilder
-                ->select('NULL')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', $tableAlias);
+        $categories = ArrayHelper::getValue('categories', $recommender->getProperties());
 
-            if (!empty($categories)) {
-                $queryBuilder->andWhere($queryBuilder->expr()->in('ri.item_id', $categories));
-            }
+        if (!empty($categories)) {
+
+            $categories = array_map(
+                function ($category) use ($queryBuilder) {
+                    return $queryBuilder->expr()->literal($category);
+                },
+                $categories
+            );
+
+            $queryBuilder->innerJoin(
+                'ri',
+                MAUTIC_TABLE_PREFIX.'recommender_item_property_value',
+                'ripv',
+                'ri.id = ripv.item_id AND ripv.property_id = 4'
+            );
+            /* $queryBuilder->andWhere(
+                 $queryBuilder->expr()->in('ripv.value', array_map([$queryBuilder->expr(), 'literal'], $categories))
+             );*/
+
+            $queryBuilder->andWhere($queryBuilder->expr()->in('ripv.value', $categories));
         }
     }
 }

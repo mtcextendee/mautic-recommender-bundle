@@ -87,10 +87,9 @@ class RecommenderTokenReplacer
     {
         $content        = $this->getRecommenderToken()->getContent();
         $replacedTokens = $this->getReplacedTokensFromContent($content, $view);
-        foreach ($replacedTokens as $token=> $replace) {
+        foreach ($replacedTokens as $token => $replace) {
             $content = str_replace($token, $replace, $content);
         }
-
         return $content;
     }
 

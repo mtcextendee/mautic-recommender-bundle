@@ -68,6 +68,7 @@ return [
                     'mautic.recommender.helper',
                     'mautic.recommender.service.replacer',
                     'mautic.helper.integration',
+                    'mautic.email.model.email'
                 ],
             ],
             'mautic.recommender.maintenance.subscriber' => [
@@ -118,6 +119,9 @@ return [
             ],
             'mautic.recommender.model.property' => [
                 'class' => \MauticPlugin\MauticRecommenderBundle\Model\RecommenderPropertyModel::class,
+            ],
+            'mautic.recommender.model.categories' => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Model\RecommenderCategoriesModel::class,
             ],
         ],
         'forms'        => [

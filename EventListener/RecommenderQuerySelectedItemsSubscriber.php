@@ -34,11 +34,9 @@ class RecommenderQuerySelectedItemsSubscriber implements EventSubscriberInterfac
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
-        if ($recommender->getFilterTarget() === FiltersEnum::SELECTED_ITEMS) {
-            $items = ArrayHelper::getValue('items', $recommender->getProperties());
-            if (!empty($items)) {
-                $queryBuilder->andWhere($queryBuilder->expr()->in('ri.item_id', $items));
-            }
+        $items = ArrayHelper::getValue('items', $recommender->getProperties());
+        if (!empty($items)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->in('ri.item_id', $items));
         }
     }
 }

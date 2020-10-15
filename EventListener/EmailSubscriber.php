@@ -14,8 +14,12 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\BuilderTokenHelper;
 use Mautic\EmailBundle\EmailEvents;
+use Mautic\EmailBundle\Entity\Stat;
 use Mautic\EmailBundle\Event\EmailBuilderEvent;
 use Mautic\EmailBundle\Event\EmailSendEvent;
+use Mautic\EmailBundle\Exception\EmailCouldNotBeSentException;
+use Mautic\EmailBundle\Exception\FailedToSendToContactException;
+use Mautic\EmailBundle\Model\EmailModel;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
@@ -41,19 +45,28 @@ class EmailSubscriber extends CommonSubscriber
     protected $integrationHelper;
 
     /**
+     * @var EmailModel
+     */
+    private $emailModel;
+
+    /**
      * EmailSubscriber constructor.
      *
      * @param RecommenderHelper        $recommenderHelper
      * @param RecommenderTokenReplacer $recommenderTokenReplacer
+     * @param IntegrationHelper        $integrationHelper
+     * @param EmailModel               $emailModel
      */
     public function __construct(
         RecommenderHelper $recommenderHelper,
         RecommenderTokenReplacer $recommenderTokenReplacer,
-        IntegrationHelper $integrationHelper
+        IntegrationHelper $integrationHelper,
+        EmailModel $emailModel
     ) {
         $this->recommenderHelper        = $recommenderHelper;
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
         $this->integrationHelper        = $integrationHelper;
+        $this->emailModel = $emailModel;
     }
 
     /**
@@ -112,6 +125,21 @@ class EmailSubscriber extends CommonSubscriber
         if ($event->getEmail() && $event->getEmail()->getId() && !empty($event->getLead()['id'])) {
             $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
             $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
+            $replacedTokens = $this->recommenderTokenReplacer->getReplacedTokensFromContent('Email');
+
+
+            if (count(array_filter($replacedTokens)) != count($replacedTokens)) {
+                /** @var Stat $stat */
+                if ($stat = $this->emailModel->getStatRepository()->findOneBy(
+                    ['trackingHash' => $event->getIdHash()]
+                )) {
+                    $stat->setIsFailed(true);
+                    $this->emailModel->getStatRepository()->saveEntity($stat);
+                }
+
+                throw new FailedToSendToContactException();
+            }
+
             if ($content = $this->recommenderTokenReplacer->getReplacedContent('Email')) {
                 $event->setContent($content);
             }

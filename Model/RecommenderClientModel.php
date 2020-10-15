@@ -107,7 +107,7 @@ class RecommenderClientModel extends AbstractCommonModel implements AjaxLookupMo
      * @param int    $start
      * @param array  $options
      */
-    public function getLookupResults($type, $filter = '', $limit = 10, $start = 0, $options = [])
+    public function getLookupResults($type, $filter = '', $limit = 100, $start = 0, $options = [])
     {
         $results = [];
         switch ($type) {

@@ -3,7 +3,24 @@ Mautic.recommenderOnLoad = function (container, response) {
     Mautic.activateChosenSelect(availableFilters, false);
 
     Mautic.leadlistOnLoad('div.dwc-filter');
+
+    Mautic.recommendationsType();
 }
+
+
+
+Mautic.recommendationsType = function () {
+    let selectedValue = mQuery("#recommender_filterTarget").val();
+    console.log(selectedValue);
+    if (selectedValue == 'custom') {
+        mQuery('#recommender-orderby').show('normal');
+    }else{
+        mQuery('#recommender-orderby').hide('normal');
+    }
+}
+
+
+
 mQuery('.recommender-preview .editor-basic').on('froalaEditor.contentChanged', function(){
         Mautic.recommenderUpdatePreview();
 });
@@ -43,12 +60,24 @@ Mautic.recommenderUpdatePreview = function () {
 
 
 Mautic.reloadExample = function (el) {
-    Mautic.loadContent(mQuery(el).parents('form').attr('action')+'?tmpl=template', '', 'POST', '.contact-options', false, false, mQuery(el).parents('form').formToArray());
+    let route = (mQuery(el).parents('form').attr('action')).replace('edit','example');
+    Mautic.loadContent(route+'?tmpl=template', '', 'POST', '.contact-options', false, false, mQuery(el).parents('form').formToArray());
 }
+
+Mautic.onRecommenderTypeChoice = function (el) {
+    if (el.value() == 'custom') {
+        mQuery("#recommender-orderby").show();
+    }else{
+        mQuery("#recommender-orderby").hide();
+    }
+}
+
+Mautic.onRecommenderTypeChoice()
 
 
 /**
- * Enables/Disables email preview and edit. Can be triggered from campaign or form actions
+ * Enables/Disables email preview and edit. Can be triggered from campaign or
+ * form actions
  * @param opener
  * @param origin
  */
