@@ -178,7 +178,7 @@ class RecommenderController extends AbstractStandardFormController
                 )->getIntegrationSettings()->getFeatureSettings();
                 if (!empty($featureSettings['show_recommender_testbench'])) {
                     //$viewParameters['tester'] = $this->get('mautic.recommender.contact.search')->renderForm($args['objectId'], $this);
-                    $viewParameters['tester'] = $this->renderView('MauticRecommenderBundle:Recommender:example.html.php', $this->get('mautic.recommender.contact.search')->getViewParameters());
+                    $viewParameters['tester'] = $this->renderView('MauticRecommenderBundle:Recommender:example.html.php', $this->get('mautic.recommender.contact.search')->getViewParameters($args['entity']->getId()));
                 }
                 break;
         }

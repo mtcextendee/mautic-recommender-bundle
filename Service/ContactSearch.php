@@ -153,8 +153,11 @@ class ContactSearch
     /**
      * @return array
      */
-    public function getViewParameters()
+    public function getViewParameters($objectId = null)
     {
+        if ($objectId) {
+            $this->objectId = $objectId;
+        }
         $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($this->getContact());
         $this->recommenderTokenReplacer->getRecommenderToken()->setContent('{recommender='.$this->objectId.'}');
         $this->recommenderTokenReplacer->getRecommenderToken()->setId($this->objectId);
@@ -166,7 +169,6 @@ class ContactSearch
             serialize(['search' => $this->getSearch(), 'contact' => $this->getContact()]),
             3600 * 24 * 31 * 365
         );
-
         return [
             'tmpl'        => $this->getTmpl(),
             'searchValue' => $this->getSearch(),
