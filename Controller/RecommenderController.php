@@ -149,7 +149,6 @@ class RecommenderController extends AbstractStandardFormController
 
     /**
      * @param      $entity
-     * @param Form $form
      * @param      $action
      * @param      $isPost
      * @param null $objectId

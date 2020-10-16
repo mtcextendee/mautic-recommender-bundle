@@ -112,7 +112,7 @@ class ItemEventValueQueryBuilder extends RecommenderFilterQueryBuilder
                 break;
             case 'regexp':
             case 'notRegexp':
-                $not        = ($filterOperator === 'notRegexp') ? ' NOT' : '';
+                $not        = ('notRegexp' === $filterOperator) ? ' NOT' : '';
                 $expression = $tableAlias.'.'.$this->filterField().$not.' REGEXP '.$filterParametersHolder;
 
                 $subQueryBuilder->andWhere($expression);

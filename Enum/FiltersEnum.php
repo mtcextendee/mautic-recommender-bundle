@@ -24,5 +24,4 @@ class FiltersEnum
     const RECENTLY_CREATED    = 'recently_created';
 
     const SELECTED_CATEGORIES = 'selected_categories';
-
 }

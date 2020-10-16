@@ -18,9 +18,6 @@ class RecommenderAttr
 {
     private $recommenderAttr = ['type', 'itemId', 'userId', 'limit'];
 
-    /**
-     * @return array
-     */
     public function getRecommenderAttr(): array
     {
         return $this->recommenderAttr;

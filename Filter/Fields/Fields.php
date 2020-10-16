@@ -35,20 +35,11 @@ class Fields
     private $recommenderClientModel;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * Fields constructor.
-     *
-     * @param RecommenderClientModel $recommenderClientModel
-     * @param TranslatorInterface    $translator
      */
     public function __construct(RecommenderClientModel $recommenderClientModel, TranslatorInterface $translator)
     {
         $this->recommenderClientModel = $recommenderClientModel;
-        $this->translator             = $translator;
     }
 
     /**
@@ -67,7 +58,7 @@ class Fields
     private function loadFields($table)
     {
         // Load fields from recommender_event_log db table
-        if ($table == 'recommenders' && !isset($this->fields[$table])) {
+        if ('recommenders' == $table && !isset($this->fields[$table])) {
             /*  $items = $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
                   3 // @todo Add product name detection
               );
@@ -117,7 +108,7 @@ class Fields
                       'type' => 'number',
                   ],
               ];*/
-        } elseif ($table == 'recommender_event_log' && !isset($this->fields[$table])) {
+        } elseif ('recommender_event_log' == $table && !isset($this->fields[$table])) {
             $events                                              = $this->recommenderClientModel->getEventRepository()->getEventNamesAsChoices();
             $this->fields['recommender_event_log']['event_id']   =
                 [
@@ -173,7 +164,7 @@ class Fields
                             ],
                     ];
             }*/
-        } elseif ($table == 'recommender_item' && !isset($this->fields[$table])) {
+        } elseif ('recommender_item' == $table && !isset($this->fields[$table])) {
             /* $this->fields['recommender_item']['item_id'] =
                  [
                      'name'       => 'mautic.plugin.recommender.form.item.id',
@@ -184,7 +175,7 @@ class Fields
                          'recommender' => ['type' => ItemQueryBuilder::getServiceId()],
                      ],
                  ];*/
-        } elseif ($table == 'recommender_event_log_property_value' && !isset($this->fields[$table])) {
+        } elseif ('recommender_event_log_property_value' == $table && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getEventLogValueRepository()->getValueProperties();
             foreach ($eventProperties as $property) {
                 $property['decorator'] =
@@ -198,7 +189,7 @@ FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.pr
                     ];
                 $this->fields['recommender_event_log_property_value']['event_'.$property['id']] = $property;
             }
-        } elseif ($table == 'recommender_item_property_value' && !isset($this->fields[$table])) {
+        } elseif ('recommender_item_property_value' == $table && !isset($this->fields[$table])) {
             $eventProperties = $this->recommenderClientModel->getItemPropertyValueRepository()->getItemValueProperties();
             foreach ($eventProperties as $property) {
                 $property['decorator']                                                    =
@@ -208,21 +199,21 @@ FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.pr
                             'type' => ItemValueQueryBuilder::getServiceId(),
                         ],
                     ];
-                if ($property['id'] == 4) {
+                if (4 == $property['id']) {
                     $categories = $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
                         4 // @todo Add product name detection
                     );
                     if ($categories) {
-                       $property['properties'] = [
+                        $property['properties'] = [
                             'type' => 'multiselect',
                             'list' => $categories,
                         ];
-                       $property['operators'] = [
+                        $property['operators'] = [
                            'include'=> [
                                '=',
                                'empty',
-                               'notEmpty'
-                           ]
+                               'notEmpty',
+                           ],
                        ];
                     }
                 }

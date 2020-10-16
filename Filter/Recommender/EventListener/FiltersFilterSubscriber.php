@@ -38,15 +38,7 @@ class FiltersFilterSubscriber implements EventSubscriberInterface
     private $recommenderQueryBuilder;
 
     /**
-     * @var FilterFactory
-     */
-    private $filterFactory;
-
-    /**
      * PointsFilterSubscriber constructor.
-     *
-     * @param RecommenderClientModel  $clientModel
-     * @param RecommenderQueryBuilder $recommenderQueryBuilder
      */
     public function __construct(
         RecommenderClientModel $clientModel,
@@ -55,7 +47,6 @@ class FiltersFilterSubscriber implements EventSubscriberInterface
     ) {
         $this->clientModel             = $clientModel;
         $this->recommenderQueryBuilder = $recommenderQueryBuilder;
-        $this->filterFactory           = $filterFactory;
     }
 
     /**
@@ -73,17 +64,11 @@ class FiltersFilterSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param FilterChoiceFormEvent $event
-     */
     public function onFilterFormChoicesGenerate(FilterChoiceFormEvent $event)
     {
         $event->addChoice('filter', 'mautic.plugin.recommender.form.type.filters', 'filters');
     }
 
-    /**
-     * @param FilterResultsEvent $event
-     */
     public function onFilterResults(FilterResultsEvent $event)
     {
         /** @var RecommenderToken $recommenderToken */
@@ -99,7 +84,7 @@ class FiltersFilterSubscriber implements EventSubscriberInterface
                 $properties['image'] = '';
             }
             foreach ($properties as $alias => $property) {
-                if ($alias === 'price') {
+                if ('price' === $alias) {
                     $properties[$alias] = number_format((float) $property, 2);
                 }
             }

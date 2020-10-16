@@ -55,10 +55,6 @@ class RecommenderToken
 
     /**
      * RecommenderToken constructor.
-     *
-     * @param RecommenderModel  $recommenderModel
-     * @param LeadModel         $leadModel
-     * @param IntegrationHelper $integrationHelper
      */
     public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel, IntegrationHelper $integrationHelper)
     {

@@ -50,9 +50,7 @@ class ContextToken
     }
 
     /**
-     * @param string           $filter
-     * @param QueryBuilder     $queryBuilder
-     * @param RecommenderToken $recommenderToken
+     * @param string $filter
      *
      * @return array
      */
@@ -87,7 +85,7 @@ class ContextToken
         foreach ($contextParts as $contextPart) {
             foreach ($expressions as $expression=>$queryBuilderExpression) {
                 $expressionParts = explode($expression, $contextPart);
-                if (count($expressionParts) === 2) {
+                if (2 === count($expressionParts)) {
                     switch (trim($expressionParts[0])) {
                         case 'date_added':
                             $dateAddedParam = $this->randomParameterName->generateRandomParameterName();

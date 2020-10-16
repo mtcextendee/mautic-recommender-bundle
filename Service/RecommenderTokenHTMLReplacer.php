@@ -13,29 +13,19 @@ namespace MauticPlugin\MauticRecommenderBundle\Service;
 
 class RecommenderTokenHTMLReplacer
 {
-    private $tokenValues = [];
-
-    private $recommenderTokens = [];
-
     /**
      * @var RecommenderGenerator
      */
     private $recommenderGenerator;
-
     private $recommenderToken;
-
     /**
      * RecommenderTokenHTMLReplacer constructor.
-     *
-     * @param RecommenderGenerator $recommenderGenerator
-     * @param RecommenderToken     $recommenderToken
      */
     public function __construct(RecommenderGenerator $recommenderGenerator, RecommenderToken $recommenderToken)
     {
         $this->recommenderGenerator = $recommenderGenerator;
         $this->recommenderToken     = $recommenderToken;
     }
-
     public function findTokens($content)
     {
         // replace slots
@@ -55,20 +45,5 @@ class RecommenderTokenHTMLReplacer
             $recommenderBlock->parentNode->replaceChild($newnode, $newContent);
         }
         $dom->saveHTML();
-    }
-
-    /**
-     * @param \DOMElement $recommenderBlock
-     */
-    private function parseData(\DOMElement $recommenderBlock)
-    {
-        $tokenValues = [];
-        foreach ((new RecommenderAttr())->getRecommenderAttr() as $attr) {
-            if ($attribute = $recommenderBlock->getAttribute('data-'.$attr)) {
-                $tokenValues[$attr] = $attribute;
-            }
-        }
-
-        return $tokenValues;
     }
 }

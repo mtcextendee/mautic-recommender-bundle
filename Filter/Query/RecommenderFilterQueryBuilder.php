@@ -28,9 +28,10 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
             switch ($filter->getOperator()) {
                 case 'regexp':
                 case 'notRegexp':
-                $filterParameters = str_replace( '\|', '|', preg_quote ($filterParameters));
+                $filterParameters = str_replace('\|', '|', preg_quote($filterParameters));
                     break;
             }
+
             return $queryBuilder->setParameter($parameters, $filterParameters, $type);
         }
         foreach ($parameters as $parameter) {
@@ -51,21 +52,17 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
             case 'select':
             case 'multiselect':
                 return 'string';
-            break;
             case 'bool':
                 $parameter = (bool) $parameter;
 
                 return 'boolean';
-            break;
             case 'int':
             case 'number':
                 $parameter = (int) $parameter;
 
                 return 'integer';
-                break;
             default:
                 return  $type;
-                break;
         }
     }
 }

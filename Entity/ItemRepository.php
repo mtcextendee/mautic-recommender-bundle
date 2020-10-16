@@ -47,8 +47,6 @@ class ItemRepository extends CommonRepository
     }
 
     /**
-     * @param InputDAO $inputDAO
-     *
      * @return array
      */
     public function getItemsToSync(InputDAO $inputDAO)
@@ -77,7 +75,7 @@ class ItemRepository extends CommonRepository
 
     /**
      * @param array $itemIds
-     * 
+     *
      * @return array
      */
     public function findActiveExcluding($itemIds)

@@ -45,8 +45,6 @@ class RecommenderTemplatesType extends AbstractType
 
     /**
      * CompanyType constructor.
-     *
-     * @param CorePermissions $security
      */
     public function __construct(CorePermissions $security, RouterInterface $router, TranslatorInterface $translator)
     {
@@ -55,10 +53,6 @@ class RecommenderTemplatesType extends AbstractType
         $this->translator = $translator;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -94,7 +88,6 @@ class RecommenderTemplatesType extends AbstractType
             ]
         );
 
-
         $builder->add(
             'templateMode',
             ButtonGroupType::class,
@@ -105,7 +98,7 @@ class RecommenderTemplatesType extends AbstractType
                     'class'    => 'form-control',
                     'tooltip'  => 'mautic.plugin.recommender.form.template_mode.tooltip',
                 ],
-                'choices' => $this->getTemplateModes(),
+                'choices'           => $this->getTemplateModes(),
                 'choices_as_values' => true,
                 'data'              => $options['data']->getTemplateMode() ?: 'basic',
             ]
@@ -164,9 +157,6 @@ class RecommenderTemplatesType extends AbstractType
         }
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefined(['update_select']);

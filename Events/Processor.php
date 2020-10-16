@@ -28,11 +28,6 @@ class Processor
     private $coreParametersHelper;
 
     /**
-     * @var CorePermissions
-     */
-    private $security;
-
-    /**
      * @var ApiCommands
      */
     private $apiCommands;
@@ -59,14 +54,6 @@ class Processor
 
     /**
      * Processor constructor.
-     *
-     * @param CoreParametersHelper  $coreParametersHelper
-     * @param CorePermissions       $security
-     * @param ApiCommands           $apiCommands
-     * @param RecommenderEventModel $eventModel
-     * @param TranslatorInterface   $translator
-     * @param LeadModel             $leadModel
-     * @param ContactTracker        $contactTracker
      */
     public function __construct(
         CoreParametersHelper $coreParametersHelper,
@@ -78,7 +65,6 @@ class Processor
         ContactTracker $contactTracker
     ) {
         $this->coreParametersHelper = $coreParametersHelper;
-        $this->security             = $security;
         $this->apiCommands          = $apiCommands;
         $this->eventModel           = $eventModel;
         $this->translator           = $translator;
@@ -102,19 +88,9 @@ class Processor
         $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
 
         if (!isset($eventDetail['eventName'])) {
-            throw new \Exception(
-                $this->translator->trans('mautic.plugin.recommender.eventName.not_found', [], 'validators')
-            );
+            throw new \Exception($this->translator->trans('mautic.plugin.recommender.eventName.not_found', [], 'validators'));
         } elseif (!$this->eventModel->getRepository()->findOneBy(['name' => $eventDetail['eventName']])) {
-            throw new \Exception(
-                $this->translator->trans(
-                    'mautic.plugin.recommender.eventName.not_allowed',
-                    [
-                        '%eventName%' => $eventDetail['eventName'],
-                    ],
-                    'validators'
-                )
-            );
+            throw new \Exception($this->translator->trans('mautic.plugin.recommender.eventName.not_allowed', ['%eventName%' => $eventDetail['eventName']], 'validators'));
         }
         // Just provider from console
         $inConsole = defined('IN_MAUTIC_CONSOLE') || defined('IN_MAUTIC_API');

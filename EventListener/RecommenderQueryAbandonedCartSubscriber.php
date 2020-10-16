@@ -32,7 +32,7 @@ class RecommenderQueryAbandonedCartSubscriber implements EventSubscriberInterfac
     {
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
-        if ($recommender->getFilterTarget() === FiltersEnum::ABANDONED_CART) {
+        if (FiltersEnum::ABANDONED_CART === $recommender->getFilterTarget()) {
             if ($contactId = $queryBuildEvent->getRecommenderToken()->getUserId()) {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', (int) $contactId));
 

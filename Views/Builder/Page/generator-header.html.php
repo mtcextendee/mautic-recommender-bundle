@@ -28,7 +28,7 @@ echo $view->render(
 );
 ?>
 
-<div class="recommender-global-row <?php echo $class ?>">
+<div class="recommender-global-row <?php echo $class; ?>">
 
     <?php
     if (isset($recommender->getProperties()['header'])) {

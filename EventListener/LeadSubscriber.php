@@ -43,16 +43,12 @@ class LeadSubscriber implements EventSubscriberInterface
 
     /**
      * LeadSubscriber constructor.
-     *
-     * @param IntegrationHelper   $integrationHelper
-     * @param TranslatorInterface $translator
-     * @param EntityManager       $em
      */
     public function __construct(IntegrationHelper $integrationHelper, TranslatorInterface $translator, EntityManager $em)
     {
         $this->integrationHelper      = $integrationHelper;
-        $this->translator = $translator;
-        $this->em = $em;
+        $this->translator             = $translator;
+        $this->em                     = $em;
     }
 
     /**
@@ -67,8 +63,6 @@ class LeadSubscriber implements EventSubscriberInterface
 
     /**
      * Compile events for the lead timeline.
-     *
-     * @param LeadTimelineEvent $event
      */
     public function onTimelineGenerate(LeadTimelineEvent $event)
     {
@@ -77,7 +71,7 @@ class LeadSubscriber implements EventSubscriberInterface
             return;
         }
         $integrationSettings = $integration->getIntegrationSettings();
-        if (!$integration || $integrationSettings->getIsPublished() === false) {
+        if (!$integration || false === $integrationSettings->getIsPublished()) {
             return;
         }
 
@@ -118,8 +112,6 @@ class LeadSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param EventLog $eventLogEntity
-     *
      * @return string
      */
     private function getLabel(EventLog $eventLogEntity)

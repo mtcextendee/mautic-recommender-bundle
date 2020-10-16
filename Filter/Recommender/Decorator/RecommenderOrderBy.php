@@ -35,9 +35,6 @@ class RecommenderOrderBy
 
     /**
      * SegmentChoices constructor.
-     *
-     * @param Fields              $fields
-     * @param RandomParameterName $randomParameterName
      */
     public function __construct(Fields $fields, RandomParameterName $randomParameterName)
     {

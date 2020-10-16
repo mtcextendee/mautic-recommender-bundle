@@ -33,7 +33,7 @@ class RecommenderQueryBestSellersSubscriber implements EventSubscriberInterface
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
-        if ($recommender->getFilterTarget() === FiltersEnum::BEST_SELLERS) {
+        if (FiltersEnum::BEST_SELLERS === $recommender->getFilterTarget()) {
             $queryBuilder->andWhere($queryBuilder->expr()->in('l.event_id', 4));
             $queryBuilder->orderBy('COUNT(l.event_id)', 'DESC');
         }

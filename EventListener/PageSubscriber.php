@@ -47,11 +47,6 @@ class PageSubscriber implements EventSubscriberInterface
 
     /**
      * PageSubscriber constructor.
-     *
-     * @param RecommenderTokenReplacer  $recommenderTokenReplacer
-     * @param ContactTracker            $contactTracker
-     * @param IntegrationHelper         $integrationHelper
-     * @param BuilderTokenHelperFactory $builderTokenHelperFactory
      */
     public function __construct(
         RecommenderTokenReplacer $recommenderTokenReplacer,
@@ -59,9 +54,9 @@ class PageSubscriber implements EventSubscriberInterface
         IntegrationHelper $integrationHelper,
         BuilderTokenHelperFactory $builderTokenHelperFactory
     ) {
-        $this->recommenderTokenReplacer = $recommenderTokenReplacer;
-        $this->contactTracker           = $contactTracker;
-        $this->integrationHelper        = $integrationHelper;
+        $this->recommenderTokenReplacer  = $recommenderTokenReplacer;
+        $this->contactTracker            = $contactTracker;
+        $this->integrationHelper         = $integrationHelper;
         $this->builderTokenHelperFactory = $builderTokenHelperFactory;
     }
 
@@ -84,12 +79,12 @@ class PageSubscriber implements EventSubscriberInterface
     public function onPageBuild(Events\PageBuilderEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
         if ($event->tokensRequested(RecommenderHelper::$recommenderRegex)) {
-            $tokenHelper = $this->builderTokenHelperFactory->getBuilderTokenHelper( 'recommender');
+            $tokenHelper = $this->builderTokenHelperFactory->getBuilderTokenHelper('recommender');
             $event->addTokensFromHelper($tokenHelper, RecommenderHelper::$recommenderRegex, 'name', 'id', true);
         }
     }
@@ -100,7 +95,7 @@ class PageSubscriber implements EventSubscriberInterface
     public function onPageDisplay(Events\PageDisplayEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 

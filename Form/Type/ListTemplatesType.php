@@ -29,18 +29,12 @@ class ListTemplatesType extends AbstractType
 
     /**
      * TemplatesListType constructor.
-     *
-     * @param TemplateModel $templateModel
      */
     public function __construct(TemplateModel $templateModel)
     {
         $this->templateModel = $templateModel;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
     }

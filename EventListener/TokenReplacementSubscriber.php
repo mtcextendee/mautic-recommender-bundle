@@ -31,16 +31,6 @@ class TokenReplacementSubscriber implements EventSubscriberInterface
     private $recommenderTokenReplacer;
 
     /**
-     * @var DynamicContentModel
-     */
-    private $dynamicContentModel;
-
-    /**
-     * @var FocusModel
-     */
-    private $focusModel;
-
-    /**
      * @var IntegrationHelper
      */
     protected $integrationHelper;
@@ -50,13 +40,6 @@ class TokenReplacementSubscriber implements EventSubscriberInterface
      */
     private $contactTracker;
 
-    /**
-     * @param RecommenderTokenReplacer $recommenderTokenReplacer
-     * @param DynamicContentModel      $dynamicContentModel
-     * @param FocusModel               $focusModel
-     * @param IntegrationHelper        $integrationHelper
-     * @param ContactTracker           $contactTracker
-     */
     public function __construct(
         RecommenderTokenReplacer $recommenderTokenReplacer,
         DynamicContentModel $dynamicContentModel,
@@ -65,8 +48,6 @@ class TokenReplacementSubscriber implements EventSubscriberInterface
         ContactTracker $contactTracker
     ) {
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
-        $this->dynamicContentModel      = $dynamicContentModel;
-        $this->focusModel               = $focusModel;
         $this->integrationHelper        = $integrationHelper;
         $this->contactTracker           = $contactTracker;
     }
@@ -83,13 +64,10 @@ class TokenReplacementSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param TokenReplacementEvent $event
-     */
     public function onDynamicContentTokenReplacement(TokenReplacementEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
@@ -99,13 +77,10 @@ class TokenReplacementSubscriber implements EventSubscriberInterface
         $event->setContent($this->recommenderTokenReplacer->replaceTokensFromContent($event->getContent()));
     }
 
-    /**
-     * @param TokenReplacementEvent $event
-     */
     public function onFocusTokenReplacement(TokenReplacementEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 

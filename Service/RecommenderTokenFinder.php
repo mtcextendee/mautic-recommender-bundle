@@ -54,9 +54,6 @@ class RecommenderTokenFinder
         return $this->recommenderTokens;
     }
 
-    /**
-     * @param array $recommenderTokens
-     */
     public function setRecommenderTokens(array $recommenderTokens)
     {
         $this->recommenderTokens = $recommenderTokens;

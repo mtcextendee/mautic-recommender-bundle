@@ -20,8 +20,7 @@ class RecommenderEvent extends CommonEvent
     /**
      * RecommenderEvent constructor.
      *
-     * @param RecommenderTemplate $entity
-     * @param bool                $isNew
+     * @param bool $isNew
      */
     public function __construct(RecommenderTemplate $entity, $isNew = false)
     {
@@ -37,9 +36,6 @@ class RecommenderEvent extends CommonEvent
         return $this->entity;
     }
 
-    /**
-     * @param RecommenderTemplate $entity
-     */
     public function setEntity(RecommenderTemplate $entity)
     {
         $this->entity = $entity;

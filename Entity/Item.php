@@ -23,9 +23,6 @@ class Item
      */
     protected $id;
 
-    /**
-     * @var
-     */
     protected $itemId;
 
     /*
@@ -49,9 +46,6 @@ class Item
         $this->setDateModified(new \DateTime());
     }
 
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
@@ -117,8 +111,6 @@ class Item
     }
 
     /**
-     * @param \DateTime $dateAdded
-     *
      * @return Item
      */
     public function setDateAdded(\DateTime $dateAdded)

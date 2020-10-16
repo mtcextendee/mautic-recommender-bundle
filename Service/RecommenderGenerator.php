@@ -24,81 +24,31 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class RecommenderGenerator
 {
-    /** @var RecommenderApi */
-    private $recommenderApi;
-
-    /**
-     * @var TemplateModel
-     */
-    private $recommenderModel;
-
-    /**
-     * @var LeadModel
-     */
-    private $leadModel;
-
     /**
      * @var \Twig_Extension
      */
     private $twig;
-
-    /**
-     * @var ApiCommands
-     */
-    private $apiCommands;
-
     private $header;
-
     private $footer;
-
     /**
      * @var TemplatingHelper
      */
     private $templateHelper;
-
-    /** @var array $items */
-    private $items = [];
-
     /** @var array */
-    private $cache = [];
-
+    private $items = [];
     /**
      * @var EventDispatcherInterface
      */
     private $dispatcher;
-
     /**
      * RecommenderGenerator constructor.
-     *
-     * @param TemplateModel            $recommenderModel
-     * @param RecommenderApi           $recommenderApi
-     * @param LeadModel                $leadModel
-     * @param \Twig_Environment        $twig
-     * @param ApiCommands              $apiCommands
-     * @param TemplatingHelper         $templatingHelper
-     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct(
-        TemplateModel $recommenderModel,
-        RecommenderApi $recommenderApi,
-        LeadModel $leadModel,
-        \Twig_Environment $twig,
-        ApiCommands $apiCommands,
-        TemplatingHelper $templatingHelper,
-        EventDispatcherInterface $dispatcher
-    ) {
-        $this->recommenderApi    = $recommenderApi;
-        $this->recommenderModel  = $recommenderModel;
-        $this->leadModel         = $leadModel;
+    public function __construct(TemplateModel $recommenderModel, RecommenderApi $recommenderApi, LeadModel $leadModel, \Twig_Environment $twig, ApiCommands $apiCommands, TemplatingHelper $templatingHelper, EventDispatcherInterface $dispatcher)
+    {
         $this->twig              = $twig;
-        $this->apiCommands       = $apiCommands;
         $this->templateHelper    = $templatingHelper;
         $this->dispatcher        = $dispatcher;
     }
-
-    /**
-     * @param RecommenderToken $recommenderToken
-     */
     public function getResultByToken(RecommenderToken $recommenderToken)
     {
         if (!$recommenderToken->getRecommender() instanceof Recommender) {
@@ -113,7 +63,6 @@ class RecommenderGenerator
 
         return $this->items;
     }
-
     /**
      * @param $content
      *
@@ -125,10 +74,7 @@ class RecommenderGenerator
             return $this->twig->createTemplate($content)->render($this->getFirstItem());
         }
     }
-
     /**
-     * @param RecommenderToken $recommenderToken
-     *
      * @return string|void
      */
     public function getContentByToken(RecommenderToken $recommenderToken, $view = 'Page')
@@ -141,7 +87,7 @@ class RecommenderGenerator
         if (empty($this->items)) {
             return;
         }
-        if ($recommenderTemplate->getTemplateMode() == 'basic') {
+        if ('basic' == $recommenderTemplate->getTemplateMode()) {
             $headerTemplateCore = $this->templateHelper->getTemplating()->render(
                 'MauticRecommenderBundle:Builder/'.$view.':generator-header.html.php',
                 [
@@ -181,7 +127,6 @@ class RecommenderGenerator
 
         return $this->getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate);
     }
-
     /**
      * @return string
      */
@@ -202,7 +147,6 @@ class RecommenderGenerator
 
         return $output;
     }
-
     /**
      * @return mixed
      */
@@ -210,7 +154,6 @@ class RecommenderGenerator
     {
         return $this->header;
     }
-
     /**
      * @return mixed
      */
@@ -218,7 +161,6 @@ class RecommenderGenerator
     {
         return $this->footer;
     }
-
     /**
      * @return array
      */
@@ -226,7 +168,7 @@ class RecommenderGenerator
     {
         $keys = $this->getItemsKeys();
         foreach ($this->items as &$item) {
-            foreach ($item as $key => &$ite) {
+            foreach ($item as &$ite) {
                 if (is_array($ite)) {
                     $ite = implode(', ', $ite);
                 }
@@ -236,7 +178,6 @@ class RecommenderGenerator
 
         return $this->items;
     }
-
     /**
      * @param array $items
      */
@@ -244,7 +185,6 @@ class RecommenderGenerator
     {
         $this->items = $items;
     }
-
     /**
      * Return new token keys with comma separated item IDs.
      *
@@ -256,7 +196,6 @@ class RecommenderGenerator
     {
         return  implode($separator, array_column($this->items, 'itemId'));
     }
-
     /**
      * Get first item.
      *

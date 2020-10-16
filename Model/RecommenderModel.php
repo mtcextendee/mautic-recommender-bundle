@@ -54,11 +54,11 @@ class RecommenderModel extends FormModel implements AjaxLookupModelInterface
      *
      * @param null $id
      *
-     * @return null|Event
+     * @return Event|null
      */
     public function getEntity($id = null)
     {
-        if ($id === null) {
+        if (null === $id) {
             return new Recommender();
         }
 

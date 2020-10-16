@@ -28,9 +28,7 @@ class RecommenderTagsReplacer
     /**
      * RecommenderTagsReplacer constructor.
      *
-     * @param RecommenderTokenReplacer $recommenderTokenReplacer
-     * @param RecommenderToken         $recommenderToken
-     * @param array                    $options
+     * @param array $options
      */
     public function __construct(RecommenderTokenReplacer $recommenderTokenReplacer, RecommenderToken $recommenderToken, $options = [])
     {

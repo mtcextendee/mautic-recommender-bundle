@@ -30,14 +30,8 @@ class RecommenderTokenReplacer
 
     private $replacedTokens = [];
 
-    private $customOptions = [];
-
     /**
      * RecommenderTokenReplacer constructor.
-     *
-     * @param RecommenderToken       $recommenderToken
-     * @param RecommenderTokenFinder $recommenderTokenFinder
-     * @param RecommenderGenerator   $recommenderGenerator
      */
     public function __construct(
         RecommenderToken $recommenderToken,
@@ -90,6 +84,7 @@ class RecommenderTokenReplacer
         foreach ($replacedTokens as $token => $replace) {
             $content = str_replace($token, $replace, $content);
         }
+
         return $content;
     }
 
@@ -114,13 +109,12 @@ class RecommenderTokenReplacer
     public function replaceTagsFromContent($content, RecommenderToken $recommenderToken)
     {
         $this->recommenderGenerator->getResultByToken($recommenderToken);
-        $content = $this->recommenderGenerator->replaceTagsFromContent($content);
 
-        return $content;
+        return $this->recommenderGenerator->replaceTagsFromContent($content);
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasItems()
     {

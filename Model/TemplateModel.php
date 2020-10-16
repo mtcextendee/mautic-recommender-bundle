@@ -64,11 +64,11 @@ class TemplateModel extends FormModel implements AjaxLookupModelInterface
      *
      * @param null $id
      *
-     * @return null|RecommenderTemplate
+     * @return RecommenderTemplate|null
      */
     public function getEntity($id = null)
     {
-        if ($id === null) {
+        if (null === $id) {
             return new RecommenderTemplate();
         }
 

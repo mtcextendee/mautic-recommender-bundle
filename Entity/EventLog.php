@@ -50,9 +50,6 @@ class EventLog
         $this->setDateAdded(new \DateTime());
     }
 
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
@@ -113,8 +110,6 @@ class EventLog
     }
 
     /**
-     * @param Item $item
-     *
      * @return EventLog
      */
     public function setItem(Item $item)
@@ -156,8 +151,6 @@ class EventLog
     }
 
     /**
-     * @param Event $event
-     *
      * @return EventLog
      */
     public function setEvent(Event $event)
@@ -176,8 +169,6 @@ class EventLog
     }
 
     /**
-     * @param Lead $lead
-     *
      * @return EventLog
      */
     public function setLead(Lead $lead)

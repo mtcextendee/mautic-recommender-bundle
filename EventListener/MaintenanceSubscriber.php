@@ -31,13 +31,10 @@ class MaintenanceSubscriber implements EventSubscriberInterface
 
     /**
      * MaintenanceSubscriber constructor.
-     *
-     * @param Connection          $db
-     * @param TranslatorInterface $translator
      */
     public function __construct(Connection $db, TranslatorInterface $translator)
     {
-        $this->db = $db;
+        $this->db         = $db;
         $this->translator = $translator;
     }
 
@@ -51,9 +48,6 @@ class MaintenanceSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param MaintenanceEvent $event
-     */
     public function onDataCleanup(MaintenanceEvent $event)
     {
         $this->cleanEventLog($event, 'recommender_event_log');
@@ -61,11 +55,10 @@ class MaintenanceSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param MaintenanceEvent $event
      * @param $table tableName
      *
      * This function cleans old data from recommender_event_log table like standard Mautic cleanup: old data of unidentified contacts OR with --gdpr option: very old contacts are cleaned up
-     * Later we may add funcionality clean old data overall. But that may require plugin setting. 
+     * Later we may add funcionality clean old data overall. But that may require plugin setting.
      */
     private function cleanEventLog(MaintenanceEvent $event, $table)
     {
@@ -78,7 +71,7 @@ class MaintenanceSubscriber implements EventSubscriberInterface
               ->join('rel', MAUTIC_TABLE_PREFIX.'leads', 'l', 'rel.lead_id = l.id')
               ->where($qb->expr()->lte('l.last_active', ':date'));
 
-            if ($event->isGdpr() === false) {
+            if (false === $event->isGdpr()) {
                 $qb->andWhere($qb->expr()->isNull('l.date_identified'));
             } else {
                 $qb->orWhere(
@@ -95,7 +88,7 @@ class MaintenanceSubscriber implements EventSubscriberInterface
             $subQb->select('id')->from(MAUTIC_TABLE_PREFIX.'leads', 'l')
               ->where($qb->expr()->lte('l.last_active', ':date'));
 
-            if ($event->isGdpr() === false) {
+            if (false === $event->isGdpr()) {
                 $subQb->andWhere($qb->expr()->isNull('l.date_identified'));
             } else {
                 $subQb->orWhere(
@@ -113,7 +106,7 @@ class MaintenanceSubscriber implements EventSubscriberInterface
 
                 $leadsIds = array_column($subQb->execute()->fetchAll(), 'id');
 
-                if (sizeof($leadsIds) === 0) {
+                if (0 === sizeof($leadsIds)) {
                     break;
                 }
 
@@ -131,7 +124,6 @@ class MaintenanceSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param MaintenanceEvent $event
      * @param $table tableName
      */
     private function cleanItems(MaintenanceEvent $event, $table)

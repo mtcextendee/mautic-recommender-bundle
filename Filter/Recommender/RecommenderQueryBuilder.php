@@ -56,13 +56,6 @@ class RecommenderQueryBuilder
 
     /**
      * ContactSegmentQueryBuilder constructor.
-     *
-     * @param EntityManager            $entityManager
-     * @param RandomParameterName      $randomParameterName
-     * @param FilterFactory            $filterFactory
-     * @param Decorator                $decorator
-     * @param RecommenderOrderBy       $recommenderOrderBy
-     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         EntityManager $entityManager,
@@ -81,8 +74,6 @@ class RecommenderQueryBuilder
     }
 
     /**
-     * @param RecommenderToken $recommenderToken
-     *
      * @return QueryBuilder
      */
     public function assembleContactQueryBuilder(RecommenderToken $recommenderToken)
@@ -120,32 +111,7 @@ class RecommenderQueryBuilder
         return $queryBuilder;
     }
 
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param Recommender  $recommender
-     */
     private function setOrderBy(QueryBuilder $queryBuilder, Recommender $recommender)
     {
-        return;
-        $tableorder = $recommender->getTableOrder();
-        if (empty($tableorder['column'])) {
-            return;
-        }
-        $orderBy = $this->recommenderOrderBy->getDictionary($queryBuilder, $tableorder['column']);
-
-        if (!empty($tableorder['function'])) {
-            $orderBy = $tableorder['function'].'('.$orderBy.')';
-        }
-        $queryBuilder->orderBy($orderBy, $tableorder['direction']);
-    }
-
-    /**
-     * Generate a unique parameter name.
-     *
-     * @return string
-     */
-    private function generateRandomParameterName()
-    {
-        return $this->randomParameterName->generateRandomParameterName();
     }
 }

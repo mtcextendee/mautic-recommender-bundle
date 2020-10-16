@@ -24,7 +24,6 @@ class RecommenderCategoriesModel extends AbstractCommonModel implements AjaxLook
         return $this->em->getRepository('MauticRecommenderBundle:Property');
     }
 
-
     /**
      * @return \Doctrine\ORM\EntityRepository|\MauticPlugin\MauticRecommenderBundle\Entity\ItemPropertyValueRepository
      */

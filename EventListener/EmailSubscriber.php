@@ -25,7 +25,6 @@ use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 class EmailSubscriber implements EventSubscriberInterface
 {
     /**
@@ -55,12 +54,6 @@ class EmailSubscriber implements EventSubscriberInterface
 
     /**
      * EmailSubscriber constructor.
-     *
-     * @param RecommenderHelper         $recommenderHelper
-     * @param RecommenderTokenReplacer  $recommenderTokenReplacer
-     * @param IntegrationHelper         $integrationHelper
-     * @param EmailModel                $emailModel
-     * @param BuilderTokenHelperFactory $builderTokenHelperFactory
      */
     public function __construct(
         RecommenderHelper $recommenderHelper,
@@ -69,10 +62,10 @@ class EmailSubscriber implements EventSubscriberInterface
         EmailModel $emailModel,
         BuilderTokenHelperFactory $builderTokenHelperFactory
     ) {
-        $this->recommenderHelper        = $recommenderHelper;
-        $this->recommenderTokenReplacer = $recommenderTokenReplacer;
-        $this->integrationHelper        = $integrationHelper;
-        $this->emailModel = $emailModel;
+        $this->recommenderHelper         = $recommenderHelper;
+        $this->recommenderTokenReplacer  = $recommenderTokenReplacer;
+        $this->integrationHelper         = $integrationHelper;
+        $this->emailModel                = $emailModel;
         $this->builderTokenHelperFactory = $builderTokenHelperFactory;
     }
 
@@ -90,42 +83,34 @@ class EmailSubscriber implements EventSubscriberInterface
 
     /**
      * Add email to available page tokens.
-     *
-     * @param EmailBuilderEvent $event
      */
     public function onPageBuild(EmailBuilderEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
         if ($event->tokensRequested(RecommenderHelper::$recommenderRegex)) {
-            $tokenHelper = $this->builderTokenHelperFactory->getBuilderTokenHelper( 'recommender');
+            $tokenHelper = $this->builderTokenHelperFactory->getBuilderTokenHelper('recommender');
             $event->addTokensFromHelper($tokenHelper, RecommenderHelper::$recommenderRegex, 'name', 'id', true);
         }
     }
 
-    /**
-     * @param EmailSendEvent $event
-     */
     public function onEmailDisplay(EmailSendEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
         $this->onEmailGenerate($event);
     }
 
-    /**
-     * @param EmailSendEvent $event
-     */
     public function onEmailGenerate(EmailSendEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
@@ -133,7 +118,6 @@ class EmailSubscriber implements EventSubscriberInterface
             $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
             $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
             $replacedTokens = $this->recommenderTokenReplacer->getReplacedTokensFromContent('Email');
-
 
             if (count(array_filter($replacedTokens)) != count($replacedTokens)) {
                 /** @var Stat $stat */

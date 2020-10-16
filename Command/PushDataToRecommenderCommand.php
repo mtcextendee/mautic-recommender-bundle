@@ -18,17 +18,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class PushDataToRecommenderCommand extends ContainerAwareCommand
 {
     /**
-     * @var SymfonyStyle
-     */
-    private $io;
-
-    /**
      * @var array
      */
     private $types = ['events', 'items'];
-
     private $actions = [];
-
     /**
      * {@inheritdoc}
      */
@@ -67,7 +60,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
 
         parent::configure();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -141,7 +133,7 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
             );
         }
 
-        if ($type !== 'contacts') {
+        if ('contacts' !== $type) {
             if (empty($file)) {
                 return $output->writeln(
                     sprintf(
@@ -209,7 +201,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
                 break;
         }
     }
-
     /**
      * @param $url
      *
@@ -226,7 +217,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
 
         return $data;
     }
-
     /**
      * @return array
      */
@@ -234,7 +224,6 @@ class PushDataToRecommenderCommand extends ContainerAwareCommand
     {
         return array_merge($this->types, $this->actions);
     }
-
     /**
      * @return array
      */

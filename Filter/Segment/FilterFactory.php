@@ -32,9 +32,6 @@ class FilterFactory
 
     /**
      * SegmentFilterFactory constructor.
-     *
-     * @param ContainerInterface      $container
-     * @param TableSchemaColumnsCache $schemaCache
      */
     public function __construct(ContainerInterface $container, TableSchemaColumnsCache $schemaCache)
     {
@@ -66,8 +63,7 @@ class FilterFactory
     }
 
     /**
-     * @param              $filter
-     * @param QueryBuilder $qb
+     * @param $filter
      */
     public function applySegmentQuery($filter, QueryBuilder $qb)
     {

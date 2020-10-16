@@ -50,9 +50,6 @@ class EventLogRepository extends CommonRepository
     }
 
     /**
-     * @param Lead  $contact
-     * @param array $options
-     *
      * @return array
      */
     public function getTimeLineEvents(Lead $contact, array $options = [])

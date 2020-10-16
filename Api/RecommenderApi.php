@@ -31,23 +31,7 @@ class RecommenderApi
     protected $logger;
 
     /**
-     * @var IntegrationHelper
-     */
-    private $integrationHelper;
-
-    /**
-     * @var VersionHelper
-     */
-    private $versionHelper;
-
-    /**
      * TwilioApi constructor.
-     *
-     * @param TrackableModel    $pageTrackableModel
-     * @param IntegrationHelper $integrationHelper
-     * @param Logger            $logger
-     * @param VersionHelper     $versionHelper
-     * @param Client            $client
      *
      * @internal param CoreParametersHelper $coreParametersHelper
      */
@@ -60,43 +44,6 @@ class RecommenderApi
     ) {
         $this->logger = $logger;
         $this->client = $client;
-
-        return;
-
-        $integration = $integrationHelper->getIntegrationObject('Recommender');
-        if (($integration && $integration->getIntegrationSettings()->getIsPublished()) || isset($_POST['integration_details'])) {
-            $keys = $integration->getDecryptedApiKeys();
-
-            if (!empty($_POST['integration_details']['apiKeys'])) {
-                $keys = $_POST['integration_details']['apiKeys'];
-            }
-            if (empty($keys['database']) && empty($keys['secret_key'])) {
-                $keys['database']   = trim(getenv('d'));
-                $keys['secret_key'] = trim(getenv('s'));
-            }
-        }
-
-        $database = '';
-        if (!empty($keys['database'])) {
-            $database = $keys['database'];
-        }
-
-        $secretKey = '';
-        if (!empty($keys['secret_key'])) {
-            $secretKey = $keys['secret_key'];
-        }
-
-        /*  $this->client = new Client(
-              $database,
-              $secretKey,
-              'https',
-              ['serviceName' => 'Mautic '.$versionHelper->getVersion()]
-          );*/
-
-        parent::__construct($pageTrackableModel);
-        $this->integrationHelper = $integrationHelper;
-        $this->versionHelper     = $versionHelper;
-        $this->client            = $client;
     }
 
     /**

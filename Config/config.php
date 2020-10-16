@@ -27,7 +27,7 @@ return [
                     'mautic.recommender.filter.fields.recommender',
                     'mautic.recommender.segment.decoration',
                     'mautic.helper.integration',
-                    'request_stack'
+                    'request_stack',
                 ],
             ],
 
@@ -36,7 +36,7 @@ return [
                 'arguments' => [
                     'mautic.helper.core_parameters',
                     'mautic.helper.integration',
-                    'router'
+                    'router',
                 ],
             ],
             'mautic.recommender.pagebundle.subscriber'  => [
@@ -45,7 +45,7 @@ return [
                     'mautic.recommender.service.replacer',
                     'mautic.tracker.contact',
                     'mautic.helper.integration',
-                    'mautic.helper.token_builder.factory'
+                    'mautic.helper.token_builder.factory',
                 ],
             ],
             'mautic.recommender.token.replacer.subscriber'  => [
@@ -63,7 +63,7 @@ return [
                 'arguments' => [
                     'mautic.helper.integration',
                     'translator',
-                    'doctrine.orm.entity_manager'
+                    'doctrine.orm.entity_manager',
                 ],
             ],
             'mautic.recommender.emailbundle.subscriber' => [
@@ -73,14 +73,14 @@ return [
                     'mautic.recommender.service.replacer',
                     'mautic.helper.integration',
                     'mautic.email.model.email',
-                    'mautic.helper.token_builder.factory'
+                    'mautic.helper.token_builder.factory',
                 ],
             ],
             'mautic.recommender.maintenance.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\MaintenanceSubscriber::class,
                 'arguments' => [
                     'doctrine.dbal.default_connection',
-                    'translator'
+                    'translator',
                 ],
             ],
 
@@ -224,13 +224,6 @@ return [
                 ],
                 'methodCalls' => [
                     'initiateDebugLogger' => ['mautic.recommender.logger'],
-                ],
-            ],
-
-            'mautic.recommender.contact.search'  => [
-                'class'     => \MauticPlugin\MauticRecommenderBundle\Service\ContactSearch::class,
-                'arguments' => [
-                    '@service_container',
                 ],
             ],
 

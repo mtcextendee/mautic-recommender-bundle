@@ -37,7 +37,6 @@ class RecommenderQuerySelectedCategoriesSubscriber implements EventSubscriberInt
         $categories = ArrayHelper::getValue('categories', $recommender->getProperties());
 
         if (!empty($categories)) {
-
             $categories = array_map(
                 function ($category) use ($queryBuilder) {
                     return $queryBuilder->expr()->literal($category);

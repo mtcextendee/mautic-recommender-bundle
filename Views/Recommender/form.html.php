@@ -84,7 +84,7 @@ $templates = [
 
                             <div class="row">
                                 <div
-                                        id="<?php echo $form->vars['id'] ?>"
+                                        id="<?php echo $form->vars['id']; ?>"
                                         class="col-xs-12 dwc-filter available-filters"
                                         data-prototype="<?php echo $view->escape(
                                             $view['form']->widget($form['filters']->vars['prototype'])
@@ -95,20 +95,20 @@ $templates = [
                                             <?php
                                             foreach ($fields as $object => $field):
                                                 $header = $object;
-                                                $icon = ($object == 'company') ? 'building' : 'user';
+                                                $icon   = ('company' == $object) ? 'building' : 'user';
                                                 ?>
                                                 <optgroup label="<?php echo $view['translator']->trans(
                                                     'mautic.lead.'.$header
                                                 ); ?>">
                                                     <?php foreach ($field as $value => $params):
-                                                        $list = (!empty($params['properties']['list'])) ? $params['properties']['list'] : [];
+                                                        $list    = (!empty($params['properties']['list'])) ? $params['properties']['list'] : [];
                                                         $choices = \Mautic\LeadBundle\Helper\FormFieldHelper::parseList(
                                                             $list,
                                                             true,
                                                             ('boolean' === $params['properties']['type'])
                                                         );
-                                                        $list = json_encode($choices);
-                                                        $callback = (!empty($params['properties']['callback'])) ? $params['properties']['callback'] : '';
+                                                        $list      = json_encode($choices);
+                                                        $callback  = (!empty($params['properties']['callback'])) ? $params['properties']['callback'] : '';
                                                         $operators = (!empty($params['operators'])) ? $view->escape(
                                                             json_encode($params['operators'])
                                                         ) : '{}';
@@ -141,7 +141,7 @@ $templates = [
                         <div class="row" id="recommender-orderby">
                             <br>
                             <div class="col-md-4">
-                                <?php echo $view['form']->row($form['tableOrder']->children['column']);; ?>
+                                <?php echo $view['form']->row($form['tableOrder']->children['column']); ?>
                             </div>
                             <div class="col-md-4">
                                 <?php echo $view['form']->row($form['tableOrder']->children['direction']); ?>
@@ -174,7 +174,7 @@ $templates = [
 
 <div class="hide" id="templates">
     <?php foreach ($templates as $dataKey => $template): ?>
-        <?php $attr = ($dataKey == 'tags') ? ' data-placeholder="'.$view['translator']->trans(
+        <?php $attr = ('tags' == $dataKey) ? ' data-placeholder="'.$view['translator']->trans(
                 'mautic.lead.tags.select_or_create'
             )
             .'" data-no-results-text="'.$view['translator']->trans('mautic.lead.tags.enter_to_create')
@@ -192,7 +192,7 @@ $templates = [
                         endforeach;
                         echo "</optgroup>\n";
                     else:
-                        if ($dataKey == 'lists' && (isset($currentListId) && (int) $value === (int) $currentListId)) {
+                        if ('lists' == $dataKey && (isset($currentListId) && (int) $value === (int) $currentListId)) {
                             continue;
                         }
                         echo "<option value=\"$value\">$label</option>\n";

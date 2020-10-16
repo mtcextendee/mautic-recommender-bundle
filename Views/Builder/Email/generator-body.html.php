@@ -48,7 +48,7 @@ $style['recommender-image'] = ['display: block', 'max-width: 100%'];
 if (!empty($recommender->getProperties()['itemImageStyle'])):
     $style['recommender-image'][] = $recommender->getProperties()['itemImageStyle'];
 endif;
-if (!empty($recommender->getProperties()['columns']) && $recommender->getProperties()['columns'] == 12):
+if (!empty($recommender->getProperties()['columns']) && 12 == $recommender->getProperties()['columns']):
     $style['recommender-image'][] = 'margin-right: 20px';
     $style['recommender-image'][] = 'float: left';
 endif;
@@ -139,7 +139,7 @@ $style['recommender-price-old']   = implode('; ', $style['recommender-price-old'
 
 if (isset($index)) {
     $i = $index;
-    if ($i == 0 || ($i % $recommender->getProperties()['columns']) === 0) {
+    if (0 == $i || 0 === ($i % $recommender->getProperties()['columns'])) {
         if ($i > 0) {
             ?>
             </tr>

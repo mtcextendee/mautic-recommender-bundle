@@ -270,27 +270,6 @@ abstract class AbstractRequest
     }
 
     /**
-     * Check if the value is a valid date.
-     *
-     * @param mixed $value
-     *
-     * @return boolean
-     */
-    private function isDate($value)
-    {
-        if (!$value) {
-            return false;
-        }
-        try {
-            new \DateTime($value);
-
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
-    /**
      * Check if has settings by client.
      *
      * @param $setting

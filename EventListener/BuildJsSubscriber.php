@@ -39,8 +39,6 @@ class BuildJsSubscriber implements EventSubscriberInterface
 
     /**
      * BuildJsSubscriber constructor.
-     *
-     * @param CoreParametersHelper $coreParametersHelper
      */
     public function __construct(
         CoreParametersHelper $coreParametersHelper,
@@ -49,7 +47,7 @@ class BuildJsSubscriber implements EventSubscriberInterface
     ) {
         $this->coreParametersHelper = $coreParametersHelper;
         $this->integrationHelper    = $integrationHelper;
-        $this->router = $router;
+        $this->router               = $router;
     }
 
     /**
@@ -65,13 +63,10 @@ class BuildJsSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param BuildJsEvent $event
-     */
     public function onBuildJsTop(BuildJsEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
@@ -135,9 +130,6 @@ JS;
         $event->appendJs($js, 'RecommenderTemplate');
     }
 
-    /**
-     * @param BuildJsEvent $event
-     */
     public function onDynamicRecommenderJs(BuildJsEvent $event)
     {
         $recommenderUrl = $this->router->generate('mautic_recommender_dwc', ['objectId' => 'slotNamePlaceholder'], UrlGeneratorInterface::ABSOLUTE_URL);

@@ -32,38 +32,12 @@ class ApiCommands
     private $recommenderApi;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var RecommenderTokenFinder
-     */
-    private $recommenderTokenFinder;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
 
     /**
      * ApiCommands constructor.
-     *
-     * @param RecommenderApi           $recommenderApi
-     * @param LoggerInterface          $logger
-     * @param TranslatorInterface      $translator
-     * @param RecommenderTokenFinder   $recommenderTokenFinder
-     * @param EventDispatcherInterface $dispatcher
      */
     public function __construct(
         RecommenderApi $recommenderApi,
@@ -74,25 +48,17 @@ class ApiCommands
         EntityManagerInterface $entityManager
     ) {
         $this->recommenderApi         = $recommenderApi;
-        $this->logger                 = $logger;
-        $this->translator             = $translator;
-        $this->recommenderTokenFinder = $recommenderTokenFinder;
-        $this->dispatcher             = $dispatcher;
         $this->entityManager          = $entityManager;
     }
 
     /**
-     * @param       $apiRequest
-     * @param array $options
+     * @param $apiRequest
      */
     public function callCommand($apiRequest, array $options = [])
     {
         return $this->recommenderApi->getClient()->send($apiRequest, $options);
     }
 
-    /**
-     * @param RecommenderToken $recommenderToken
-     */
     public function getResults(RecommenderToken $recommenderToken)
     {
         return $this->recommenderApi->getClient()->display($recommenderToken);
@@ -114,18 +80,18 @@ class ApiCommands
             $progress = ProgressBarHelper::init($output, $batchSize);
             $progress->start();
             try {
-                foreach ($items as $key => $item) {
+                foreach ($items as $item) {
                     $i += $this->recommenderApi->getClient()->send(
                         'ImportItems',
                         $item,
                         ['timeout' => $timeout]
                     );
                     $progress->setProgress($i);
-                    if ($i % $clearBatch === 0) {
+                    if (0 === $i % $clearBatch) {
                         $this->entityManager->clear(Item::class);
                         $this->entityManager->clear(Property::class);
                     }
-                    if ($i % $batchSize === 0) {
+                    if (0 === $i % $batchSize) {
                         $batchSize = 0;
                         $progress->finish();
                         break;
@@ -155,7 +121,7 @@ class ApiCommands
     public function deactivateMissingItems($items, Output $output)
     {
         $itemsInJson = [];
-        foreach ($items as $key => $item) {
+        foreach ($items as $item) {
             $itemsInJson[] = $item['itemId'];
         }
         $itemRepository             = $this->entityManager->getRepository('MauticRecommenderBundle:Item');
@@ -165,7 +131,7 @@ class ApiCommands
         $progress = ProgressBarHelper::init($output, count($activeItemsMissingFromJson));
         $progress->start();
 
-        foreach ($activeItemsMissingFromJson as $key => $item) {
+        foreach ($activeItemsMissingFromJson as $item) {
             ++$i;
 
             $itemEntity = $itemRepository->findOneBy(['itemId' => $item['item_id']]);

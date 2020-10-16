@@ -34,7 +34,7 @@ class RecommenderQueryRecentlyCreatedSubscriber implements EventSubscriberInterf
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
-        if ($recommender->getFilterTarget() === FiltersEnum::RECENTLY_CREATED) {
+        if (FiltersEnum::RECENTLY_CREATED === $recommender->getFilterTarget()) {
             if ($contactId = $queryBuildEvent->getRecommenderToken()->getUserId()) {
                 $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', (int) $contactId));
             }

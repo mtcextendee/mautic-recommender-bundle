@@ -26,8 +26,6 @@ class RecommenderQueryContextSubscriber implements EventSubscriberInterface
 
     /**
      * RecommenderQueryContextSubscriber constructor.
-     *
-     * @param ContextToken $contextToken
      */
     public function __construct(ContextToken $contextToken)
     {
@@ -50,9 +48,9 @@ class RecommenderQueryContextSubscriber implements EventSubscriberInterface
         $recommender      = $recommenderToken->getRecommender();
         $queryBuilder     = $queryBuildEvent->getQueryBuilder();
         $filters          = $recommender->getFilters();
-        foreach ($filters as $key => $filter) {
-            if (isset($filter['filter']) && !is_array($filter['filter']) && strpos($filter['filter'], '{', 0) === 0) {
-                if (strpos($filter['filter'], '{context', 0) === 0) {
+        foreach ($filters as $filter) {
+            if (isset($filter['filter']) && !is_array($filter['filter']) && 0 === strpos($filter['filter'], '{', 0)) {
+                if (0 === strpos($filter['filter'], '{context', 0)) {
                     $tokenValue = $this->contextToken->findValueFromContext(
                         $filter['filter'],
                         $queryBuilder,

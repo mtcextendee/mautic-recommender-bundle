@@ -18,7 +18,7 @@ if (!isset($settings)) {
 }
 ?>
 <center>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F2F2F2" class="recommender-global-row <?php echo $class ?>">
+<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F2F2F2" class="recommender-global-row <?php echo $class; ?>">
     <tr>
         <td align="center" valign="top">
             <?php if ($preview) {
@@ -32,4 +32,4 @@ if (!isset($settings)) {
     </tr>
     <tr>
         <td align="center" valign="top">
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F2F2F2" class="recommender-global-row <?php echo $class ?>">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F2F2F2" class="recommender-global-row <?php echo $class; ?>">

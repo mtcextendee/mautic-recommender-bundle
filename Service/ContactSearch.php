@@ -119,8 +119,7 @@ class ContactSearch
     }
 
     /**
-     * @param                  $objectId
-     * @param CommonController $controller
+     * @param $objectId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -135,8 +134,7 @@ class ContactSearch
     }
 
     /**
-     * @param                  $objectId
-     * @param CommonController $controller
+     * @param $objectId
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -197,7 +195,7 @@ class ContactSearch
     /**
      * Get unserialized content from cookie.
      *
-     * @param null|string $key
+     * @param string|null $key
      *
      * @return array|string
      */

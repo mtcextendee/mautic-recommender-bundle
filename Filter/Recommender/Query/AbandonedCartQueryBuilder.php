@@ -28,11 +28,8 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
 
     /**
      * BaseFilterQueryBuilder constructor.
-     *
-     * @param RandomParameterName    $randomParameterNameService
-     * @param RecommenderClientModel $clientModel
      */
-    public function __construct(RandomParameterName $randomParameterNameService, RecommenderClientModel  $clientModel)
+    public function __construct(RandomParameterName $randomParameterNameService, RecommenderClientModel $clientModel)
     {
         $this->parameterNameGenerator = $randomParameterNameService;
         $this->clientModel            = $clientModel;
@@ -71,17 +68,6 @@ class AbandonedCartQueryBuilder extends RecommenderFilterQueryBuilder
         $filterParametersHolder = $filter->getParameterHolder($parameters);
         $tableAlias             = $this->generateRandomParameterName();
         $tableAlias2            = $this->generateRandomParameterName();
-
-        $leftJoinCondition = sprintf(
-            '%s.lead_id = %s.lead_id AND %s.event_id IN (3,4) AND %s.id > %s.id AND %s.item_id = %s.item_id',
-            $tableAlias2,
-            $tableAlias,
-            $tableAlias2,
-            $tableAlias2,
-            $tableAlias,
-            $tableAlias2,
-            $tableAlias
-        );
 
         $leftJoinCondition = $tableAlias2.'.lead_id = '.$tableAlias.'.lead_id  AND '.$tableAlias2.'.id > '.$tableAlias.'.id AND '.$tableAlias2.'.item_id = '.$tableAlias.'.item_id AND (('.$tableAlias.'.item_id = '.$tableAlias2.'.item_id AND  '.$tableAlias2.'.event_id  = 3) OR  '.$tableAlias2.'.event_id = 4)';
 

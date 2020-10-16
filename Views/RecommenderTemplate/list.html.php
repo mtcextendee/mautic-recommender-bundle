@@ -8,7 +8,7 @@
  *
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
-if ($tmpl == 'index') {
+if ('index' == $tmpl) {
     $view->extend('MauticRecommenderBundle:RecommenderTemplate:index.html.php');
 }
 /* @var \MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate[] $items */

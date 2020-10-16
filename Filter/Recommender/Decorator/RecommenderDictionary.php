@@ -36,8 +36,6 @@ class RecommenderDictionary
 
     /**
      * SegmentChoices constructor.
-     *
-     * @param Fields $fields
      */
     public function __construct(Fields $fields)
     {

@@ -32,18 +32,12 @@ class RecommenderTagsType extends AbstractType
 
     /**
      * RecommenderTagsType constructor.
-     *
-     * @param ApiCommands $apiCommands
      */
     public function __construct(ApiCommands $apiCommands)
     {
         $this->apiCommands = $apiCommands;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
     }

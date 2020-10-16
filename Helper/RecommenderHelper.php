@@ -48,28 +48,12 @@ class RecommenderHelper
     protected $translator;
 
     /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var CorePermissions
-     */
-    private $security;
-
-    /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
      * RecommenderHelper constructor.
-     *
-     * @param IntegrationHelper   $integrationHelper
-     * @param TemplateModel       $recommenderModel
-     * @param TranslatorInterface $translator
-     * @param CorePermissions     $security
-     * @param EntityManager       $entityManager
      */
     public function __construct(
         IntegrationHelper $integrationHelper,
@@ -81,7 +65,6 @@ class RecommenderHelper
         $this->integrationHelper    = $integrationHelper;
         $this->recommenderModel     = $recommenderModel;
         $this->translator           = $translator;
-        $this->security             = $security;
         $this->entityManager        = $entityManager;
     }
 

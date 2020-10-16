@@ -40,9 +40,6 @@ class ItemPropertyValue
 
     private $changes = [];
 
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         /** @var ClassMetadataBuilder $builder */
@@ -102,17 +99,12 @@ class ItemPropertyValue
         return $this->property;
     }
 
-    /**
-     * @param Property $property
-     */
     public function setProperty(Property $property)
     {
         $this->property = $property;
     }
 
     /**
-     * @param Item $item
-     *
      * @return ItemPropertyValue
      */
     public function setItem(Item $item)
@@ -154,9 +146,7 @@ class ItemPropertyValue
     }
 
     /**
-     * @param Item     $item
-     * @param Property $property
-     * @param string   $value
+     * @param string $value
      */
     public function setValues(Item $item, Property $property, $value)
     {

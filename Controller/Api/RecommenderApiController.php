@@ -32,14 +32,6 @@ class RecommenderApiController extends CommonApiController
      */
     private $allowedEvents = ['RecommenderEvent'];
 
-    /**
-     * @var array
-     */
-    private $requiredParams = ['contactId', 'contactEmail'];
-
-    /**
-     * @param FilterControllerEvent $event
-     */
     public function initialize(FilterControllerEvent $event)
     {
         $this->processor = $this->get('mautic.recommender.events.processor');

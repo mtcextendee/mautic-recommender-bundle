@@ -19,15 +19,10 @@ use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 
 class RecommenderClientModel extends AbstractCommonModel implements AjaxLookupModelInterface
 {
-    /**
-     * @var ContactTracker
-     */
     private $contactTracker;
 
     /**
      * RecommenderClientModel constructor.
-     *
-     * @param ContactTracker $contactTracker
      */
     public function __construct(ContactTracker $contactTracker)
     {

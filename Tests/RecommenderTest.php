@@ -183,23 +183,23 @@ class RecommendereTest extends AbstractMauticTestCase
     private function getItemsToEvent($keysAttr = true, $first = false, $userId = true)
     {
         $returnItems = [];
-        if ($keysAttr === true) {
+        if (true === $keysAttr) {
             $keys = ['id'];
         } else {
             $keys = $keysAttr;
         }
 
-        if ($userId === true) {
+        if (true === $userId) {
             $userId = $this->leadInTest->getId();
         }
 
         foreach ($this->getItems() as $keyFromItems => $item) {
             foreach ($keys as $key) {
                 $keyForArray = $key;
-                if ($key === 'id') {
+                if ('id' === $key) {
                     $keyForArray = 'itemId';
                 }
-                if ($first == true) {
+                if (true == $first) {
                     return [$keyForArray => $item[$key], 'userId' => $userId];
                 }
                 $returnItems[$keyFromItems][$keyForArray] = $item[$key];

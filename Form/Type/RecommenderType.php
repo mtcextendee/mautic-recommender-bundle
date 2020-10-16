@@ -41,54 +41,21 @@ use Symfony\Component\Validator\Constraints\Range;
 
 class RecommenderType extends AbstractType
 {
-    /**
-     * @var EventDispatcherInterface
-     */
     private $dispatcher;
 
-    /**
-     * @var EntityManager
-     */
     private $entityManager;
 
-    /**
-     * @var TranslatorInterface
-     */
     private $translator;
 
     /** @var array */
     private $fieldChoices;
 
-    /**
-     * @var ListModel
-     */
-    private $listModel;
-
-    /**
-     * @var RecommenderClientModel
-     */
-    private $recommenderClientModel;
-
-    /**
-     * @var Choices
-     */
     private $choices;
 
-    /**
-     * @var RouterInterface
-     */
     private $router;
 
     /**
      * RecommenderType constructor.
-     *
-     * @param EventDispatcherInterface $dispatcher
-     * @param EntityManager            $entityManager
-     * @param TranslatorInterface      $translator
-     * @param ListModel                $listModel
-     * @param RecommenderClientModel   $recommenderClientModel
-     * @param Choices                  $choices
-     * @param RouterInterface          $router
      */
     public function __construct(
         EventDispatcherInterface $dispatcher,
@@ -102,16 +69,10 @@ class RecommenderType extends AbstractType
         $this->dispatcher             = $dispatcher;
         $this->entityManager          = $entityManager;
         $this->translator             = $translator;
-        $this->listModel              = $listModel;
-        $this->recommenderClientModel = $recommenderClientModel;
         $this->choices                = $choices;
         $this->router                 = $router;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -296,7 +257,7 @@ class RecommenderType extends AbstractType
                 'choice_attr' => function ($choice, $key, $value) {
                     return ['tooltip' => "recommender.form.{$value}.tooltip"];
                 },
-                'attr'=>[
+                'attr'=> [
                     'onchange' => ' Mautic.recommendationsType(this)',
                 ],
                 'expanded'    => false,
@@ -326,9 +287,6 @@ class RecommenderType extends AbstractType
         $view->vars['fields'] = $this->fieldChoices;
     }
 
-    /**
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefined(['update_select']);

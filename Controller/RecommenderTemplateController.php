@@ -151,8 +151,7 @@ class RecommenderTemplateController extends AbstractStandardFormController
     }
 
     /**
-     * @param array $args
-     * @param       $action
+     * @param $action
      *
      * @return array
      */

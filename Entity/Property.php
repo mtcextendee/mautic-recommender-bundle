@@ -58,9 +58,6 @@ class Property
         $this->setDateAdded(new \DateTime());
     }
 
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
@@ -177,8 +174,6 @@ class Property
     }
 
     /**
-     * @param \DateTime $dateAdded
-     *
      * @return Item
      */
     public function setDateAdded(\DateTime $dateAdded)
@@ -197,8 +192,6 @@ class Property
     }
 
     /**
-     * @param bool $segmentFilter
-     *
      * @return Property
      */
     public function setSegmentFilter(bool $segmentFilter)
@@ -209,7 +202,7 @@ class Property
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSegmentFilter()
     {

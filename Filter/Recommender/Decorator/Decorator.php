@@ -20,9 +20,6 @@ class Decorator extends CustomMappedDecorator
 {
     /**
      * Decorator constructor.
-     *
-     * @param ContactSegmentFilterOperator   $contactSegmentFilterOperator
-     * @param ContactSegmentFilterDictionary $contactSegmentFilterDictionary
      */
     public function __construct(
         ContactSegmentFilterOperator $contactSegmentFilterOperator,
@@ -34,9 +31,7 @@ class Decorator extends CustomMappedDecorator
     }
 
     /**
-     * @param ContactSegmentFilterCrate $contactSegmentFilterCrate
-     *
-     * @return array|bool|float|null|string
+     * @return array|bool|float|string|null
      */
     public function getParameterValue(ContactSegmentFilterCrate $contactSegmentFilterCrate)
     {

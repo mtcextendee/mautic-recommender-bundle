@@ -17,7 +17,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OperatorsSubscriber implements EventSubscriberInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -28,9 +27,6 @@ class OperatorsSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param LeadListDictionaryGeneratedEvent $event
-     */
     public function onDictionaryGenerated(LeadListDictionaryGeneratedEvent $event)
     {
         // $dictionaries = $this->recommenderDictionary->getDictionary();

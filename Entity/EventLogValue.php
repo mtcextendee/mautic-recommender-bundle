@@ -38,9 +38,6 @@ class EventLogValue
      */
     protected $value;
 
-    /**
-     * @param ORM\ClassMetadata $metadata
-     */
     public static function loadMetadata(ORM\ClassMetadata $metadata)
     {
         $builder = new ClassMetadataBuilder($metadata);
@@ -99,9 +96,6 @@ class EventLogValue
         return $this->property;
     }
 
-    /**
-     * @param Property $property
-     */
     public function setProperty(Property $property)
     {
         $this->property = $property;
@@ -126,9 +120,7 @@ class EventLogValue
     }
 
     /**
-     * @param EventLog $eventLog
-     * @param Property $property
-     * @param string   $value
+     * @param string $value
      */
     public function setValues(EventLog $eventLog, Property $property, $value)
     {
@@ -137,11 +129,6 @@ class EventLogValue
         $this->value        = $value;
     }
 
-    /**
-     * @param EventLog $eventLog
-     *
-     * @return EventLogValue
-     */
     public function setEventLog(EventLog $eventLog): EventLogValue
     {
         $this->eventLog = $eventLog;
@@ -149,9 +136,6 @@ class EventLogValue
         return $this;
     }
 
-    /**
-     * @return EventLog
-     */
     public function getEventLog(): EventLog
     {
         return $this->eventLog;

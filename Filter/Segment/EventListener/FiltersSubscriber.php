@@ -53,10 +53,6 @@ class FiltersSubscriber implements EventSubscriberInterface
 
     /**
      * FiltersSubscriber constructor.
-     *
-     * @param FilterFactory $segmentFilterFactory
-     * @param Choices       $choices
-     * @param Decorator     $decorator
      */
     public function __construct(
         FilterFactory $segmentFilterFactory,
@@ -88,13 +84,10 @@ class FiltersSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param LeadListFilteringEvent $event
-     */
     public function onListFiltersFiltering(LeadListFilteringEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 
@@ -113,7 +106,7 @@ class FiltersSubscriber implements EventSubscriberInterface
     public function onListFiltersGenerate(LeadListFiltersChoicesEvent $event)
     {
         $integration = $this->integrationHelper->getIntegrationObject('Recommender');
-        if (!$integration || $integration->getIntegrationSettings()->getIsPublished() === false) {
+        if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
 

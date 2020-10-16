@@ -22,10 +22,6 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class RecommenderPropertiesType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -44,7 +40,7 @@ class RecommenderPropertiesType extends AbstractType
                 'items',
                 ItemListType::class,
                 [
-                    'label'      =>  'recommender.form.items_limitation',
+                    'label'      => 'recommender.form.items_limitation',
                     'label_attr' => ['class' => 'control-label'],
                     'multiple'   => true,
                     'required'   => false,
@@ -60,7 +56,7 @@ class RecommenderPropertiesType extends AbstractType
                 'categories',
                 ItemCategoriesListType::class,
                 [
-                    'label'      =>  'recommender.form.categories_limitation',
+                    'label'      => 'recommender.form.categories_limitation',
                     'label_attr' => ['class' => 'control-label'],
                     'multiple'   => true,
                     'required'   => false,

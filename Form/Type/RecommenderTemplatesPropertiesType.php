@@ -24,10 +24,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class RecommenderTemplatesPropertiesType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -67,12 +63,11 @@ class RecommenderTemplatesPropertiesType extends AbstractType
             ]
         );
 
-
         $builder->add(
             'font',
             ChoiceType::class,
             [
-                'choices' => array_flip($this->getFonts()),
+                'choices'    => array_flip($this->getFonts()),
                 'label'      => 'mautic.focus.form.font',
                 'label_attr' => ['class' => 'control-label'],
                 'attr'       => [
@@ -614,7 +609,6 @@ class RecommenderTemplatesPropertiesType extends AbstractType
             '\'Trebuchet MS\', Helvetica, sans-serif'                  => 'Trebuchet MS',
             'Verdana, Geneva, sans-serif'                              => 'Verdana',
         ];
-
     }
 
     private function getColumnsNumbers()

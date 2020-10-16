@@ -9,7 +9,7 @@
  * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 ?>
-<?php if ($tmpl == 'index'): ?>
+<?php if ('index' == $tmpl): ?>
     <h3 class="col-xs-12"><?php echo $view['translator']->trans(
             'mautic.plugin.recommender.form.testing_area'
         ); ?>
@@ -64,7 +64,7 @@
             <?php endif; ?>
             <hr>
             <?php echo $cnt; ?></div>
-        <?php if ($tmpl == 'index'): ?>
+        <?php if ('index' == $tmpl): ?>
     </div>
 </div>
 <?php endif; ?>

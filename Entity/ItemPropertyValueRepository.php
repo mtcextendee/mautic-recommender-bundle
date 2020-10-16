@@ -39,8 +39,6 @@ class ItemPropertyValueRepository extends CommonRepository
     }
 
     /**
-     * @param int  $propertyId
-     * @param int  $limit
      * @param null $filter
      *
      * @return array

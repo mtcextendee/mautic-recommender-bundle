@@ -32,8 +32,6 @@ class Options
 
     /**
      * Options constructor.
-     *
-     * @param Client $client
      */
     public function __construct(Client $client)
     {
@@ -63,7 +61,7 @@ class Options
                     break;
             }
 
-            if ($entity == 'itemId' && !isset($options[$entity])) {
+            if ('itemId' == $entity && !isset($options[$entity])) {
                 throw new \Exception('Item ID param not exist');
                 // die();
             }

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * @copyright   2019 Mautic Contributors. All rights reserved
  * @author      Mautic
@@ -32,19 +31,9 @@ class RecommenderSettings
     private $integrationHelper;
 
     /**
-     * @var CoreParametersHelper
-     */
-    private $coreParametersHelper;
-
-    /**
      * @var array
      */
     private $settings;
-
-    /**
-     * @var RecommenderEventModel
-     */
-    private $eventModel;
 
     /**
      * @var RecommenderPropertyModel
@@ -53,18 +42,11 @@ class RecommenderSettings
 
     /**
      * EcrSettings constructor.
-     *
-     * @param IntegrationHelper        $integrationHelper
-     * @param CoreParametersHelper     $coreParametersHelper
-     * @param RecommenderEventModel    $eventModel
-     * @param RecommenderPropertyModel $propertyModel
      */
     public function __construct(IntegrationHelper $integrationHelper, CoreParametersHelper $coreParametersHelper, RecommenderEventModel $eventModel, RecommenderPropertyModel $propertyModel)
     {
         $this->integrationHelper    = $integrationHelper;
-        $this->coreParametersHelper = $coreParametersHelper;
         $this->settings             = $this->getIntegrationSettings('Recommender');
-        $this->eventModel           = $eventModel;
         $this->propertyModel        = $propertyModel;
     }
 
@@ -111,9 +93,6 @@ class RecommenderSettings
         }
     }
 
-    /**
-     * @param DebugLogger $logger
-     */
     public function initiateDebugLogger(DebugLogger $logger): void
     {
         // Yes it's a hack to prevent from having to pass the logger as a dependency into dozens of classes

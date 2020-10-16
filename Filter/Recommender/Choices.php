@@ -40,10 +40,6 @@ class Choices
 
     /**
      * SegmentChoices constructor.
-     *
-     * @param Fields              $fields
-     * @param ListModel           $listModel
-     * @param TranslatorInterface $translator
      */
     public function __construct(Fields $fields, ListModel $listModel, TranslatorInterface $translator)
     {
@@ -53,8 +49,7 @@ class Choices
     }
 
     /**
-     * @param LeadListFiltersChoicesEvent $event
-     * @param                             $object
+     * @param $object
      */
     public function addChoicesToEvent(LeadListFiltersChoicesEvent $event, $object)
     {
@@ -79,7 +74,7 @@ class Choices
         foreach (self::ALLOWED_TABLES as $table) {
             if (isset($choices[$table])) {
                 foreach ($choices[$table] as $key=>$options) {
-                    if ($object === null || ($object == 'recommender' && $options['recommender'])) {
+                    if (null === $object || ('recommender' == $object && $options['recommender'])) {
                         $this->fieldChoices[$table][$key] =  $options;
                     }
                 }
@@ -149,6 +144,7 @@ class Choices
                 }
             }
         }
+
         return $choices;
     }
 }

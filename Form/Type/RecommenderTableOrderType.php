@@ -28,18 +28,12 @@ class RecommenderTableOrderType extends AbstractType
 
     /**
      * RecommenderTableOrderType constructor.
-     *
-     * @param TranslatorInterface $translator
      */
     public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array                $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $column = $options['data']['column'] ?? null;
@@ -65,7 +59,7 @@ class RecommenderTableOrderType extends AbstractType
 
         // Direction
         $builder->add('direction', ChoiceType::class, [
-            'choices' => array_flip($this->getDirections()),
+            'choices'     => array_flip($this->getDirections()),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.core.order',
@@ -160,8 +154,6 @@ class RecommenderTableOrderType extends AbstractType
     }
 
     /**
-     * @param OptionsResolver $resolver
-     *
      * @throws \Symfony\Component\OptionsResolver\Exception\AccessException
      */
     public function configureOptions(OptionsResolver $resolver)

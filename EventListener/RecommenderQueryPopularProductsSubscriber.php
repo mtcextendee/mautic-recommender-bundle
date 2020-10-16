@@ -33,7 +33,7 @@ class RecommenderQueryPopularProductsSubscriber implements EventSubscriberInterf
         $recommender  = $queryBuildEvent->getRecommenderToken()->getRecommender();
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
-        if ($recommender->getFilterTarget() === FiltersEnum::POPULAR_PRODUCTS) {
+        if (FiltersEnum::POPULAR_PRODUCTS === $recommender->getFilterTarget()) {
             $queryBuilder->innerJoin('l', MAUTIC_TABLE_PREFIX.'recommender_event', 're', 're.id = l.event_id');
             $queryBuilder->orderBy('SUM(re.weight)', 'DESC');
         }
