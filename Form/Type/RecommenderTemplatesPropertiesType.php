@@ -14,6 +14,8 @@ namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -32,18 +34,13 @@ class RecommenderTemplatesPropertiesType extends AbstractType
             'columns',
             ChoiceType::class,
             [
-                'choices' => [
-                    '2'  => '6',
-                    '3'  => '4',
-                    '4'  => '3',
-                    '6'  => '2',
-                    '12' => '1',
-                ],
+                'choices' => array_flip($this->getColumnsNumbers()),
+
                 'expanded'    => false,
                 'multiple'    => false,
                 'label'       => 'mautic.recommender.form.columns',
                 'label_attr'  => ['class' => ''],
-                'empty_value' => false,
+                'placeholder' => false,
                 'required'    => true,
                 'data'        => isset($options['data']['columns']) ? $options['data']['columns'] : 3,
                 'constraints' => [
@@ -58,7 +55,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'background',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.background.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -70,40 +67,25 @@ class RecommenderTemplatesPropertiesType extends AbstractType
             ]
         );
 
+
         $builder->add(
             'font',
-            'choice',
+            ChoiceType::class,
             [
-                'choices' => [
-                    'Arial, Helvetica, sans-serif'                             => 'Arial',
-                    '\'Arial Black\', Gadget, sans-serif'                      => 'Arial Black',
-                    '\'Arial Narrow\', sans-serif'                             => 'Arial Narrow',
-                    'Century Gothic, sans-serif'                               => 'Century Gothic',
-                    'Copperplate / Copperplate Gothic Light, sans-serif'       => 'Copperplate Gothic Light',
-                    '\'Courier New\', Courier, monospace'                      => 'Courier New',
-                    'Georgia, Serif'                                           => 'Georgia',
-                    'Impact, Charcoal, sans-serif'                             => 'Impact',
-                    '\'Lucida Console\', Monaco, monospace'                    => 'Lucida Console',
-                    '\'Lucida Sans Unicode\', \'Lucida Grande\', sans-serif'   => 'Lucida Sans Unicode',
-                    '\'Palatino Linotype\', \'Book Antiqua\', Palatino, serif' => 'Palatino',
-                    'Tahoma, Geneva, sans-serif'                               => 'Tahoma',
-                    '\'Times New Roman\', Times, serif'                        => 'Times New Roman',
-                    '\'Trebuchet MS\', Helvetica, sans-serif'                  => 'Trebuchet MS',
-                    'Verdana, Geneva, sans-serif'                              => 'Verdana',
-                ],
+                'choices' => array_flip($this->getFonts()),
                 'label'      => 'mautic.focus.form.font',
                 'label_attr' => ['class' => 'control-label'],
                 'attr'       => [
                     'class'        => 'form-control',
                 ],
                 'required'    => false,
-                'empty_value' => false,
+                'placeholder' => false,
             ]
         );
 
         $builder->add(
             'padding',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.padding',
                 'label_attr' => ['class' => 'control-label'],
@@ -116,7 +98,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'style',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -129,7 +111,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'colBackground',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.background.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -143,7 +125,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'colPadding',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.padding',
                 'label_attr' => ['class' => 'control-label'],
@@ -156,7 +138,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'colStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -182,7 +164,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemNameColor',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -196,7 +178,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemNameSize',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.font.size',
                 'label_attr' => ['class' => 'control-label'],
@@ -209,7 +191,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemNamePadding',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.padding',
                 'label_attr' => ['class' => 'control-label'],
@@ -232,7 +214,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemNameStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -258,7 +240,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemImageStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -295,7 +277,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemShortDescriptionStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -321,7 +303,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemAction',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.item.action',
                 'label_attr' => ['class' => 'control-label'],
@@ -334,7 +316,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionBackground',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.background.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -348,7 +330,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionHover',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.background.hover.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -362,7 +344,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionColor',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -376,7 +358,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionPadding',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.padding',
                 'label_attr' => ['class' => 'control-label'],
@@ -389,7 +371,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionRadius',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.radius',
                 'label_attr' => ['class' => 'control-label'],
@@ -402,7 +384,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionSize',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.font.size',
                 'label_attr' => ['class' => 'control-label'],
@@ -426,7 +408,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemActionStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -452,7 +434,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemPriceColor',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -466,7 +448,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemPricePadding',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.padding',
                 'label_attr' => ['class' => 'control-label'],
@@ -479,7 +461,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemPriceSize',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.font.size',
                 'label_attr' => ['class' => 'control-label'],
@@ -503,7 +485,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemPriceStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -529,7 +511,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemOldPriceColor',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.color',
                 'label_attr' => ['class' => 'control-label'],
@@ -543,7 +525,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemOldPriceSize',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.recommender.form.font.size',
                 'label_attr' => ['class' => 'control-label'],
@@ -556,7 +538,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'itemOldPriceStyle',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.plugin.recommender.style',
                 'label_attr' => ['class' => 'control-label'],
@@ -580,7 +562,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'header',
-            'textarea',
+            TextareaType::class,
             [
                 'label'      => 'mautic.plugin.recommender.header',
                 'label_attr' => ['class' => 'control-label'],
@@ -593,7 +575,7 @@ class RecommenderTemplatesPropertiesType extends AbstractType
 
         $builder->add(
             'footer',
-            'textarea',
+            TextareaType::class,
             [
                 'label'      => 'mautic.plugin.recommender.footer',
                 'label_attr' => ['class' => 'control-label'],
@@ -608,8 +590,41 @@ class RecommenderTemplatesPropertiesType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'recommender_properties';
+    }
+
+    private function getFonts()
+    {
+        return  [
+            'Arial, Helvetica, sans-serif'                             => 'Arial',
+            '\'Arial Black\', Gadget, sans-serif'                      => 'Arial Black',
+            '\'Arial Narrow\', sans-serif'                             => 'Arial Narrow',
+            'Century Gothic, sans-serif'                               => 'Century Gothic',
+            'Copperplate / Copperplate Gothic Light, sans-serif'       => 'Copperplate Gothic Light',
+            '\'Courier New\', Courier, monospace'                      => 'Courier New',
+            'Georgia, Serif'                                           => 'Georgia',
+            'Impact, Charcoal, sans-serif'                             => 'Impact',
+            '\'Lucida Console\', Monaco, monospace'                    => 'Lucida Console',
+            '\'Lucida Sans Unicode\', \'Lucida Grande\', sans-serif'   => 'Lucida Sans Unicode',
+            '\'Palatino Linotype\', \'Book Antiqua\', Palatino, serif' => 'Palatino',
+            'Tahoma, Geneva, sans-serif'                               => 'Tahoma',
+            '\'Times New Roman\', Times, serif'                        => 'Times New Roman',
+            '\'Trebuchet MS\', Helvetica, sans-serif'                  => 'Trebuchet MS',
+            'Verdana, Geneva, sans-serif'                              => 'Verdana',
+        ];
+
+    }
+
+    private function getColumnsNumbers()
+    {
+        return [
+            '2'  => '6',
+            '3'  => '4',
+            '4'  => '3',
+            '6'  => '2',
+            '12' => '1',
+        ];
     }
 }

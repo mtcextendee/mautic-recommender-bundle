@@ -104,7 +104,7 @@ if ($tmpl == 'index') {
                     </td>
                     <td>
                         <?php
-                        /*<a href="<?php echo $view['router']->generate(
+                        /*<a href="<?php echo $view['router']->url(
                             'mautic_recommender_action',
                             ['objectAction' => 'view', 'objectId' => $item->getId()]
                         ); ?>" data-toggle="ajax">
@@ -136,7 +136,7 @@ if ($tmpl == 'index') {
                     'page'       => $page,
                     'limit'      => $limit,
                     'menuLinkId' => 'mautic_recommender_index',
-                    'baseUrl'    => $view['router']->generate('mautic_recommender_index'),
+                    'baseUrl'    => $view['router']->url('mautic_recommender_index'),
                     'sessionVar' => 'recommender',
                 ]
             ); ?>

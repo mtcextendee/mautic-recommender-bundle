@@ -12,9 +12,8 @@
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,43 +46,44 @@ class RecommenderTableOrderType extends AbstractType
 
         $fields = $options['fields'];
         unset($fields['mautic.lead.recommenders'], $fields['mautic.lead.recommender_item'], $fields['mautic.lead.recommender_item_property_value']);
-        $builder->add('column', 'choice', [
-            'choices'     => $fields,
-            'expanded'    => false,
-            'multiple'    => false,
-            'label'       => 'mautic.plugin.recommender.form.order_by',
-            'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => false,
-            'required'    => false,
-            'attr'        => [
-                'class' => 'form-control filter-columns',
-            ],
-        ]);
+        $builder->add(
+            'column',
+            ChoiceType::class,
+            [
+                'choices'     => $this->flipSubarrays($fields),
+                'expanded'    => false,
+                'multiple'    => false,
+                'label'       => 'mautic.plugin.recommender.form.order_by',
+                'label_attr'  => ['class' => 'control-label'],
+                'placeholder' => false,
+                'required'    => false,
+                'attr'        => [
+                    'class' => 'form-control filter-columns',
+                ],
+            ]
+        );
 
         // Direction
-        $builder->add('direction', 'choice', [
-            'choices' => [
-                'DESC' => $this->translator->trans('mautic.report.report.label.tableorder_dir.desc'),
-                'ASC'  => $this->translator->trans('mautic.report.report.label.tableorder_dir.asc'),
-            ],
+        $builder->add('direction', ChoiceType::class, [
+            'choices' => array_flip($this->getDirections()),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.core.order',
             'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => false,
+            'placeholder' => false,
             'required'    => false,
             'attr'        => [
                 'class' => 'form-control not-chosen',
             ],
         ]);
 
-        $builder->add('function', 'choice', [
-            'choices'     => $this->getAvabilableFunctionChoices($column ?? null),
+        $builder->add('function', ChoiceType::class, [
+            'choices'     => array_flip($this->getAvabilableFunctionChoices($column ?? null)),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
             'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => false,
+            'placeholder' => false,
             'required'    => true,
             'attr'        => [
                 'class' => 'form-control not-chosen',
@@ -145,13 +145,13 @@ class RecommenderTableOrderType extends AbstractType
         }
 
         // function
-        $form->add('function', 'choice', [
-            'choices'     => $choices,
+        $form->add('function', ChoiceType::class, [
+            'choices'     => array_flip($choices),
             'expanded'    => false,
             'multiple'    => false,
             'label'       => 'mautic.report.function',
             'label_attr'  => ['class' => 'control-label'],
-            'empty_value' => false,
+            'placeholder' => false,
             'required'    => true,
             'attr'        => [
                 'class' => 'form-control not-chosen',
@@ -179,5 +179,23 @@ class RecommenderTableOrderType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['fields'] = $options['fields'];
+    }
+
+    private function getDirections()
+    {
+        return [
+            'DESC' => $this->translator->trans('mautic.report.report.label.tableorder_dir.desc'),
+            'ASC'  => $this->translator->trans('mautic.report.report.label.tableorder_dir.asc'),
+        ];
+    }
+
+    private function flipSubarrays(array $masterArrays): array
+    {
+        return array_map(
+            function (array $subArray) {
+                return array_flip($subArray);
+            },
+            $masterArrays
+        );
     }
 }

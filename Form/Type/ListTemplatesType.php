@@ -59,7 +59,7 @@ class ListTemplatesType extends AbstractType
                     $choices[$event->getId()] = $event->getName();
                 }
 
-                return $choices;
+                return array_flip($choices);
             },
             'attr'        => [
                 'class' => 'form-control',
@@ -68,7 +68,7 @@ class ListTemplatesType extends AbstractType
             'expanded'    => false,
             'multiple'    => false,
             'required'    => false,
-            'empty_value' => '',
+            'placeholder' => '',
         ]);
     }
 

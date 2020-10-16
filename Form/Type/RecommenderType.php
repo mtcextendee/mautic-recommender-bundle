@@ -14,6 +14,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 use Doctrine\ORM\EntityManager;
 use Mautic\CategoryBundle\Form\Type\CategoryListType;
 use Mautic\CoreBundle\Form\DataTransformer\IdToEntityModelTransformer;
+use Mautic\CoreBundle\Form\Type\FormButtonsType;
 use Mautic\LeadBundle\Form\DataTransformer\FieldFilterTransformer;
 use Mautic\LeadBundle\Model\ListModel;
 use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
@@ -24,6 +25,7 @@ use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -194,7 +196,7 @@ class RecommenderType extends AbstractType
 
             $builder->add(
                 'newRecommenderButton',
-                'button',
+                ButtonType::class,
                 [
                     'attr'  => [
                         'class'   => 'btn btn-primary btn-nospin',
@@ -220,7 +222,7 @@ class RecommenderType extends AbstractType
 
             $builder->add(
                 'editRecommenderButton',
-                'button',
+                ButtonType::class,
                 [
                     'attr'  => [
                         'class'    => 'btn btn-primary btn-nospin',
@@ -248,8 +250,8 @@ class RecommenderType extends AbstractType
                 'filters',
                 CollectionType::class,
                 [
-                    'type'           => FilterType::class,
-                    'options'        => [
+                    'entry_type'           => FilterType::class,
+                    'entry_options'        => [
                         'fields' => $this->fieldChoices,
                     ],
                     'error_bubbling' => false,
@@ -290,18 +292,7 @@ class RecommenderType extends AbstractType
             'filterTarget',
             ChoiceType::class,
             [
-                'choices'     => [
-                    FiltersEnum::BEST_SELLERS     => 'recommender.form.best_sellers',
-                    FiltersEnum::POPULAR_PRODUCTS => 'recommender.form.popular_products',
-                    FiltersEnum::ABANDONED_CART   => 'recommender.form.event.abandoned_cart',
-                    FiltersEnum::RECENTLY_CREATED => 'recommender.form.event.recently_created',
-                    //FiltersEnum::CUSTOM           => 'recommender.form.event.custom',
-                    //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
-                   // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
-                    //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
-                    //'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
-                    //'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
-                ],
+                'choices'     => array_flip($this->getFilterTargets()),
                 'choice_attr' => function ($choice, $key, $value) {
                     return ['tooltip' => "recommender.form.{$value}.tooltip"];
                 },
@@ -318,7 +309,7 @@ class RecommenderType extends AbstractType
 
         $builder->add(
             'buttons',
-            'form_buttons'
+            FormButtonsType::class
         );
 
         $builder->add(
@@ -346,8 +337,24 @@ class RecommenderType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'recommender';
+    }
+
+    private function getFilterTargets()
+    {
+        return [
+            FiltersEnum::BEST_SELLERS     => 'recommender.form.best_sellers',
+            FiltersEnum::POPULAR_PRODUCTS => 'recommender.form.popular_products',
+            FiltersEnum::ABANDONED_CART   => 'recommender.form.event.abandoned_cart',
+            FiltersEnum::RECENTLY_CREATED => 'recommender.form.event.recently_created',
+            FiltersEnum::CUSTOM           => 'recommender.form.event.custom',
+            //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
+            // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
+            //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
+            //'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
+            //'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
+        ];
     }
 }

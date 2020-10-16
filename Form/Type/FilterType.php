@@ -113,7 +113,7 @@ class FilterType extends AbstractType
         $view->vars['fields'] = $options['fields'];
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         'recommender_filter';
     }

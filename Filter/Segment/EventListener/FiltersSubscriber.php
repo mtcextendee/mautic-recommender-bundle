@@ -21,8 +21,10 @@ use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Choices;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\Decorator\Decorator;
 use MauticPlugin\MauticRecommenderBundle\Filter\Segment\FilterFactory;
 use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class FiltersSubscriber extends CommonSubscriber
+class FiltersSubscriber implements EventSubscriberInterface
 {
     /**
      * @var FilterFactory
@@ -45,6 +47,11 @@ class FiltersSubscriber extends CommonSubscriber
     protected $integrationHelper;
 
     /**
+     * @var \Symfony\Component\HttpFoundation\Request|null
+     */
+    private $request;
+
+    /**
      * FiltersSubscriber constructor.
      *
      * @param FilterFactory $segmentFilterFactory
@@ -55,12 +62,14 @@ class FiltersSubscriber extends CommonSubscriber
         FilterFactory $segmentFilterFactory,
         Choices $choices,
         Decorator $decorator,
-        IntegrationHelper $integrationHelper
+        IntegrationHelper $integrationHelper,
+        RequestStack $requestStack
     ) {
         $this->filterFactory     = $segmentFilterFactory;
         $this->choices           = $choices;
         $this->decorator         = $decorator;
         $this->integrationHelper = $integrationHelper;
+        $this->request           = $requestStack->getCurrentRequest();
     }
 
     /**

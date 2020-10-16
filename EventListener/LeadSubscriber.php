@@ -11,17 +11,20 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
+use Doctrine\ORM\EntityManager;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\LeadBundle\Event\LeadTimelineEvent;
 use Mautic\LeadBundle\LeadEvents;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLog;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventLogRepository;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class LeadSubscriber.
  */
-class LeadSubscriber extends CommonSubscriber
+class LeadSubscriber implements EventSubscriberInterface
 {
     /**
      * @var integrationHelper
@@ -29,14 +32,27 @@ class LeadSubscriber extends CommonSubscriber
     protected $integrationHelper;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    /**
      * LeadSubscriber constructor.
      *
-     * @param FormModel $formModel
-     * @param PageModel $pageModel
+     * @param IntegrationHelper   $integrationHelper
+     * @param TranslatorInterface $translator
+     * @param EntityManager       $em
      */
-    public function __construct(IntegrationHelper $integrationHelper)
+    public function __construct(IntegrationHelper $integrationHelper, TranslatorInterface $translator, EntityManager $em)
     {
         $this->integrationHelper      = $integrationHelper;
+        $this->translator = $translator;
+        $this->em = $em;
     }
 
     /**

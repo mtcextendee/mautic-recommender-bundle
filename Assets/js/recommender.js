@@ -5,9 +5,8 @@ Mautic.recommenderOnLoad = function (container, response) {
     Mautic.leadlistOnLoad('div.dwc-filter');
 
     Mautic.recommendationsType();
+    Mautic.onRecommenderTypeChoice();
 }
-
-
 
 Mautic.recommendationsType = function () {
     let selectedValue = mQuery("#recommender_filterTarget").val();
@@ -18,8 +17,6 @@ Mautic.recommendationsType = function () {
         mQuery('#recommender-orderby').hide('normal');
     }
 }
-
-
 
 mQuery('.recommender-preview .editor-basic').on('froalaEditor.contentChanged', function(){
         Mautic.recommenderUpdatePreview();
@@ -71,9 +68,6 @@ Mautic.onRecommenderTypeChoice = function (el) {
         mQuery("#recommender-orderby").hide();
     }
 }
-
-Mautic.onRecommenderTypeChoice()
-
 
 /**
  * Enables/Disables email preview and edit. Can be triggered from campaign or

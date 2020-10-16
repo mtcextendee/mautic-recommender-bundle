@@ -27,6 +27,7 @@ use MauticPlugin\MauticMTCPilotBundle\MTCPilotEvents;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplateRepository;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderEvent;
+use MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderTemplatesType;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -96,7 +97,7 @@ class TemplateModel extends FormModel implements AjaxLookupModelInterface
             $options['action'] = $action;
         }
 
-        return $formFactory->create('recommender_templates', $entity, $options);
+        return $formFactory->create(RecommenderTemplatesType::class, $entity, $options);
     }
 
     /**

@@ -11,9 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Recommender\EventListener;
 
-use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\InputHelper;
-use Mautic\LeadBundle\Event\LeadListFilteringEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterChoiceFormEvent;
 use MauticPlugin\MauticRecommenderBundle\Event\FilterResultsEvent;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\RecommenderQueryBuilder;
@@ -22,8 +20,10 @@ use MauticPlugin\MauticRecommenderBundle\Helper\SqlQuery;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
-class FiltersFilterSubscriber extends CommonSubscriber
+class FiltersFilterSubscriber implements EventSubscriberInterface
 {
     const TYPE = 'filters';
 

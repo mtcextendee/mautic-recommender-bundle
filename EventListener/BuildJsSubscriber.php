@@ -16,12 +16,11 @@ use Mautic\CoreBundle\Event\BuildJsEvent;
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
-/**
- * Class BuildJsSubscriber.
- */
-class BuildJsSubscriber extends CommonSubscriber
+class BuildJsSubscriber implements EventSubscriberInterface
 {
     /**
      * @var CoreParametersHelper
@@ -34,16 +33,23 @@ class BuildJsSubscriber extends CommonSubscriber
     protected $integrationHelper;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * BuildJsSubscriber constructor.
      *
      * @param CoreParametersHelper $coreParametersHelper
      */
     public function __construct(
         CoreParametersHelper $coreParametersHelper,
-        IntegrationHelper $integrationHelper
+        IntegrationHelper $integrationHelper,
+        RouterInterface $router
     ) {
         $this->coreParametersHelper = $coreParametersHelper;
         $this->integrationHelper    = $integrationHelper;
+        $this->router = $router;
     }
 
     /**
@@ -70,7 +76,7 @@ class BuildJsSubscriber extends CommonSubscriber
         }
 
         $url        = $this->router->generate('mautic_recommender_send_event', [], UrlGeneratorInterface::ABSOLUTE_URL);
-        $eventLabel = $this->coreParametersHelper->getParameter('eventLabel');
+        $eventLabel = $this->coreParametersHelper->get('eventLabel');
         //basic js
         $js = <<<JS
         

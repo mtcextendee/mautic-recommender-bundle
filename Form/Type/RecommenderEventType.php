@@ -11,6 +11,7 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
+use Mautic\CoreBundle\Form\Type\FormButtonsType;
 use MauticPlugin\MauticRecommenderBundle\Enum\EventTypeEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -77,26 +78,26 @@ class RecommenderEventType extends AbstractType
             'type',
             ChoiceType::class,
             [
-                'choices'     => EventTypeEnum::getChoices(),
+                'choices'     => array_flip(EventTypeEnum::getChoices()),
                 'expanded'    => false,
                 'multiple'    => false,
                 'label'       => 'mautic.recommender.form.event.type',
                 'label_attr'  => ['class' => ''],
-                'empty_value' => '',
+                'placeholder' => '',
                 'required'    => true,
             ]
         );
 
         $builder->add(
             'buttons',
-            'form_buttons'
+            FormButtonsType::class
         );
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'recommender_event';
     }

@@ -16,7 +16,6 @@ return [
                     'mautic.recommender.model.client',
                     'mautic.recommender.filter.recommender',
                     'mautic.recommender.filter.factory',
-                    'mautic.helper.integration',
                 ],
             ],
 
@@ -28,6 +27,7 @@ return [
                     'mautic.recommender.filter.fields.recommender',
                     'mautic.recommender.segment.decoration',
                     'mautic.helper.integration',
+                    'request_stack'
                 ],
             ],
 
@@ -36,6 +36,7 @@ return [
                 'arguments' => [
                     'mautic.helper.core_parameters',
                     'mautic.helper.integration',
+                    'router'
                 ],
             ],
             'mautic.recommender.pagebundle.subscriber'  => [
@@ -44,6 +45,7 @@ return [
                     'mautic.recommender.service.replacer',
                     'mautic.tracker.contact',
                     'mautic.helper.integration',
+                    'mautic.helper.token_builder.factory'
                 ],
             ],
             'mautic.recommender.token.replacer.subscriber'  => [
@@ -60,6 +62,8 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\LeadSubscriber::class,
                 'arguments' => [
                     'mautic.helper.integration',
+                    'translator',
+                    'doctrine.orm.entity_manager'
                 ],
             ],
             'mautic.recommender.emailbundle.subscriber' => [
@@ -68,13 +72,15 @@ return [
                     'mautic.recommender.helper',
                     'mautic.recommender.service.replacer',
                     'mautic.helper.integration',
-                    'mautic.email.model.email'
+                    'mautic.email.model.email',
+                    'mautic.helper.token_builder.factory'
                 ],
             ],
             'mautic.recommender.maintenance.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\MaintenanceSubscriber::class,
                 'arguments' => [
                     'doctrine.dbal.default_connection',
+                    'translator'
                 ],
             ],
 
@@ -476,17 +482,27 @@ return [
                     'mautic.recommender.service.token',
                 ],
             ],
-            'mautic.recommender.service.campaign.lead.details' => [
-                'class'     => MauticPlugin\MauticRecommenderBundle\EventListener\Service\CampaignLeadDetails::class,
-                'arguments' => [
-                    'mautic.campaign.model.campaign',
-                ],
-            ],
         ],
         'integrations' => [
             'mautic.integration.recommender' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderIntegration::class,
                 'arguments' => [
+                    'event_dispatcher',
+                    'mautic.helper.cache_storage',
+                    'doctrine.orm.entity_manager',
+                    'session',
+                    'request_stack',
+                    'router',
+                    'translator',
+                    'logger',
+                    'mautic.helper.encryption',
+                    'mautic.lead.model.lead',
+                    'mautic.lead.model.company',
+                    'mautic.helper.paths',
+                    'mautic.core.model.notification',
+                    'mautic.lead.model.field',
+                    'mautic.plugin.model.integration_entity',
+                    'mautic.lead.model.dnc',
                 ],
             ],
         ],

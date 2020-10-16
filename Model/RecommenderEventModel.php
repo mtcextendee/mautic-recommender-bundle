@@ -17,6 +17,7 @@ use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventRepository;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplateRepository;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderEvent;
+use MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderEventType;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
@@ -85,7 +86,7 @@ class RecommenderEventModel extends FormModel implements AjaxLookupModelInterfac
             $options['action'] = $action;
         }
 
-        return $formFactory->create('recommender_event', $entity, $options);
+        return $formFactory->create(RecommenderEventType::class, $entity, $options);
     }
 
     /**

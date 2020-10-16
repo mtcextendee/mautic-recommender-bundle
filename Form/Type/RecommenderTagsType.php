@@ -15,6 +15,7 @@ use JMS\Serializer\Tests\Fixtures\Input;
 use Mautic\CoreBundle\Helper\InputHelper;
 use MauticPlugin\MauticRecommenderBundle\Api\Service\ApiCommands;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -73,7 +74,7 @@ class RecommenderTagsType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'recommender_tags';
     }
@@ -83,6 +84,6 @@ class RecommenderTagsType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
 }

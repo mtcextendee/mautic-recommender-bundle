@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\BuilderTokenHelper;
+use Mautic\CoreBundle\Helper\BuilderTokenHelperFactory;
 use Mautic\LeadBundle\LeadEvent;
 use Mautic\LeadBundle\Tracker\ContactTracker;
 use Mautic\PageBundle\Event as Events;
@@ -20,11 +21,9 @@ use Mautic\PageBundle\PageEvents;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * Class PageSubscriber.
- */
-class PageSubscriber extends CommonSubscriber
+class PageSubscriber implements EventSubscriberInterface
 {
     /**
      * @var RecommenderTokenReplacer
@@ -42,19 +41,28 @@ class PageSubscriber extends CommonSubscriber
     protected $integrationHelper;
 
     /**
+     * @var BuilderTokenHelperFactory
+     */
+    private $builderTokenHelperFactory;
+
+    /**
      * PageSubscriber constructor.
      *
-     * @param RecommenderTokenReplacer $recommenderTokenReplacer
-     * @param ContactTracker           $contactTracker
+     * @param RecommenderTokenReplacer  $recommenderTokenReplacer
+     * @param ContactTracker            $contactTracker
+     * @param IntegrationHelper         $integrationHelper
+     * @param BuilderTokenHelperFactory $builderTokenHelperFactory
      */
     public function __construct(
         RecommenderTokenReplacer $recommenderTokenReplacer,
         ContactTracker $contactTracker,
-        IntegrationHelper $integrationHelper
+        IntegrationHelper $integrationHelper,
+        BuilderTokenHelperFactory $builderTokenHelperFactory
     ) {
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
         $this->contactTracker           = $contactTracker;
         $this->integrationHelper        = $integrationHelper;
+        $this->builderTokenHelperFactory = $builderTokenHelperFactory;
     }
 
     /**
@@ -81,7 +89,7 @@ class PageSubscriber extends CommonSubscriber
         }
 
         if ($event->tokensRequested(RecommenderHelper::$recommenderRegex)) {
-            $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
+            $tokenHelper = $this->builderTokenHelperFactory->getBuilderTokenHelper( 'recommender');
             $event->addTokensFromHelper($tokenHelper, RecommenderHelper::$recommenderRegex, 'name', 'id', true);
         }
     }

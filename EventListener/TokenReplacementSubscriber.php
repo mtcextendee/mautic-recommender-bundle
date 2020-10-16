@@ -21,8 +21,9 @@ use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticFocusBundle\FocusEvents;
 use MauticPlugin\MauticFocusBundle\Model\FocusModel;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class TokenReplacementSubscriber extends CommonSubscriber
+class TokenReplacementSubscriber implements EventSubscriberInterface
 {
     /**
      * @var RecommenderTokenReplacer

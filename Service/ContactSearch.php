@@ -99,7 +99,7 @@ class ContactSearch
             ],
             [
                 'action'  => $this->getAction(),
-                'choices' => $this->getChoices(),
+                'choices' => array_flip($this->getChoices()),
             ]
         );
     }
@@ -155,7 +155,7 @@ class ContactSearch
     /**
      * @return array
      */
-    private function getViewParameters()
+    public function getViewParameters()
     {
         $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($this->getContact());
         $this->recommenderTokenReplacer->getRecommenderToken()->setContent('{recommender='.$this->objectId.'}');

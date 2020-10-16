@@ -11,9 +11,14 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\Form\Type;
 
+use Mautic\CoreBundle\Form\Type\ButtonGroupType;
+use Mautic\CoreBundle\Form\Type\FormButtonsType;
+use Mautic\CoreBundle\Form\Type\YesNoButtonGroupType;
 use Mautic\CoreBundle\Security\Permissions\CorePermissions;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -58,7 +63,7 @@ class RecommenderTemplatesType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'label'      => 'mautic.core.name',
                 'label_attr' => ['class' => 'control-label'],
@@ -89,9 +94,10 @@ class RecommenderTemplatesType extends AbstractType
             ]
         );
 
+
         $builder->add(
             'templateMode',
-            'button_group',
+            ButtonGroupType::class,
             [
                 'label'      => 'mautic.plugin.recommender.form.template_mode',
                 'label_attr' => ['class' => 'control-label'],
@@ -99,10 +105,7 @@ class RecommenderTemplatesType extends AbstractType
                     'class'    => 'form-control',
                     'tooltip'  => 'mautic.plugin.recommender.form.template_mode.tooltip',
                 ],
-                'choices' => [
-                    'mautic.plugin.recommender.form.basic'  => 'basic',
-                    'mautic.plugin.recommender.form.html'   => 'html',
-                ],
+                'choices' => $this->getTemplateModes(),
                 'choices_as_values' => true,
                 'data'              => $options['data']->getTemplateMode() ?: 'basic',
             ]
@@ -131,19 +134,19 @@ class RecommenderTemplatesType extends AbstractType
             ]
         );
 
-        $builder->add('isPublished', 'yesno_button_group');
+        $builder->add('isPublished', YesNoButtonGroupType::class);
 
         if (!empty($options['update_select'])) {
             $builder->add(
                 'buttons',
-                'form_buttons',
+                FormButtonsType::class,
                 [
                     'apply_text' => false,
                 ]
             );
             $builder->add(
                 'updateSelect',
-                'hidden',
+                HiddenType::class,
                 [
                     'data'   => $options['update_select'],
                     'mapped' => false,
@@ -152,7 +155,7 @@ class RecommenderTemplatesType extends AbstractType
         } else {
             $builder->add(
                 'buttons',
-                'form_buttons'
+                FormButtonsType::class
             );
         }
 
@@ -172,8 +175,16 @@ class RecommenderTemplatesType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'recommender_templates';
+    }
+
+    private function getTemplateModes()
+    {
+        return [
+            'mautic.plugin.recommender.form.basic' => 'basic',
+            'mautic.plugin.recommender.form.html'  => 'html',
+        ];
     }
 }

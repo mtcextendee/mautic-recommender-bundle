@@ -13,21 +13,20 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
 use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\BuilderTokenHelper;
+use Mautic\CoreBundle\Helper\BuilderTokenHelperFactory;
 use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Entity\Stat;
 use Mautic\EmailBundle\Event\EmailBuilderEvent;
 use Mautic\EmailBundle\Event\EmailSendEvent;
-use Mautic\EmailBundle\Exception\EmailCouldNotBeSentException;
 use Mautic\EmailBundle\Exception\FailedToSendToContactException;
 use Mautic\EmailBundle\Model\EmailModel;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Helper\RecommenderHelper;
 use MauticPlugin\MauticRecommenderBundle\Service\RecommenderTokenReplacer;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-/**
- * Class EmailSubscriber.
- */
-class EmailSubscriber extends CommonSubscriber
+
+class EmailSubscriber implements EventSubscriberInterface
 {
     /**
      * @var RecommenderHelper
@@ -50,23 +49,31 @@ class EmailSubscriber extends CommonSubscriber
     private $emailModel;
 
     /**
+     * @var BuilderTokenHelperFactory
+     */
+    private $builderTokenHelperFactory;
+
+    /**
      * EmailSubscriber constructor.
      *
-     * @param RecommenderHelper        $recommenderHelper
-     * @param RecommenderTokenReplacer $recommenderTokenReplacer
-     * @param IntegrationHelper        $integrationHelper
-     * @param EmailModel               $emailModel
+     * @param RecommenderHelper         $recommenderHelper
+     * @param RecommenderTokenReplacer  $recommenderTokenReplacer
+     * @param IntegrationHelper         $integrationHelper
+     * @param EmailModel                $emailModel
+     * @param BuilderTokenHelperFactory $builderTokenHelperFactory
      */
     public function __construct(
         RecommenderHelper $recommenderHelper,
         RecommenderTokenReplacer $recommenderTokenReplacer,
         IntegrationHelper $integrationHelper,
-        EmailModel $emailModel
+        EmailModel $emailModel,
+        BuilderTokenHelperFactory $builderTokenHelperFactory
     ) {
         $this->recommenderHelper        = $recommenderHelper;
         $this->recommenderTokenReplacer = $recommenderTokenReplacer;
         $this->integrationHelper        = $integrationHelper;
         $this->emailModel = $emailModel;
+        $this->builderTokenHelperFactory = $builderTokenHelperFactory;
     }
 
     /**
@@ -94,7 +101,7 @@ class EmailSubscriber extends CommonSubscriber
         }
 
         if ($event->tokensRequested(RecommenderHelper::$recommenderRegex)) {
-            $tokenHelper = new BuilderTokenHelper($this->factory, 'recommender');
+            $tokenHelper = $this->builderTokenHelperFactory->getBuilderTokenHelper( 'recommender');
             $event->addTokensFromHelper($tokenHelper, RecommenderHelper::$recommenderRegex, 'name', 'id', true);
         }
     }

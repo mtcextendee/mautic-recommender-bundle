@@ -17,14 +17,6 @@ class RecommenderIntegration extends AbstractIntegration
     const IMPORT_BATCH   = 100;
 
     /**
-     * RecommenderIntegration constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @return string
