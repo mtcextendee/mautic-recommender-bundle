@@ -56,7 +56,7 @@ class RecommenderTagsType extends AbstractType
                     $choices[$tag] = $property['name'];
                 }
 
-                return $choices;
+                return array_flip($choices);
             },
             'label'       => 'mautic.plugin.recommender.template.tags',
             'label_attr'  => ['class' => 'control-label'],

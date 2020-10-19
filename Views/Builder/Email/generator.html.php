@@ -12,7 +12,6 @@
 if (!isset($preview)) {
     $preview = false;
 }
-
 echo $view->render(
     'MauticRecommenderBundle:Builder\Email:generator-header.html.php',
     [
@@ -41,9 +40,9 @@ echo $view->render(
 echo $view->render(
     'MauticRecommenderBundle:Builder\Email:generator-footer.html.php',
     [
+        'preview'     => $preview,
         'recommender' => $recommender,
         'settings'    => $settings,
-        'preview'     => $preview,
     ]
 );
 ?>
