@@ -18,6 +18,7 @@ class RecommenderTokenHTMLReplacer
      */
     private $recommenderGenerator;
     private $recommenderToken;
+
     /**
      * RecommenderTokenHTMLReplacer constructor.
      */
@@ -26,6 +27,7 @@ class RecommenderTokenHTMLReplacer
         $this->recommenderGenerator = $recommenderGenerator;
         $this->recommenderToken     = $recommenderToken;
     }
+
     public function findTokens($content)
     {
         // replace slots

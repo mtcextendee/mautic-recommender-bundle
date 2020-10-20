@@ -169,6 +169,7 @@ class ContactSearch
             serialize(['search' => $this->getSearch(), 'contact' => $this->getContact()]),
             3600 * 24 * 31 * 365
         );
+
         return [
             'tmpl'        => $this->getTmpl(),
             'searchValue' => $this->getSearch(),

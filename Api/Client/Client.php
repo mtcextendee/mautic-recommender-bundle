@@ -26,6 +26,7 @@ class Client
     private $settings = [];
     private $optionsResolver;
     private $endpoint;
+
     /**
      * Client constructor.
      */
@@ -34,6 +35,7 @@ class Client
         new PropertyAccessor();
         $this->clientModel      = $clientModel;
     }
+
     /**
      * @param string $endpoint
      *
@@ -53,6 +55,7 @@ class Client
 
         return $loader->run();
     }
+
     public function display(RecommenderToken $recommenderToken)
     {
         $this->endpoint        = $recommenderToken->getType();
@@ -65,6 +68,7 @@ class Client
             return $loader->run();
         }
     }
+
     /**
      * @return Options
      */
@@ -72,6 +76,7 @@ class Client
     {
         return $this->options;
     }
+
     /**
      * @return Options
      */
@@ -79,6 +84,7 @@ class Client
     {
         return $this->optionsResolver;
     }
+
     /**
      * @return RecommenderClientModel
      */
@@ -86,6 +92,7 @@ class Client
     {
         return $this->clientModel;
     }
+
     /**
      * @return mixed
      */
@@ -93,6 +100,7 @@ class Client
     {
         return $this->endpoint;
     }
+
     /**
      * @return array
      */

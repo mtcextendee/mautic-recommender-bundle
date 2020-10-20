@@ -32,9 +32,6 @@ class RecommenderQueryBuilder
     /** @var EntityManager */
     private $entityManager;
 
-    /** @var RandomParameterName */
-    private $randomParameterName;
-
     /**
      * @var FilterFactory
      */
@@ -67,7 +64,6 @@ class RecommenderQueryBuilder
         EventDispatcherInterface $dispatcher
     ) {
         $this->entityManager       = $entityManager;
-        $this->randomParameterName = $randomParameterName;
         $this->filterFactory       = $filterFactory;
         $this->decorator           = $decorator;
         $this->recommenderOrderBy  = $recommenderOrderBy;
@@ -117,15 +113,15 @@ class RecommenderQueryBuilder
 
     private function setCustomOrderBy(QueryBuilder $queryBuilder, Recommender $recommender)
     {
-            $tableorder = $recommender->getTableOrder();
-            if (empty($tableorder['column'])) {
-                return;
-            }
-            $orderBy = $this->recommenderOrderBy->getDictionary($queryBuilder, $tableorder['column']);
+        $tableorder = $recommender->getTableOrder();
+        if (empty($tableorder['column'])) {
+            return;
+        }
+        $orderBy = $this->recommenderOrderBy->getDictionary($queryBuilder, $tableorder['column']);
 
-            if (!empty($tableorder['function'])) {
-                $orderBy = $tableorder['function'].'('.$orderBy.')';
-            }
-            $queryBuilder->orderBy($orderBy, $tableorder['direction']);
+        if (!empty($tableorder['function'])) {
+            $orderBy = $tableorder['function'].'('.$orderBy.')';
+        }
+        $queryBuilder->orderBy($orderBy, $tableorder['direction']);
     }
 }

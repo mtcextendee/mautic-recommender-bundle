@@ -19,7 +19,7 @@ if (!isset($preview)) {
 <tr>
     <td align="center" valign="top">
         <?php if ($preview) {
-            echo html_entity_decode($recommender->getProperties()['footer']); ?>
+    echo html_entity_decode($recommender->getProperties()['footer']); ?>
         <?php
 } else {
         echo $recommender->getProperties()['footer']; ?>

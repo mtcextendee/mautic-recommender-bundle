@@ -40,6 +40,7 @@ class RecommenderGenerator
      * @var EventDispatcherInterface
      */
     private $dispatcher;
+
     /**
      * RecommenderGenerator constructor.
      */
@@ -49,6 +50,7 @@ class RecommenderGenerator
         $this->templateHelper    = $templatingHelper;
         $this->dispatcher        = $dispatcher;
     }
+
     public function getResultByToken(RecommenderToken $recommenderToken)
     {
         if (!$recommenderToken->getRecommender() instanceof Recommender) {
@@ -63,6 +65,7 @@ class RecommenderGenerator
 
         return $this->items;
     }
+
     /**
      * @param $content
      *
@@ -74,6 +77,7 @@ class RecommenderGenerator
             return $this->twig->createTemplate($content)->render($this->getFirstItem());
         }
     }
+
     /**
      * @return string|void
      */
@@ -127,6 +131,7 @@ class RecommenderGenerator
 
         return $this->getTemplateContent($headerTemplate, $footerTemplate, $bodyTemplate);
     }
+
     /**
      * @return string
      */
@@ -147,6 +152,7 @@ class RecommenderGenerator
 
         return $output;
     }
+
     /**
      * @return mixed
      */
@@ -154,6 +160,7 @@ class RecommenderGenerator
     {
         return $this->header;
     }
+
     /**
      * @return mixed
      */
@@ -161,6 +168,7 @@ class RecommenderGenerator
     {
         return $this->footer;
     }
+
     /**
      * @return array
      */
@@ -178,6 +186,7 @@ class RecommenderGenerator
 
         return $this->items;
     }
+
     /**
      * @param array $items
      */
@@ -185,6 +194,7 @@ class RecommenderGenerator
     {
         $this->items = $items;
     }
+
     /**
      * Return new token keys with comma separated item IDs.
      *
@@ -196,6 +206,7 @@ class RecommenderGenerator
     {
         return  implode($separator, array_column($this->items, 'itemId'));
     }
+
     /**
      * Get first item.
      *
