@@ -100,10 +100,10 @@ class Processor
                 throw new \Exception('Contact '.$eventDetail['contactEmail'].' not found');
             }
             unset($eventDetail['contactEmail']);
-            $this->leadModel->setSystemCurrentLead($contact);
+            $this->contactTracker->setSystemContact($contact);
         } elseif (isset($eventDetail['contactId'])) {
             if ($contact = $this->leadModel->getEntity($eventDetail['contactId'])) {
-                $this->leadModel->setSystemCurrentLead($contact);
+                $this->contactTracker->setSystemContact($contact);
             } else {
                 throw new \Exception('Tracked contact doesn\'t exist');
             }

@@ -33,7 +33,12 @@ class ItemListType extends AbstractType
                 'model_lookup_method' => 'getLookupResults',
                 'ajax_lookup_action'  => 'plugin:recommender:getLookupChoiceList',
                 'lookup_arguments'    => function (Options $options) {
-                    return ['filter' => '$data', 'limit'  => 100, 'start'  => 0, 'type'   => 'recommender.client'];
+                    return [
+                        'type'   => 'recommender.client',
+                        'filter' => '$data',
+                        'limit'  => 100,
+                        'start'  => 0,
+                    ];
                 },
                 'multiple'            => true,
                 'main_entity'         => null,

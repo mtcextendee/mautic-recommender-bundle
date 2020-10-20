@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManager;
 use Mautic\CoreBundle\Helper\ArrayHelper;
 use Mautic\LeadBundle\Segment\RandomParameterName;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
+use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
 use MauticPlugin\MauticRecommenderBundle\Filter\QueryBuilder;
 use MauticPlugin\MauticRecommenderBundle\Filter\Recommender\Decorator\Decorator;
@@ -104,14 +105,27 @@ class RecommenderQueryBuilder
             $queryBuilder = $filter->applyQuery($queryBuilder);
         }
 
-        $this->setOrderBy($queryBuilder, $recommenderToken->getRecommender());
+        if (FiltersEnum::CUSTOM === $recommenderToken->getRecommender()->getFilterTarget()) {
+            $this->setCustomOrderBy($queryBuilder, $recommenderToken->getRecommender());
+        }
+
         $queryBuilder->groupBy('l.item_id');
         $queryBuilder->setMaxResults($recommenderToken->getLimit());
 
         return $queryBuilder;
     }
 
-    private function setOrderBy(QueryBuilder $queryBuilder, Recommender $recommender)
+    private function setCustomOrderBy(QueryBuilder $queryBuilder, Recommender $recommender)
     {
+            $tableorder = $recommender->getTableOrder();
+            if (empty($tableorder['column'])) {
+                return;
+            }
+            $orderBy = $this->recommenderOrderBy->getDictionary($queryBuilder, $tableorder['column']);
+
+            if (!empty($tableorder['function'])) {
+                $orderBy = $tableorder['function'].'('.$orderBy.')';
+            }
+            $queryBuilder->orderBy($orderBy, $tableorder['direction']);
     }
 }

@@ -15,7 +15,7 @@ class FiltersEnum
 {
     const ABANDONED_CART      = 'abandoned_cart';
 
-    const CUSTOM = 'custom';
+    const CUSTOM              = 'custom';
 
     const BEST_SELLERS        = 'best_sellers';
 

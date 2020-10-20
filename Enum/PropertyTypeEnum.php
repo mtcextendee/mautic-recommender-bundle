@@ -16,4 +16,5 @@ class PropertyTypeEnum
     const PRICE       = 'price';
     const NAME        = 'product';
     const CATEGORY    = 'category';
+    const PARENT_CATEGORY    = 'parent_category';
 }
