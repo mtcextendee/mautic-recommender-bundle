@@ -438,8 +438,8 @@ return [
                 'class'     => MauticPlugin\MauticRecommenderBundle\Service\RecommenderToken::class,
                 'arguments' => [
                     'mautic.recommender.model.recommender',
-                    'mautic.lead.model.lead',
                     'mautic.helper.integration',
+                    'mautic.tracker.contact'
                 ],
             ],
             'mautic.recommender.service.token.finder'        => [

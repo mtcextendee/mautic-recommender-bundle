@@ -13,6 +13,7 @@ namespace MauticPlugin\MauticRecommenderBundle\Service;
 
 use Mautic\CampaignBundle\Model\CampaignModel;
 use Mautic\LeadBundle\Model\LeadModel;
+use Mautic\LeadBundle\Tracker\ContactTracker;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
 use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplate;
@@ -54,13 +55,18 @@ class RecommenderToken
     private $filterTokens = [];
 
     /**
+     * @var ContactTracker
+     */
+    private $contactTracker;
+
+    /**
      * RecommenderToken constructor.
      */
-    public function __construct(RecommenderModel $recommenderModel, LeadModel $leadModel, IntegrationHelper $integrationHelper)
+    public function __construct(RecommenderModel $recommenderModel, IntegrationHelper $integrationHelper, ContactTracker $contactTracker)
     {
-        $this->leadModel         = $leadModel;
         $this->recommenderModel  = $recommenderModel;
         $this->integrationHelper = $integrationHelper;
+        $this->contactTracker = $contactTracker;
     }
 
     /**
@@ -69,7 +75,7 @@ class RecommenderToken
     public function getUserId()
     {
         if (!$this->userId) {
-            if ($lead = $this->leadModel->getCurrentLead()) {
+            if ($lead = $this->contactTracker->getContact()) {
                 return $lead->getId();
             }
         }
