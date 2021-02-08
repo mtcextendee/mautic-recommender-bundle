@@ -213,7 +213,7 @@ class RecommenderController extends AbstractStandardFormController
                 ]
             );
         } catch (\Exception $e) {
-            $logger->log('error', $e->getMessage().' with params '.$params);
+            $logger->log('debug', $e->getMessage().' with params '.$params);
             $error = $e->getMessage();
 
             return new JsonResponse(
