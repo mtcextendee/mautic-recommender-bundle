@@ -47,6 +47,8 @@ abstract class AbstractRequest
 
     /**
      * ItemRequest constructor.
+     *
+     * @param Client $client
      */
     public function __construct(Client $client)
     {
@@ -119,7 +121,7 @@ abstract class AbstractRequest
 
     public function save()
     {
-        if (1 == count($this->getEntities())) {
+        if (count($this->getEntities()) == 1) {
             return $this->getRepo()->saveEntity($this->getEntities()[0]);
         } elseif (count($this->getEntities()) > 1) {
             return $this->getRepo()->saveEntities($this->getEntities());
@@ -128,7 +130,7 @@ abstract class AbstractRequest
 
     public function delete()
     {
-        if (1 == count($this->getDeleteEntities())) {
+        if (count($this->getDeleteEntities()) == 1) {
             return $this->getRepo()->deleteEntity($this->getDeleteEntities()[0]);
         } elseif (count($this->getDeleteEntities()) > 1) {
             return $this->getRepo()->deleteEntities($this->getDeleteEntities());

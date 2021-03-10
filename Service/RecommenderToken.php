@@ -66,7 +66,7 @@ class RecommenderToken
     {
         $this->recommenderModel  = $recommenderModel;
         $this->integrationHelper = $integrationHelper;
-        $this->contactTracker = $contactTracker;
+        $this->contactTracker    = $contactTracker;
     }
 
     /**

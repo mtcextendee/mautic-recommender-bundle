@@ -15,11 +15,9 @@ use Mautic\CoreBundle\Helper\ArrayHelper;
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
 use Mautic\PluginBundle\Helper\IntegrationHelper;
 use Mautic\PluginBundle\Integration\AbstractIntegration;
-use MauticPlugin\MauticRecommenderBundle\Entity\Property;
 use MauticPlugin\MauticRecommenderBundle\Enum\PropertyTypeEnum;
 use MauticPlugin\MauticRecommenderBundle\Integration\DTO\RecombeeSettings;
 use MauticPlugin\MauticRecommenderBundle\Logger\DebugLogger;
-use MauticPlugin\MauticRecommenderBundle\Model\RecommenderClientModel;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderEventModel;
 use MauticPlugin\MauticRecommenderBundle\Model\RecommenderPropertyModel;
 

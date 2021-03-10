@@ -11,6 +11,7 @@
 namespace MauticPlugin\MauticRecommenderBundle\Filter\Query;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use Mautic\CoreBundle\Helper\DateTimeHelper;
 use Mautic\LeadBundle\Segment\ContactSegmentFilter;
 use Mautic\LeadBundle\Segment\Query\Filter\BaseFilterQueryBuilder;
 
@@ -61,6 +62,11 @@ class RecommenderFilterQueryBuilder extends BaseFilterQueryBuilder
                 $parameter = (int) $parameter;
 
                 return 'integer';
+            case 'date':
+                $dateTimeHelper = new DateTimeHelper($parameter);
+                $parameter      = $dateTimeHelper->getUtcDateTime();
+
+                return 'datetime';
             default:
                 return  $type;
         }

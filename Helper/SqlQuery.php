@@ -30,6 +30,8 @@ class SqlQuery
         foreach ($params as $name => $param) {
             if (is_array($param)) {
                 $param = implode(',', $param);
+            } elseif ($param instanceof \DateTimeInterface) {
+                $param = $param->format('Y-m-d');
             }
             $q = str_replace(":$name", "'$param'", $q);
         }

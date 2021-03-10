@@ -439,7 +439,7 @@ return [
                 'arguments' => [
                     'mautic.recommender.model.recommender',
                     'mautic.helper.integration',
-                    'mautic.tracker.contact'
+                    'mautic.tracker.contact',
                 ],
             ],
             'mautic.recommender.service.token.finder'        => [
