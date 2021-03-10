@@ -199,24 +199,24 @@ FROM recommender_event_log_property_value v WHERE v.event_log_id = l.id and v.pr
                             'type' => ItemValueQueryBuilder::getServiceId(),
                         ],
                     ];
-                if (4 == $property['id']) {
-                    $categories = $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
-                        4 // @todo Add product name detection
-                    );
-                    if ($categories) {
-                        $property['properties'] = [
-                            'type' => 'multiselect',
-                            'list' => $categories,
+                /* if (4 == $property['id']) {
+                     $categories = $this->recommenderClientModel->getItemPropertyValueRepository()->getValuesForProperty(
+                         4 // @todo Add product name detection
+                     );
+                     if ($categories) {
+                         $property['properties'] = [
+                             'type' => 'multiselect',
+                             'list' => $categories,
+                         ];
+                         $property['operators'] = [
+                            'include'=> [
+                                '=',
+                                'empty',
+                                'notEmpty',
+                            ],
                         ];
-                        $property['operators'] = [
-                           'include'=> [
-                               '=',
-                               'empty',
-                               'notEmpty',
-                           ],
-                       ];
-                    }
-                }
+                     }
+                 }*/
                 $this->fields['recommender_item_property_value']['item_'.$property['id']] = $property;
             }
         }

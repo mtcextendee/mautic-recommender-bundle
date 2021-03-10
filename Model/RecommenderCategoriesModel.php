@@ -49,7 +49,10 @@ class RecommenderCategoriesModel extends AbstractCommonModel implements AjaxLook
                 !is_array($filter) ? $filter : ''
             );
             foreach ($items as $item) {
-                $results[$item['value']] = $item['value'];
+                $results[] = [
+                    'value' => $item['value'],
+                    'label' => $item['value'],
+                ];
             }
         }
 

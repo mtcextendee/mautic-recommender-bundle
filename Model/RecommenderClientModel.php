@@ -115,7 +115,10 @@ class RecommenderClientModel extends AbstractCommonModel implements AjaxLookupMo
                         !is_array($filter) ? $filter : ''
                     );
                     foreach ($items as $item) {
-                        $results[$item['item_id']] = $item['value'];
+                        $results[] = [
+                            'label' => $item['value'],
+                            'value' => $item['item_id'],
+                        ];
 
                         //['label' => $item['value'], 'value' => $item['item_id']];
                     }
