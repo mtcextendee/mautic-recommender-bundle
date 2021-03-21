@@ -16,7 +16,7 @@ use Mautic\CoreBundle\Model\FormModel;
 use MauticPlugin\MauticRecommenderBundle\Entity\Event;
 use MauticPlugin\MauticRecommenderBundle\Entity\EventRepository;
 use MauticPlugin\MauticRecommenderBundle\Entity\Recommender;
-use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderTemplateRepository;
+use MauticPlugin\MauticRecommenderBundle\Entity\RecommenderRepository;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderEvent;
 use MauticPlugin\MauticRecommenderBundle\Form\Type\RecommenderType;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
@@ -41,7 +41,7 @@ class RecommenderModel extends FormModel implements AjaxLookupModelInterface
      */
     public function getRepository()
     {
-        /** @var RecommenderTemplateRepository $repo */
+        /** @var RecommenderRepository $repo */
         $repo = $this->em->getRepository('MauticRecommenderBundle:Recommender');
 
         $repo->setTranslator($this->translator);

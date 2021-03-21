@@ -10,7 +10,6 @@ Mautic.recommenderOnLoad = function (container, response) {
 
 Mautic.recommendationsType = function () {
     let selectedValue = mQuery("#recommender_filterTarget").val();
-    console.log(selectedValue);
     if (selectedValue == 'custom') {
         mQuery('#recommender-orderby').show('normal');
     }else{
@@ -62,7 +61,7 @@ Mautic.reloadExample = function (el) {
 }
 
 Mautic.onRecommenderTypeChoice = function (el) {
-    if (el.value() == 'custom') {
+    if (el && el.value() == 'custom') {
         mQuery("#recommender-orderby").show();
     }else{
         mQuery("#recommender-orderby").hide();
