@@ -14,11 +14,22 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 use Mautic\CoreBundle\Helper\ArrayHelper;
 use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderProperties;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RecommenderQuerySelectedCategoriesSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var RecommenderProperties
+     */
+    private $recommenderProperties;
+
+    public function __construct(RecommenderProperties $recommenderProperties)
+    {
+        $this->recommenderProperties = $recommenderProperties;
+    }
+
     /**
      * @return array
      */
@@ -48,11 +59,8 @@ class RecommenderQuerySelectedCategoriesSubscriber implements EventSubscriberInt
                 'ri',
                 MAUTIC_TABLE_PREFIX.'recommender_item_property_value',
                 'ripv',
-                'ri.id = ripv.item_id AND ripv.property_id = 4'
+                'ri.id = ripv.item_id AND ripv.property_id = '.$this->recommenderProperties->getCategoryPropertyId()
             );
-            /* $queryBuilder->andWhere(
-                 $queryBuilder->expr()->in('ripv.value', array_map([$queryBuilder->expr(), 'literal'], $categories))
-             );*/
 
             $queryBuilder->andWhere($queryBuilder->expr()->in('ripv.value', $categories));
         }

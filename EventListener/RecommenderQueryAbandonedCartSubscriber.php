@@ -13,11 +13,22 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
 use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderProperties;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RecommenderQueryAbandonedCartSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var RecommenderProperties
+     */
+    private $recommenderProperties;
+
+    public function __construct(RecommenderProperties $recommenderProperties)
+    {
+        $this->recommenderProperties = $recommenderProperties;
+    }
+
     /**
      * @return array
      */
@@ -34,35 +45,30 @@ class RecommenderQueryAbandonedCartSubscriber implements EventSubscriberInterfac
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
         if (FiltersEnum::ABANDONED_CART === $recommender->getFilterTarget()) {
             if ($contactId = $queryBuildEvent->getRecommenderToken()->getUserId()) {
-                $queryBuilder->andWhere($queryBuilder->expr()->eq('l.lead_id', (int) $contactId));
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->eq('l.lead_id', (int) $contactId),
+                    $queryBuilder->expr()->eq('l.event_id', $this->recommenderProperties->getAddToCartEventId())
+                );
 
                 $tableAlias  = 'rel2';
-                $tableAlias2 = 'rel3';
-
-                $leftJoinCondition = sprintf(
-                    '%s
-                .lead_id = %s.lead_id AND %s.id > %s.id  AND  ((%s.item_id = %s.item_id AND  %s.event_id  = 3) OR  %s.event_id = 4)',
-                    $tableAlias2,
-                    $tableAlias,
-                    $tableAlias2,
-                    $tableAlias,
-                    $tableAlias,
-                    $tableAlias2,
-                    $tableAlias2,
-                    $tableAlias2
-                );
 
                 $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
                 $subQueryBuilder
                     ->select('NULL')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', $tableAlias)
-                    ->leftJoin($tableAlias, MAUTIC_TABLE_PREFIX.'recommender_event_log', $tableAlias2,
-                        $leftJoinCondition
-                    )
-                    ->andWhere($tableAlias.'.event_id = 2')
-                    ->andWhere($tableAlias.'.item_id = l.item_id')
-                    ->andWhere($tableAlias2.'.id IS NULL');
+                    ->andWhere($tableAlias.'.lead_id = l.lead_id')
+                    ->andWhere($tableAlias.'.id > l.id')
+                    ->andWhere(
+                        sprintf(
+                            "(%s.event_id = %s AND %s.item_id = l.item_id) or %s.event_id = %s",
+                            $tableAlias,
+                            $this->recommenderProperties->getRemoveFromCartEventId(),
+                            $tableAlias,
+                            $tableAlias,
+                            $this->recommenderProperties->getPurchaseEventId()
+                        )
+                    );
 
-                $queryBuilder->andWhere($queryBuilder->expr()->exists($subQueryBuilder->getSQL()));
+                $queryBuilder->andWhere($queryBuilder->expr()->notExists($subQueryBuilder->getSQL()));
             }
         }
     }

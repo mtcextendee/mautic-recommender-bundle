@@ -13,11 +13,21 @@ namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
 use MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum;
 use MauticPlugin\MauticRecommenderBundle\Event\RecommenderQueryBuildEvent;
+use MauticPlugin\MauticRecommenderBundle\Integration\RecommenderProperties;
 use MauticPlugin\MauticRecommenderBundle\RecommenderEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RecommenderQueryBestSellersSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var RecommenderProperties
+     */
+    private $recommenderProperties;
+
+    public function __construct(RecommenderProperties $recommenderProperties)
+    {
+        $this->recommenderProperties = $recommenderProperties;
+    }
     /**
      * @return array
      */
@@ -34,7 +44,7 @@ class RecommenderQueryBestSellersSubscriber implements EventSubscriberInterface
         $queryBuilder = $queryBuildEvent->getQueryBuilder();
 
         if (FiltersEnum::BEST_SELLERS === $recommender->getFilterTarget()) {
-            $queryBuilder->andWhere($queryBuilder->expr()->in('l.event_id', 4));
+            $queryBuilder->andWhere($queryBuilder->expr()->in('l.event_id', $this->recommenderProperties->getPurchaseEventId()));
             $queryBuilder->orderBy('COUNT(l.event_id)', 'DESC');
         }
     }

@@ -89,15 +89,24 @@ return [
             ],
             'mautic.recommender.query.selected_categories.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQuerySelectedCategoriesSubscriber::class,
+                'arguments' => [
+                    'mautic.recommender.properties'
+                ]
             ],
             'mautic.recommender.query.best_sellers.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryBestSellersSubscriber::class,
+                'arguments' => [
+                    'mautic.recommender.properties'
+                ]
             ],
             'mautic.recommender.query.popular_products.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryPopularProductsSubscriber::class,
             ],
             'mautic.recommender.query.abandoned_cart.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryAbandonedCartSubscriber::class,
+                'arguments' => [
+                    'mautic.recommender.properties'
+                ]
             ],
             'mautic.recommender.query.recently_created.subscriber' => [
                 'class'     => \MauticPlugin\MauticRecommenderBundle\EventListener\RecommenderQueryRecentlyCreatedSubscriber::class,
@@ -224,6 +233,14 @@ return [
                 ],
                 'methodCalls' => [
                     'initiateDebugLogger' => ['mautic.recommender.logger'],
+                ],
+            ],
+
+            'mautic.recommender.properties'  => [
+                'class'     => \MauticPlugin\MauticRecommenderBundle\Integration\RecommenderProperties::class,
+                'arguments' => [
+                    'mautic.recommender.model.property',
+                    'mautic.recommender.model.event',
                 ],
             ],
 
