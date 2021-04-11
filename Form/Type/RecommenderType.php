@@ -66,11 +66,11 @@ class RecommenderType extends AbstractType
         Choices $choices,
         RouterInterface $router
     ) {
-        $this->dispatcher             = $dispatcher;
-        $this->entityManager          = $entityManager;
-        $this->translator             = $translator;
-        $this->choices                = $choices;
-        $this->router                 = $router;
+        $this->dispatcher    = $dispatcher;
+        $this->entityManager = $entityManager;
+        $this->translator    = $translator;
+        $this->choices       = $choices;
+        $this->router        = $router;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -203,7 +203,7 @@ class RecommenderType extends AbstractType
             $choices = $choiceEvent->getChoices('filter');
         }
 
-        $this->fieldChoices     = $this->choices->addChoices('recommender');
+        $this->fieldChoices = $this->choices->addChoices('recommender');
 
         $filterModalTransformer = new FieldFilterTransformer($this->translator);
         $builder->add(
@@ -211,8 +211,8 @@ class RecommenderType extends AbstractType
                 'filters',
                 CollectionType::class,
                 [
-                    'entry_type'           => FilterType::class,
-                    'entry_options'        => [
+                    'entry_type'     => FilterType::class,
+                    'entry_options'  => [
                         'fields' => $this->fieldChoices,
                     ],
                     'error_bubbling' => false,
@@ -257,7 +257,7 @@ class RecommenderType extends AbstractType
                 'choice_attr' => function ($choice, $key, $value) {
                     return ['tooltip' => "recommender.form.{$value}.tooltip"];
                 },
-                'attr'=> [
+                'attr'        => [
                     'onchange' => ' Mautic.recommendationsType(this)',
                 ],
                 'expanded'    => false,
@@ -300,19 +300,14 @@ class RecommenderType extends AbstractType
         return 'recommender';
     }
 
-    private function getFilterTargets()
+    private function getFilterTargets(): array
     {
-        return [
-            FiltersEnum::BEST_SELLERS     => 'recommender.form.best_sellers',
-            FiltersEnum::POPULAR_PRODUCTS => 'recommender.form.popular_products',
-            FiltersEnum::ABANDONED_CART   => 'recommender.form.event.abandoned_cart',
-            FiltersEnum::RECENTLY_CREATED => 'recommender.form.event.recently_created',
-            FiltersEnum::CUSTOM           => 'recommender.form.event.custom',
-            //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
-            // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
-            //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
-            //'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
-            //'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
-        ];
+        return FiltersEnum::getFilterTargets();
+
+        //'reflective'  => 'mautic.plugin.recommender.form.filter_target.reflective',
+        // 'exclusive'   => 'mautic.plugin.recommender.form.filter_target.exclusive',
+        //'inclusive'   => 'mautic.plugin.recommender.form.filter_target.inclusive',
+        //'proximity5'  => 'mautic.plugin.recommender.form.filter_target.proximity5',
+        //'proximity10' => 'mautic.plugin.recommender.form.filter_target.proximity10',
     }
 }

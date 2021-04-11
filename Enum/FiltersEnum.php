@@ -23,4 +23,19 @@ class FiltersEnum
 
     const RECENTLY_CREATED    = 'recently_created';
 
+    public static function getFilterTarget(string $filterTarget = null): ?string
+    {
+        return self::getFilterTargets()[$filterTarget] ?? null;
+    }
+
+    public static function getFilterTargets(): array
+    {
+        return [
+            self::BEST_SELLERS     => 'recommender.form.best_sellers',
+            self::POPULAR_PRODUCTS => 'recommender.form.popular_products',
+            self::ABANDONED_CART   => 'recommender.form.event.abandoned_cart',
+            self::RECENTLY_CREATED => 'recommender.form.event.recently_created',
+            self::CUSTOM           => 'recommender.form.event.custom',
+        ];
+    }
 }

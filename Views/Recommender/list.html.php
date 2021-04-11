@@ -46,9 +46,19 @@ if ('index' == $tmpl) {
                 echo $view->render(
                     'MauticCoreBundle:Helper:tableheader.html.php',
                     [
-                        'text'       => 'mautic.plugin.recommender.template',
-                        'class'      => 'col-msg-name',
-                        'default'    => true,
+                        'sessionVar' => 'recommender',
+                        'orderBy'    => 'c.filterTarget',
+                        'text'       => 'mautic.core.type',
+                        'class'      => 'visible-md visible-lg col-focus-category',
+                    ]
+                );
+
+                echo $view->render(
+                    'MauticCoreBundle:Helper:tableheader.html.php',
+                    [
+                        'text'    => 'mautic.plugin.recommender.template',
+                        'class'   => 'col-msg-name',
+                        'default' => true,
                     ]
                 );
 
@@ -56,7 +66,7 @@ if ('index' == $tmpl) {
                     'MauticCoreBundle:Helper:tableheader.html.php',
                     [
                         'sessionVar' => 'recommender',
-                        'orderBy'    => 'c.title',
+                        'orderBy'    => 'c.category',
                         'text'       => 'mautic.core.category',
                         'class'      => 'visible-md visible-lg col-focus-category',
                     ]
@@ -84,7 +94,7 @@ if ('index' == $tmpl) {
                             [
                                 'item'            => $item,
                                 'templateButtons' => [
-                                    'edit' => $view['security']->hasEntityAccess(
+                                    'edit'   => $view['security']->hasEntityAccess(
                                         $permissions['recommender:recommender:editown'],
                                         $permissions['recommender:recommender:editother'],
                                         $item->getCreatedBy()
@@ -96,8 +106,8 @@ if ('index' == $tmpl) {
                                         $item->getCreatedBy()
                                     ),
                                 ],
-                                'routeBase'  => 'recommender',
-                                'nameGetter' => 'getName',
+                                'routeBase'       => 'recommender',
+                                'nameGetter'      => 'getName',
                             ]
                         );
                         ?>
@@ -111,17 +121,27 @@ if ('index' == $tmpl) {
                         </a>
                         */
                         ?>
-                            <?php echo $item->getName(); ?>
+                        <?php echo $item->getName(); ?>
                     </td>
                     <td>
+                        <?php echo
+                        $view['translator']->trans(
+                            \MauticPlugin\MauticRecommenderBundle\Enum\FiltersEnum::getFilterTarget(
+                                $item->getFilterTarget()
+                            )
+                        ); ?>
+                    </td>
+                    <td class="visible-md visible-lg">
                         <?php echo $item->getTemplate()->getName(); ?>
-
                     </td>
                     <td class="visible-md visible-lg">
                         <?php $category = $item->getCategory(); ?>
-                        <?php $catName  = ($category) ? $category->getTitle() : $view['translator']->trans('mautic.core.form.uncategorized'); ?>
-                        <?php $color    = ($category) ? '#'.$category->getColor() : 'inherit'; ?>
-                        <span style="white-space: nowrap;"><span class="label label-default pa-4" style="border: 1px solid #d5d5d5; background: <?php echo $color; ?>;"> </span> <span><?php echo $catName; ?></span></span>
+                        <?php $catName  = ($category) ? $category->getTitle() : $view['translator']->trans(
+                            'mautic.core.form.uncategorized'
+                        ); ?>
+                        <?php $color = ($category) ? '#'.$category->getColor() : 'inherit'; ?>
+                        <span style="white-space: nowrap;"><span class="label label-default pa-4"
+                                                                 style="border: 1px solid #d5d5d5; background: <?php echo $color; ?>;"> </span> <span><?php echo $catName; ?></span></span>
                     </td>
                     <td class="visible-md visible-lg"><?php echo $item->getId(); ?></td>
                 </tr>
