@@ -73,6 +73,15 @@ if ('index' == $tmpl) {
                 echo $view->render(
                     'MauticCoreBundle:Helper:tableheader.html.php',
                     [
+                        'text'       => 'mautic.plugin.recommender.form.event.last.date_added',
+                        'class'      => 'col-msg-name',
+                        'default'    => true,
+                    ]
+                );
+
+                echo $view->render(
+                    'MauticCoreBundle:Helper:tableheader.html.php',
+                    [
                         'sessionVar' => 'recommender',
                         'orderBy'    => 'e.id',
                         'text'       => 'mautic.core.id',
@@ -127,6 +136,9 @@ if ('index' == $tmpl) {
                     </td>
                     <td>
                         <?php echo $item->getNumberOfLogs(); ?>
+                    </td>
+                    <td>
+                        <?php echo $view['formatter']->_($item->getLastDateAdded(), 'datetime'); ?>
                     </td>
                     <td class="visible-md visible-lg"><?php echo $item->getId(); ?></td>
                 </tr>

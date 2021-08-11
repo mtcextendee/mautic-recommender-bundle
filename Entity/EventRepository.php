@@ -55,4 +55,23 @@ class EventRepository extends CommonRepository
 
         return $qb->execute()->fetchColumn(0);
     }
+
+    /**
+     * @param null $eventId
+     *
+     * @return bool|string
+     */
+    public function getEventLastDate($eventId = null)
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb->select('MAX(el.date_added)')
+            ->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', 'el');
+
+        if ($eventId) {
+            $qb->andWhere($qb->expr()->eq('el.event_id', ':event_id'))
+                ->setParameter('event_id', $eventId);
+        }
+
+        return $qb->execute()->fetchColumn(0);
+    }
 }

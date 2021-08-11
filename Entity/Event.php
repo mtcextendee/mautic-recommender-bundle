@@ -49,6 +49,11 @@ class Event
      */
     protected $numberOfLogs;
 
+    /**
+     * @var string|null
+     */
+    protected $lastDateAdded;
+
     public function __construct()
     {
         $this->setDateAdded(new \DateTime());
@@ -222,5 +227,21 @@ class Event
         $this->numberOfLogs = $numberOfLogs;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastDateAdded(): ?string
+    {
+        return $this->lastDateAdded;
+    }
+
+    /**
+     * @param string|null $lastDateAdded
+     */
+    public function setLastDateAdded(?string $lastDateAdded): void
+    {
+        $this->lastDateAdded = $lastDateAdded;
     }
 }
