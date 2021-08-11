@@ -57,11 +57,13 @@ class RecommenderGenerator
             return;
         }
 
+        $this->items = [];
+
         if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS)) {
             $resultEvent = new FilterResultsEvent($recommenderToken);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_FILTER_RESULTS, $resultEvent);
+            $this->items =  $resultEvent->getItems();
         }
-        $this->items =  $resultEvent->getItems();
 
         return $this->items;
     }

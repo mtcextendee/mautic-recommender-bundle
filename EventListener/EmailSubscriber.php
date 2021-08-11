@@ -11,7 +11,6 @@
 
 namespace MauticPlugin\MauticRecommenderBundle\EventListener;
 
-use Mautic\CoreBundle\EventListener\CommonSubscriber;
 use Mautic\CoreBundle\Helper\BuilderTokenHelperFactory;
 use Mautic\EmailBundle\EmailEvents;
 use Mautic\EmailBundle\Entity\Stat;
@@ -112,12 +111,10 @@ class EmailSubscriber implements EventSubscriberInterface
         if (!$integration || false === $integration->getIntegrationSettings()->getIsPublished()) {
             return;
         }
-
         if ($event->getEmail() && $event->getEmail()->getId() && !empty($event->getLead()['id'])) {
             $this->recommenderTokenReplacer->getRecommenderToken()->setUserId($event->getLead()['id']);
             $this->recommenderTokenReplacer->getRecommenderToken()->setContent($event->getContent());
-            $replacedTokens = $this->recommenderTokenReplacer->getReplacedTokensFromContent('Email');
-
+            $replacedTokens = $this->recommenderTokenReplacer->getReplacedTokensFromContent($event->getContent().'Email');
             if (count(array_filter($replacedTokens)) != count($replacedTokens)) {
                 /** @var Stat $stat */
                 if ($stat = $this->emailModel->getStatRepository()->findOneBy(
@@ -129,13 +126,7 @@ class EmailSubscriber implements EventSubscriberInterface
 
                 throw new FailedToSendToContactException();
             }
-
-            if ($content = $this->recommenderTokenReplacer->getReplacedContent('Email')) {
-                $event->setContent($content);
-            }
-            if ($subject = $this->recommenderTokenReplacer->getRecommenderGenerator()->replaceTagsFromContent($event->getSubject())) {
-                $event->setSubject($subject);
-            }
+            $event->addTokens($replacedTokens);
         }
     }
 }

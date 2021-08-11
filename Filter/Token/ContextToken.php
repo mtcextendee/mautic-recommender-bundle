@@ -41,6 +41,11 @@ class ContextToken
      */
     private $eventModel;
 
+    /**
+     * @var false|mixed|null
+     */
+    private $globalContextValue;
+
     public function __construct(RandomParameterName $randomParameterName, RecommenderPropertyModel $propertyModel, RecommenderEventModel $eventModel)
     {
         $this->randomParameterName = $randomParameterName;
@@ -76,7 +81,7 @@ class ContextToken
 
         $contextParts = explode('AND', $contextQuery);
 
-        $subQueryBuilder = $queryBuilder->getConnection()->createQueryBuilder();
+        $subQueryBuilderGlobal = $queryBuilder->getConnection()->createQueryBuilder();
 
         $tableAlias  = $this->randomParameterName->generateRandomParameterName();
         $tableAlias2 = $this->randomParameterName->generateRandomParameterName();
@@ -90,16 +95,16 @@ class ContextToken
                         case 'date_added':
                             $dateAddedParam = $this->randomParameterName->generateRandomParameterName();
                             $this->dateTimeHelper->setDateTime($expressionParts[1]);
-                            $subQueryBuilder->andWhere(
-                                $subQueryBuilder->expr()->$queryBuilderExpression($tableAlias.'.date_added', ':'.$dateAddedParam)
+                            $subQueryBuilderGlobal->andWhere(
+                                $subQueryBuilderGlobal->expr()->$queryBuilderExpression($tableAlias.'.date_added', ':'.$dateAddedParam)
                             );
-                            $subQueryBuilder->setParameter($dateAddedParam, $this->dateTimeHelper->toUtcString());
+                            $subQueryBuilderGlobal->setParameter($dateAddedParam, $this->dateTimeHelper->toUtcString());
 
                             break;
                         case 'event':
                             if ($expressionEvent = $this->eventModel->getRepository()->findOneBy(['name' => $expressionParts[1]])) {
-                                $subQueryBuilder->andWhere(
-                                    $subQueryBuilder->expr()->$queryBuilderExpression($tableAlias.'.event_id', $expressionEvent->getId())
+                                $subQueryBuilderGlobal->andWhere(
+                                    $subQueryBuilderGlobal->expr()->$queryBuilderExpression($tableAlias.'.event_id', $expressionEvent->getId())
                                 );
                             }
                             break;
@@ -108,7 +113,7 @@ class ContextToken
             }
         }
 
-        $subQueryBuilder
+        $subQueryBuilderGlobal
             ->select($tableAlias2.'.value')->from(MAUTIC_TABLE_PREFIX.'recommender_event_log', $tableAlias)
             ->innerJoin(
                 $tableAlias,
@@ -116,13 +121,33 @@ class ContextToken
                 $tableAlias2,
                 $tableAlias.'.item_id = '.$tableAlias2.'.item_id'
             )
-            ->andWhere($tableAlias.'.lead_id = '.$recommenderToken->getUserId())
             ->andWhere($tableAlias2.'.property_id = '.$property->getId())
             ->orderBy('COUNT('.$tableAlias2.'.value)', 'DESC')
             ->groupBy($tableAlias2.'.value')
             ->setMaxResults(1);
-        SqlQuery::debugQuery($subQueryBuilder);
 
-        return $subQueryBuilder->execute()->fetchColumn(0);
+        $subQueryBuilderRelatedToContact = clone $subQueryBuilderGlobal;
+        $subQueryBuilderRelatedToContact->andWhere($tableAlias.'.lead_id = '.$recommenderToken->getUserId());
+
+        SqlQuery::debugQuery($subQueryBuilderRelatedToContact);
+
+        if ($contactContextValue = $subQueryBuilderRelatedToContact->execute()->fetchColumn(0)) {
+            return $contactContextValue;
+        }
+
+        return $this->getGlobalContextValue($subQueryBuilderGlobal);
+    }
+
+    /**
+     * @return false|mixed|null
+     */
+    protected function getGlobalContextValue(\Doctrine\DBAL\Query\QueryBuilder $subQueryBuilderGlobal)
+    {
+        $key = $subQueryBuilderGlobal->getSQL().json_encode($subQueryBuilderGlobal->getParameters());
+        if (!isset($this->globalContextValue[$key])) {
+            $this->globalContextValue[$key] = $subQueryBuilderGlobal->execute()->fetchColumn(0);
+        }
+
+        return $this->globalContextValue[$key] ?? null;
     }
 }

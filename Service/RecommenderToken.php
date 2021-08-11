@@ -168,16 +168,6 @@ class RecommenderToken
     public function addFilterToken($token, $value)
     {
         $this->filterTokens[$token] = $value;
-
-        $filters = $this->getRecommender()->getFilters();
-        foreach ($filters as $key => $filter) {
-            if (isset($filter['filter'])) {
-                if (!is_array($filter['filter'])) {
-                    $filters[$key]['filter'] = str_replace($token, $value, $filter['filter']);
-                }
-            }
-        }
-        $this->getRecommender()->setFilters($filters);
     }
 
     /**
@@ -194,5 +184,27 @@ class RecommenderToken
     public function setFilterTokens($filterTokens)
     {
         $this->filterTokens = $filterTokens;
+    }
+
+    public function reset()
+    {
+        $this->filterTokens = [];
+    }
+
+    public function getFilters(): array
+    {
+        $filters = $this->getRecommender()->getFilters();
+
+        foreach ($this->filterTokens as $token => $value) {
+            foreach ($filters as $key => $filter) {
+                if (isset($filter['filter'])) {
+                    if (!is_array($filter['filter'])) {
+                        $filters[$key]['filter'] = str_replace($token, $value, $filter['filter']);
+                    }
+                }
+            }
+        }
+
+        return $filters;
     }
 }

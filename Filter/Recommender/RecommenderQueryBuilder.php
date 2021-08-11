@@ -90,12 +90,14 @@ class RecommenderQueryBuilder
             $queryBuilder->andWhere('ri.active=1');
         }
 
+        $recommenderToken->reset();
+
         if ($this->dispatcher->hasListeners(RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY)) {
             $recommenderQuieryBuildEvent = new RecommenderQueryBuildEvent($queryBuilder, $recommenderToken);
             $this->dispatcher->dispatch(RecommenderEvents::ON_RECOMMENDER_BUILD_QUERY, $recommenderQuieryBuildEvent);
         }
 
-        $recombeeFilters = $recommenderToken->getRecommender()->getFilters();
+        $recombeeFilters = $recommenderToken->getFilters();
         foreach ($recombeeFilters as $filter) {
             $filter       = $this->filterFactory->getContactSegmentFilter($filter, $this->decorator);
             $queryBuilder = $filter->applyQuery($queryBuilder);
