@@ -44,7 +44,7 @@ class RecommenderGenerator
     /**
      * RecommenderGenerator constructor.
      */
-    public function __construct(TemplateModel $recommenderModel, RecommenderApi $recommenderApi, LeadModel $leadModel, \Twig_Environment $twig, ApiCommands $apiCommands, TemplatingHelper $templatingHelper, EventDispatcherInterface $dispatcher)
+    public function __construct(TemplateModel $recommenderModel, RecommenderApi $recommenderApi, LeadModel $leadModel, \Twig\Environment $twig, ApiCommands $apiCommands, TemplatingHelper $templatingHelper, EventDispatcherInterface $dispatcher)
     {
         $this->twig              = $twig;
         $this->templateHelper    = $templatingHelper;
