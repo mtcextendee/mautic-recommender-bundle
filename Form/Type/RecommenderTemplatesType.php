@@ -99,7 +99,6 @@ class RecommenderTemplatesType extends AbstractType
                     'tooltip'  => 'mautic.plugin.recommender.form.template_mode.tooltip',
                 ],
                 'choices'           => $this->getTemplateModes(),
-                'choices_as_values' => true,
                 'data'              => $options['data']->getTemplateMode() ?: 'basic',
             ]
         );
