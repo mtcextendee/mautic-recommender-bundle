@@ -2,7 +2,10 @@
   "name": "kuzmany/mautic-recommender-bundle",
   "type": "mautic-plugin",
   "require": {
-    "mautic/composer-plugin": "^1.0",
+    "mautic/core-lib": "^4.0",
     "halaxa/json-machine": "^0.3.0"
+  },
+  "extra": {
+    "install-directory-name": "MauticRecommenderBundle"
   }
 }
